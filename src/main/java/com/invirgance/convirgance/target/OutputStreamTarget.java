@@ -31,6 +31,11 @@ public class OutputStreamTarget implements Target
 {
     private OutputStream out;
     private boolean used;
+
+    public OutputStreamTarget(OutputStream out)
+    {
+        this.out = out;
+    }
     
     @Override
     public OutputStream getOutputStream()
