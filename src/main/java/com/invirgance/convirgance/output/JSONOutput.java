@@ -39,6 +39,12 @@ public class JSONOutput implements Output
     {
         return new JSONOutputCursor(target);
     }
+
+    @Override
+    public String getContentType()
+    {
+        return "application/json";
+    }
     
     private class JSONOutputCursor implements OutputCursor
     {

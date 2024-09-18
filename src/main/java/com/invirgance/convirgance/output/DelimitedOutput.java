@@ -58,10 +58,38 @@ public class DelimitedOutput implements Output
         this.delimiter = delimiter;
     }
 
+    public char getDelimiter()
+    {
+        return delimiter;
+    }
+
+    public void setDelimiter(char delimiter)
+    {
+        this.delimiter = delimiter;
+    }
+
+    public String getEncoding()
+    {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding)
+    {
+        this.encoding = encoding;
+    }
+
     @Override
     public OutputCursor write(Target target)
     {
         return new DelimitedOutputWriter(target, this.columns);
+    }
+    
+    @Override
+    public String getContentType()
+    {
+        if(delimiter == ',') return "text/csv";
+        
+        return "text/plain";
     }
     
     private class DelimitedOutputWriter implements OutputCursor

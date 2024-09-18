@@ -45,4 +45,15 @@ public interface Output
         catch(Exception e) { throw new ConvirganceException(e); }
     }
     
+    /**
+     * Provides the MIME type for the data format produced by this 
+     * implementation. If not set by the implementation, "application/octet"
+     * will be returned.
+     * 
+     * @return The MIME type for the data format
+     */
+    default public String getContentType()
+    {
+        return "application/octet";
+    }
 }
