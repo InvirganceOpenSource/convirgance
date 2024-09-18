@@ -131,7 +131,9 @@ public class Query
     
     private String encodeString(String value)
     {
-        return "n'" + value.replace("'", "''") + "'";
+        return "'" + value.replace("'", "''") + "'";
+// TODO: Detect and use nvarchar when appropriate
+//        return "n'" + value.replace("'", "''") + "'";
     }
     
     private String encodeDate(Date date)

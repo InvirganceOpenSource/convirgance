@@ -92,7 +92,8 @@ public class QueryTest
         
         assertEquals("select * from TABLE", new Query("select * from TABLE").getDatabaseSQL());
         assertEquals("select * from TABLE where id = 12", new Query("select * from TABLE where id = :id", new JSONObject("{\"id\": 12}")).getDatabaseSQL());
-        assertEquals("select * from TABLE where name = n'Hello ''World'''", new Query("select * from TABLE where name = :name", new JSONObject("{\"name\": \"Hello 'World'\"}")).getDatabaseSQL());
+//        assertEquals("select * from TABLE where name = n'Hello ''World'''", new Query("select * from TABLE where name = :name", new JSONObject("{\"name\": \"Hello 'World'\"}")).getDatabaseSQL());
+        assertEquals("select * from TABLE where name = 'Hello ''World'''", new Query("select * from TABLE where name = :name", new JSONObject("{\"name\": \"Hello 'World'\"}")).getDatabaseSQL());
         
         test = new Query("select * from TABLE where date = :date");
         
@@ -158,13 +159,15 @@ public class QueryTest
         query.setBinding("BLOB", data);
         query.setBinding("TAG", null);
         
-        assertEquals("insert into TABLE VALUES (123, n'Bob', ?, null, null)", query.getDatabaseSQL());
+//        assertEquals("insert into TABLE VALUES (123, n'Bob', ?, null, null)", query.getDatabaseSQL());
+        assertEquals("insert into TABLE VALUES (123, 'Bob', ?, null, null)", query.getDatabaseSQL());
         assertEquals(1, query.getDatabaseBindings().length);
         assertEquals(data, query.getDatabaseBindings()[0]);
         
         query.setBinding("BLOB", null);
         
-        assertEquals("insert into TABLE VALUES (123, n'Bob', null, null, null)", query.getDatabaseSQL());
+//        assertEquals("insert into TABLE VALUES (123, n'Bob', null, null, null)", query.getDatabaseSQL());
+        assertEquals("insert into TABLE VALUES (123, 'Bob', null, null, null)", query.getDatabaseSQL());
         assertEquals(0, query.getDatabaseBindings().length);
     }
 }
