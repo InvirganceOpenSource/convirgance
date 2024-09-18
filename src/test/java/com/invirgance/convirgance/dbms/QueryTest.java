@@ -170,4 +170,14 @@ public class QueryTest
         assertEquals("insert into TABLE VALUES (123, 'Bob', null, null, null)", query.getDatabaseSQL());
         assertEquals(0, query.getDatabaseBindings().length);
     }
+    
+    @Test
+    public void testEmptyQuotes()
+    {
+        Query query = new Query("select * from TABLE where :zipcode = ''");
+        
+        query.setBinding("zipcode", "");
+        
+        assertEquals("select * from TABLE where '' = ''", query.getDatabaseSQL());
+    }
 }

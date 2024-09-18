@@ -70,7 +70,8 @@ public class Query
             
             if(c == '\'')
             {
-                markup.add(new Text(sql.substring(start+1, i-1).replace("''", "'"), start, (i-start+1)));
+                if(start+1 == i) markup.add(new Text("", start, (i-start+1)));
+                else markup.add(new Text(sql.substring(start+1, i-1).replace("''", "'"), start, (i-start+1)));
                 
                 return (i-start);
             }
