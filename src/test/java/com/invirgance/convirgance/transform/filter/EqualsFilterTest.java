@@ -42,4 +42,13 @@ public class EqualsFilterTest
         assertFalse(filter.test(record2));
     }
     
+    @Test
+    public void testMismatchedNumberTypes()
+    {
+        JSONObject record1 = new JSONObject("{\"x\":1,\"y\":2}"); // Integer
+        EqualsFilter filter = new EqualsFilter("x", 1L); // Long
+        
+        assertTrue(filter.test(record1));
+    }
+    
 }

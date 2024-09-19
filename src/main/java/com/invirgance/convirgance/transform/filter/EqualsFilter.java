@@ -29,6 +29,8 @@ import com.invirgance.convirgance.json.JSONObject;
  */
 public class EqualsFilter implements Filter
 {
+    private CoerciveComparator comparator = new CoerciveComparator();
+    
     private String key;
     private Object value;
 
@@ -69,6 +71,6 @@ public class EqualsFilter implements Filter
         
         if(this.value == null) return (value == null);
         
-        return this.value.equals(value);
+        return this.comparator.compare(this.value, value) == 0;
     }
 }
