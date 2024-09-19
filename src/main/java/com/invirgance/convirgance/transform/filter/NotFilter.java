@@ -51,9 +51,9 @@ public class NotFilter implements Filter
     }
     
     @Override
-    public boolean filter(JSONObject record)
+    public boolean test(JSONObject record)
     {
-        return !this.filter.filter(record);
+        return !this.filter.test(record);
     }
     
 }

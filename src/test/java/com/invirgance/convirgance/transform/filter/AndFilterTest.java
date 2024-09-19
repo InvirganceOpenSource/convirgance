@@ -40,10 +40,10 @@ public class AndFilterTest
         JSONObject record2 = new JSONObject("{\"x\":3,\"y\":4}");
         AndFilter filter = new AndFilter(new EqualsFilter("x", 1), new EqualsFilter("y", 2));
         
-        assertTrue(filter.filter(record1));
-        assertFalse(filter.filter(record2));
+        assertTrue(filter.test(record1));
+        assertFalse(filter.test(record2));
         
         // Default with no filters is true for AND since "all conditions" (none) were not false
-        assertTrue(new AndFilter(new ArrayList<Filter>()).filter(record1));
+        assertTrue(new AndFilter(new ArrayList<Filter>()).test(record1));
     }
 }

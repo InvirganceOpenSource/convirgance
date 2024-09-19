@@ -58,11 +58,11 @@ public class AndFilter implements Filter
     }
 
     @Override
-    public boolean filter(JSONObject record)
+    public boolean test(JSONObject record)
     {
         for(Filter filter : filters)
         {
-            if(!filter.filter(record)) return false;
+            if(!filter.test(record)) return false;
         }
         
         return true;

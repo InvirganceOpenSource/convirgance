@@ -63,7 +63,7 @@ public class EqualsFilter implements Filter
     }
     
     @Override
-    public boolean filter(JSONObject record)
+    public boolean test(JSONObject record)
     {
         Object value = record.get(key);
         

@@ -22,7 +22,6 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
-import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,24 +29,17 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author jbanes
  */
-public class OrFilterTest
+public class EqualsFilterTest
 {
     @Test
-    public void testFilters()
+    public void testFilter()
     {
         JSONObject record1 = new JSONObject("{\"x\":1,\"y\":2}");
         JSONObject record2 = new JSONObject("{\"x\":3,\"y\":4}");
-        JSONObject record3 = new JSONObject("{\"x\":1,\"y\":4}");
-        JSONObject record4 = new JSONObject("{\"x\":3,\"y\":2}");
-        OrFilter filter = new OrFilter(new EqualsFilter("x", 1), new EqualsFilter("y", 2));
+        EqualsFilter filter = new EqualsFilter("x", 1);
         
         assertTrue(filter.test(record1));
         assertFalse(filter.test(record2));
-        assertTrue(filter.test(record3));
-        assertTrue(filter.test(record4));
-        
-        // Default with no filters is false for OR since "all conditions" (none) were not true
-        assertFalse(new OrFilter(new ArrayList<Filter>()).test(record1));
     }
     
 }

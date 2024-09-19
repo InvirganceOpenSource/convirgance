@@ -49,7 +49,7 @@ public interface Filter extends Transformer
                 {
                     next = iterator.next();
                     
-                    if(filter(next)) this.next = next;
+                    if(test(next)) this.next = next;
                 }
                 
                 return (this.next != null);
@@ -73,5 +73,5 @@ public interface Filter extends Transformer
         };
     }
     
-    public boolean filter(JSONObject record);
+    public boolean test(JSONObject record);
 }
