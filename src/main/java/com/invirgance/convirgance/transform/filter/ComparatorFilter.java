@@ -21,31 +21,49 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.filter;
 
-import com.invirgance.convirgance.json.JSONObject;
-
 /**
  *
  * @author jbanes
  */
-public class EqualsFilter extends ComparatorFilter
+public abstract class ComparatorFilter implements Filter
 {
-    public EqualsFilter()
+    private CoerciveComparator comparator = new CoerciveComparator();
+    
+    private String key;
+    private Object value;
+
+    public ComparatorFilter()
     {
-        super();
     }
 
-    public EqualsFilter(String key, Object value)
+    public ComparatorFilter(String key, Object value)
     {
-        super(key, value);
+        this.key = key;
+        this.value = value;
+    }
+
+    protected CoerciveComparator getComparator()
+    {
+        return comparator;
     }
     
-    @Override
-    public boolean test(JSONObject record)
+    public String getKey()
     {
-        Object value = record.get(getKey());
-        
-        if(getValue() == null) return (value == null);
-        
-        return getComparator().compare(value, getValue()) == 0;
+        return key;
+    }
+
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
+
+    public Object getValue()
+    {
+        return value;
+    }
+
+    public void setValue(Object value)
+    {
+        this.value = value;
     }
 }

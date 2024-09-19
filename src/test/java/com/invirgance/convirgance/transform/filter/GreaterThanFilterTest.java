@@ -22,30 +22,24 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author jbanes
  */
-public class EqualsFilter extends ComparatorFilter
+public class GreaterThanFilterTest
 {
-    public EqualsFilter()
-    {
-        super();
-    }
 
-    public EqualsFilter(String key, Object value)
+    @Test
+    public void testFilter()
     {
-        super(key, value);
+        JSONObject record = new JSONObject("{\"x\": 5}");
+        
+        assertTrue(new GreaterThanFilter("x", 1).test(record));
+        assertFalse(new GreaterThanFilter("x", 5).test(record));
+        assertFalse(new GreaterThanFilter("x", 10).test(record));
     }
     
-    @Override
-    public boolean test(JSONObject record)
-    {
-        Object value = record.get(getKey());
-        
-        if(getValue() == null) return (value == null);
-        
-        return getComparator().compare(value, getValue()) == 0;
-    }
 }

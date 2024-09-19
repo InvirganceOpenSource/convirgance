@@ -27,14 +27,14 @@ import com.invirgance.convirgance.json.JSONObject;
  *
  * @author jbanes
  */
-public class EqualsFilter extends ComparatorFilter
+public class GreaterThanOrEqualFilter extends ComparatorFilter
 {
-    public EqualsFilter()
+    public GreaterThanOrEqualFilter()
     {
         super();
     }
 
-    public EqualsFilter(String key, Object value)
+    public GreaterThanOrEqualFilter(String key, Object value)
     {
         super(key, value);
     }
@@ -42,10 +42,7 @@ public class EqualsFilter extends ComparatorFilter
     @Override
     public boolean test(JSONObject record)
     {
-        Object value = record.get(getKey());
-        
-        if(getValue() == null) return (value == null);
-        
-        return getComparator().compare(value, getValue()) == 0;
+        return getComparator().compare(record.get(getKey()), getValue()) >= 0;
     }
+    
 }
