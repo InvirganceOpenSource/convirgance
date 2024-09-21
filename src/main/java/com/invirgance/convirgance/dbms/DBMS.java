@@ -135,6 +135,8 @@ public class DBMS
             this.statement = statement;
             this.set = set;
             this.next = set.next();
+            
+            set.setFetchSize(1000);
         }
 
         @Override
