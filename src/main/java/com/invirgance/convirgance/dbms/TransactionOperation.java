@@ -39,7 +39,7 @@ public class TransactionOperation implements AtomicOperation
         this(new AtomicOperation[0]);
     }
 
-    public TransactionOperation(AtomicOperation[] operations)
+    public TransactionOperation(AtomicOperation... operations)
     {
         setOperations(operations);
     }
@@ -49,7 +49,7 @@ public class TransactionOperation implements AtomicOperation
         this.operations.add(operation);
     }
     
-    public void setOperations(AtomicOperation[] operations)
+    public void setOperations(AtomicOperation... operations)
     {
         this.operations = Arrays.asList(operations);
     }

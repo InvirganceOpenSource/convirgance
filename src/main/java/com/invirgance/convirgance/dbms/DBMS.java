@@ -89,7 +89,7 @@ public class DBMS
             connection = source.getConnection();
             
             connection.beginRequest();
-            connection.setAutoCommit(true);
+            connection.setAutoCommit(false);
             
             transaction.execute(connection);
             
@@ -111,7 +111,7 @@ public class DBMS
             {
                 try
                 {
-                    connection.setAutoCommit(false);
+                    connection.setAutoCommit(true);
                     connection.endRequest();
                     connection.close();
                 }
