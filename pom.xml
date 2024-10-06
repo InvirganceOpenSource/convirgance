@@ -6,6 +6,26 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Convirgance</name>
+    <licenses>
+        <license>
+          <name>MIT License</name>
+          <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Jerason Banes</name>
+            <email>jerasonbanes@invirgance.com</email>
+            <organization>Invirgance</organization>
+            <organizationUrl>http://www.invirgance.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/InvirganceOpenSource/convirgance.git</connection>
+        <developerConnection>scm:git:https://github.com/InvirganceOpenSource/convirgance.git</developerConnection>
+        <url>https://github.com/InvirganceOpenSource/convirgance/tree/${project.scm.tag}</url>
+        <tag>main</tag>
+    </scm>
     <build>
         <plugins>
             <plugin>
