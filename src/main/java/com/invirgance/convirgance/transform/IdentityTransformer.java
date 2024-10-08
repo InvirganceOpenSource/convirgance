@@ -21,6 +21,7 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform;
 
+import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.Iterator;
@@ -38,7 +39,7 @@ public interface IdentityTransformer extends Transformer
     @Override
     public default Iterator<JSONObject> transform(final Iterator<JSONObject> iterator) throws ConvirganceException
     {
-        return new Iterator<JSONObject>()  {
+        return new CloseableIterator<JSONObject>()  {
             
             @Override
             public boolean hasNext()
@@ -50,6 +51,15 @@ public interface IdentityTransformer extends Transformer
             public JSONObject next()
             {
                 return transform(iterator.next());
+            }
+
+            @Override
+            public void close() throws Exception
+            {
+                if(iterator instanceof CloseableIterator)
+                {
+                    ((CloseableIterator)iterator).close();
+                }
             }
         };
     }
