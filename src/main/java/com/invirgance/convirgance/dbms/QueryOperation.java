@@ -60,7 +60,7 @@ public class QueryOperation implements AtomicOperation
         
         for(int i=1; i<=bindings.length; i++)
         {
-            statement.setObject(i, bindings[i]);
+            statement.setObject(i, bindings[i-1]);
         }
         
         statement.execute();
