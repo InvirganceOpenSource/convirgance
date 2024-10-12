@@ -122,6 +122,19 @@ public class JSONParserTest
         assertEquals(2, record.size());
         assertEquals("Hello world!", record.get("message"));
         assertEquals(5, record.get("count"));
+        
+        record = new JSONParser("{\n" +
+        "    \"databases\": [\n" +
+        "        {\n" +
+        "            \"name\": \"TestDatabase\",\n" +
+        "            \"location\": \"/Users/jbanes/Development/divirgance/target/testing/system/initialization/TestDatabase\",\n" +
+        "            \"type\": \"com.invirgance.divirgance.derby.DerbyAnalyticDatabase\"\n" +
+        "        }\n" +
+        "    ]\n" +
+        "}\n" +
+        "").parseObject();
+        
+        assertEquals(1, record.getJSONArray("databases").size());
     }
     
     @Test

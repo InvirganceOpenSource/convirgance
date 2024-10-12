@@ -333,7 +333,7 @@ public class JSONParser implements AutoCloseable
                 return object;
             }
             
-            if(c != ',')  throw new IOException("Expected , but found " + c);
+            if(c != ',')  throw new IOException("Expected , but found " + c + " (0x" + Integer.toHexString(c & 0xFF) + ")");
         }
         
         throw new IOException("Reached end of stream before parsing completed");
@@ -364,7 +364,6 @@ public class JSONParser implements AutoCloseable
 
             if(c == ']')
             {
-                nextPrintable();
                 return array;
             }
             
