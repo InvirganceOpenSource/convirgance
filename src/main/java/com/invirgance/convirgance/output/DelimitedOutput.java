@@ -42,37 +42,66 @@ public class DelimitedOutput implements Output
         this(null, '|');
     }
 
+    /**
+     * 
+     * @param delimiter 
+     */
     public DelimitedOutput(char delimiter)
     {
         this(null, delimiter);
     }
     
+    /**
+     * 
+     * @param columns 
+     */
     public DelimitedOutput(String[] columns)
     {
         this(columns, '|');
     }
     
+    /**
+     * 
+     * @param columns
+     * @param delimiter 
+     */
     public DelimitedOutput(String[] columns, char delimiter)
     {
         this.columns = columns;
         this.delimiter = delimiter;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public char getDelimiter()
     {
         return delimiter;
     }
 
+    /**
+     * 
+     * @param delimiter 
+     */
     public void setDelimiter(char delimiter)
     {
         this.delimiter = delimiter;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public String getEncoding()
     {
         return encoding;
     }
 
+    /**
+     * 
+     * @param encoding 
+     */
     public void setEncoding(String encoding)
     {
         this.encoding = encoding;
@@ -92,18 +121,29 @@ public class DelimitedOutput implements Output
         return "text/plain";
     }
     
+    
     private class DelimitedOutputWriter implements OutputCursor
     {
         private Target target;
         private PrintWriter out;
         private String[] columns;
 
+        /**
+         * 
+         * @param target
+         * @param columns 
+         */
         public DelimitedOutputWriter(Target target, String[] columns)
         {
             this.target = target;
             this.columns = columns;
         }
     
+        /**
+         * 
+         * @param record
+         * @return 
+         */
         private String[] detectColumns(JSONObject record)
         {
             Set<String> keys = record.keySet();
@@ -111,6 +151,11 @@ public class DelimitedOutput implements Output
             return keys.toArray(String[]::new);
         }
     
+        /**
+         * 
+         * @param columns
+         * @return 
+         */
         private String stringify(String[] columns)
         {
             StringBuffer buffer = new StringBuffer();
@@ -125,6 +170,11 @@ public class DelimitedOutput implements Output
             return buffer.toString();
         }
     
+        /**
+         * 
+         * @param record
+         * @return 
+         */
         private String stringify(JSONObject record)
         {
             StringBuffer buffer = new StringBuffer();

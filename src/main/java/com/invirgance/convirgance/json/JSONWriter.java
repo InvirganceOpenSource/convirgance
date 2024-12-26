@@ -41,37 +41,67 @@ public class JSONWriter implements AutoCloseable
         this(new StringWriter());
     }
     
+    /**
+     * 
+     * @param indent 
+     */
     public JSONWriter(int indent)
     {
         this(new StringWriter(), indent);
     }
 
+    /**
+     * 
+     * @param writer 
+     */
     public JSONWriter(Writer writer)
     {
         this(writer, 0);
     }
     
+    /**
+     * 
+     * @param writer
+     * @param indent 
+     */
     public JSONWriter(Writer writer, int indent)
     {
         this.writer = writer;
         this.indent = indent;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public Writer getWriter()
     {
         return writer;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public int getIndent()
     {
         return indent;
     }
 
+    /**
+     * 
+     * @param indent 
+     */
     public void setIndent(int indent)
     {
         this.indent = indent;
     }
     
+    /**
+     * 
+     * @param c
+     * @return 
+     */
     private String encodeUnicodeHex(char c)
     {
         StringBuilder buffer = new StringBuilder("\\u");
@@ -87,6 +117,11 @@ public class JSONWriter implements AutoCloseable
         return buffer.toString();
     }
     
+    /**
+     * 
+     * @param level
+     * @throws IOException 
+     */
     private void indent(int level) throws IOException
     {
         for(int i=0; i<level; i++)
@@ -98,6 +133,11 @@ public class JSONWriter implements AutoCloseable
         }
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter writeNull() throws IOException
     {
         writer.write("null");
@@ -105,6 +145,12 @@ public class JSONWriter implements AutoCloseable
         return this;
     }
     
+    /**
+     * 
+     * @param value
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter write(boolean value) throws IOException
     {
         writer.write(String.valueOf(value));
@@ -112,6 +158,12 @@ public class JSONWriter implements AutoCloseable
         return this;
     }
     
+    /**
+     * 
+     * @param string
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter write(String string) throws IOException
     {
         char c;
@@ -168,6 +220,12 @@ public class JSONWriter implements AutoCloseable
         return this;
     }
     
+    /**
+     * 
+     * @param number
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter write(Number number) throws IOException
     {
         writer.write(number.toString());
@@ -175,6 +233,12 @@ public class JSONWriter implements AutoCloseable
         return this;
     }
     
+    /**
+     * 
+     * @param object
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter write(JSONObject object) throws IOException
     {
         int count = 0;
@@ -221,6 +285,12 @@ public class JSONWriter implements AutoCloseable
         return this;
     }
     
+    /**
+     * 
+     * @param array
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter write(JSONArray array) throws IOException
     {
         int count = 0;
@@ -261,6 +331,12 @@ public class JSONWriter implements AutoCloseable
         return this;
     }
     
+    /**
+     * 
+     * @param object
+     * @return
+     * @throws IOException 
+     */
     public JSONWriter write(Object object) throws IOException
     {
         if(object == null) return writeNull();

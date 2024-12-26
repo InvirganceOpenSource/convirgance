@@ -43,16 +43,28 @@ public class BSONOutput implements Output
         this(false); // TODO: Need a multithreaded GZipping to speed up compressed data. Then we can make compressed the default.
     }
 
+    /**
+     * 
+     * @param compressed 
+     */
     public BSONOutput(boolean compressed)
     {
         this.compressed = compressed;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public boolean isCompressed()
     {
         return compressed;
     }
 
+    /**
+     * 
+     * @param compressed 
+     */
     public void setCompressed(boolean compressed)
     {
         this.compressed = compressed;
@@ -64,6 +76,9 @@ public class BSONOutput implements Output
         return new BSONOutputCursor(target, compressed);
     }
     
+    /**
+     * 
+     */
     private class BSONOutputCursor implements OutputCursor
     {
         private final DataOutputStream out;

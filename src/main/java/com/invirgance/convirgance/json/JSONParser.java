@@ -42,11 +42,20 @@ public class JSONParser implements AutoCloseable
         }
     }
     
+    /**
+     * 
+     * @param json 
+     */
     public JSONParser(String json)
     {
         this(new StringReader(json));
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     private char next() throws IOException
     {
         int c;
@@ -66,6 +75,11 @@ public class JSONParser implements AutoCloseable
         return (char)c;
     }
 
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     private char nextPrintable() throws IOException
     {
         int c;
@@ -88,6 +102,11 @@ public class JSONParser implements AutoCloseable
         throw new IOException("Reached end of readable stream without finding a non-whitespace character");
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     private char parseUnicode() throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -103,6 +122,11 @@ public class JSONParser implements AutoCloseable
         return (char)Integer.parseInt(buffer.toString(), 16);
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     private char peek() throws IOException
     {
         next = reader.read();
@@ -110,6 +134,11 @@ public class JSONParser implements AutoCloseable
         return (char)next;
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     private char peekPrintable() throws IOException
     {
         int c;
@@ -126,6 +155,11 @@ public class JSONParser implements AutoCloseable
         throw new IOException("Reached end of readable stream without finding a non-whitespace character");
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Object parseNull() throws IOException
     {
         if(nextPrintable() != 'n' || next() != 'u' || next() != 'l' || next() != 'l')
@@ -136,6 +170,11 @@ public class JSONParser implements AutoCloseable
         return null;
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Boolean parseBoolean() throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -153,6 +192,11 @@ public class JSONParser implements AutoCloseable
         return Boolean.valueOf(buffer.toString());
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Number parseNumber() throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -226,6 +270,11 @@ public class JSONParser implements AutoCloseable
         throw new IOException("Reached end of stream before parsing completed");
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public String parseString() throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -293,6 +342,11 @@ public class JSONParser implements AutoCloseable
         throw new IOException("Reached end of stream before parsing completed");
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public JSONObject parseObject() throws IOException
     {
         JSONObject object = new JSONObject(true);
@@ -339,6 +393,11 @@ public class JSONParser implements AutoCloseable
         throw new IOException("Reached end of stream before parsing completed");
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public JSONArray parseArray() throws IOException
     {
         JSONArray array = new JSONArray();
@@ -373,6 +432,11 @@ public class JSONParser implements AutoCloseable
         throw new IOException("Reached end of stream before parsing completed");
     }
     
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Object parse() throws IOException
     {
         char c = peekPrintable();

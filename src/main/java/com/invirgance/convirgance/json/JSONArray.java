@@ -39,11 +39,19 @@ public class JSONArray<T> implements List<T>
         this.list = new ArrayList<>();
     }
     
+    /**
+     * 
+     * @param list 
+     */
     public JSONArray(List<T> list)
     {
         this.list = new ArrayList<>(list);
     }
     
+    /**
+     * 
+     * @param json 
+     */
     public JSONArray(String json)
     {
         try
@@ -143,6 +151,11 @@ public class JSONArray<T> implements List<T>
         return this.list.get(index);
     }
     
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     public boolean getBoolean(int index)
     {
         Object value = this.list.get(index);
@@ -154,6 +167,12 @@ public class JSONArray<T> implements List<T>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a boolean");
     }
     
+    /**
+     * 
+     * @param index
+     * @param defaultValue
+     * @return 
+     */
     public boolean getBoolean(int index, boolean defaultValue)
     {
         Object value = this.list.get(index);
@@ -165,6 +184,11 @@ public class JSONArray<T> implements List<T>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a boolean");
     }
     
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     public JSONArray getJSONArray(int index)
     {
         Object value = this.list.get(index);
@@ -174,7 +198,12 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
-    
+    /**
+     * 
+     * @param index
+     * @param defaultValue
+     * @return 
+     */
     public JSONArray getJSONArray(int index, JSONArray defaultValue)
     {
         Object value = this.list.get(index);
@@ -184,7 +213,11 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
-    
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     public JSONObject getJSONObject(int index)
     {
         Object value = this.list.get(index);
@@ -194,7 +227,12 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
-    
+    /**
+     * 
+     * @param index
+     * @param defaultValue
+     * @return 
+     */
     public JSONObject getJSONObject(int index, JSONObject defaultValue)
     {
         Object value = this.list.get(index);
@@ -204,7 +242,11 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
-    
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     public Object getString(int index)
     {
         Object value = this.list.get(index);
@@ -213,7 +255,12 @@ public class JSONArray<T> implements List<T>
         
         return value.toString();
     }
-    
+    /**
+     * 
+     * @param index
+     * @param defaultValue
+     * @return 
+     */
     public Object getString(int index, String defaultValue)
     {
         Object value = this.list.get(index);
@@ -280,7 +327,11 @@ public class JSONArray<T> implements List<T>
         }
         catch(IOException e) { throw new ConvirganceException(e); }
     }
-
+    /**
+     * 
+     * @param indent
+     * @return 
+     */
     public String toString(int indent)
     {
         try
