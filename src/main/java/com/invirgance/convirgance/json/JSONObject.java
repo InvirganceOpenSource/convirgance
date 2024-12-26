@@ -174,7 +174,9 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the key's value parsed to a Boolean.
+     * Attempts to coerce the key's value to a Boolean. 
+     * Returns true if the value is already a Boolean.
+     * Otherwise if the value is a String, Boolean.parseBoolean() is used (case-insensitive)
      * @param key A key.
      * @return The value parsed to a Boolean.
      * @throws ConvirganceException When the value is not of type Boolean or String or is null.
@@ -194,13 +196,14 @@ public class JSONObject implements Map<String, Object>
      * Gets the Boolean equivalent value for the given key with a given default alternative.
      * @param key
      * @param defaultValue A Boolean to return if the keys value is null.
-     * @return The keys value parsed to a Boolean or the default value if the keys value is null.
-     * @throws ConvirganceException When the keys value is not null, Boolean or String.
+     * @return The keys value parsed with Boolean.parseBoolean().
+     * Otherwise if the key's value is null defaultValue will be returned.
+     * @throws ConvirganceException When the key's value is not null, Boolean or String.
      */
     public boolean getBoolean(String key, boolean defaultValue) throws ConvirganceException
     {
         Object value = this.map.get(key);
-        
+       
         if(value == null) return defaultValue;
         if(value instanceof Boolean) return ((Boolean)value);
         if(value instanceof String) return Boolean.parseBoolean(value.toString());
