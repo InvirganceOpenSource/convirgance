@@ -300,7 +300,7 @@ public class JSONObject implements Map<String, Object>
      * Gets a key's value returning a JSONArray, returning null on a null key value.
      * @param key A key whose value is JSON.
      * @return Value converted to JSONArray or null.
-     * @throws ConvirganceException When the value is not of type JSONArray
+     * @throws ConvirganceException When the value is not of type JSONArray.
      */
     public JSONArray getJSONArray(String key) throws ConvirganceException
     {
@@ -330,9 +330,9 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the value for a key. Returning null or the value.
+     * Gets the value for a key. Returning null or the value as a JSONObject.
      * @param key The key.
-     * @return The keys value or null.
+     * @return The key's value as a JSONObject or null.
      * @throws ConvirganceException When the key's value is not of type JSONObject.
      */
     public JSONObject getJSONObject(String key) throws ConvirganceException
@@ -346,10 +346,10 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the value for a key. Returning default if null otherwise value.
+     * Gets the value for a key. Returning default if null otherwise the value as a JSONObject.
      * @param key The key.
      * @param defaultValue The default to use when the key's value is null.
-     * @return The keys value or the provided default.
+     * @return The key's value as a JSONObject or the provided default.
      * @throws ConvirganceException When the key's value is not of type JSONObject and is not null.
      */
     public JSONObject getJSONObject(String key, JSONObject defaultValue) throws ConvirganceException
