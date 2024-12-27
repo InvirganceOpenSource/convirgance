@@ -147,10 +147,11 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes the Boolean value as a string.
      *
-     * @param value
-     * @return
-     * @throws IOException
+     * @param value A Boolean.
+     * @return This JSONWriter.
+     * @throws IOException If writing fails.
      */
     public JSONWriter write(boolean value) throws IOException
     {
