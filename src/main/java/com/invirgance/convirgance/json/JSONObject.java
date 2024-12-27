@@ -235,10 +235,10 @@ public class JSONObject implements Map<String, Object>
     
     /**
      * Gets the value associated with the specified key as a Double returning the 
-     * provided default if the value is null.
+     * provided default if the value or key is null.
      * If the key's value is a Double its returned.
      * If the key's value is a String we pass the toString() of value to Double.parseDouble() 
-     * Otherwise if the key's value was null, defaultValue is returned.
+     * Otherwise if the key or key's value was null, defaultValue is returned.
      * @param key The key whose associated value is to be retrieved.
      * @param defaultValue The default Double value to return if the key's value is null.
      * @return The key's value parsed to Double, or defaultValue if value or key is null.
@@ -257,9 +257,11 @@ public class JSONObject implements Map<String, Object>
     
     /**
      * Gets the value associated with the specified key as a Int. 
+     * Returns value if its already an Int.
+     * Otherwise we use Integer.parseInt() and the toString() of value.
      * @param key The key whose associated value is to be retrieved.
      * @return The key's value parsed to Int.
-     * @throws ConvirganceException When the key's value cannot be converted to a Int.
+     * @throws ConvirganceException When the key's value cannot be converted to a Int. Or the key itself is null.
      */
     public int getInt(String key) throws ConvirganceException
     {
@@ -275,6 +277,8 @@ public class JSONObject implements Map<String, Object>
     /**
      * Gets the value associated with the specified key as a Int returning the 
      * provided default if the value is null.
+     * If value is null or the key doesn't exist defaultValue is returned.
+     * Otherwise if value is of type Int, it will be returned unchanged.
      * @param key The key whose associated value is to be retrieved.
      * @param defaultValue The default Int value to return if the key's value is null.
      * @return The key's value parsed to Int, or defaultValue when value is null.
