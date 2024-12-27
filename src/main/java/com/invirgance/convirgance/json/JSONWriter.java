@@ -134,8 +134,10 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes a JSON null value.
      *
-     * @return @throws IOException
+     * @return this JSONWriter for method chaining.
+     * @throws IOException If writing fails.
      */
     public JSONWriter writeNull() throws IOException
     {
