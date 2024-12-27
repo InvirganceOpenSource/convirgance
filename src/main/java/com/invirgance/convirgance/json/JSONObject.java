@@ -466,7 +466,7 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Returns this object as a String after its process by JSONWriter.
+     * Returns a JSON string of this object.
      * @param indent The number of spaces to use for each level of indentation.
      * @return A formatted JSON string representation of this object.
      * @throws ConvirganceException If the JSONWriter encounters an error during string conversion.
