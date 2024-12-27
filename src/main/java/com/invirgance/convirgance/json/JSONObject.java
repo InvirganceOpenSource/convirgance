@@ -213,9 +213,11 @@ public class JSONObject implements Map<String, Object>
     
     /**
      * Gets the value associated with the specified key as a Double.
+     * If the key's value is a Double its returned.
+     * If the key's value is a String we pass the toString() of value to Double.parseDouble() 
      * @param key The key whose associated value is to be retrieved.
-     * @return The keys value or a String coerced into a Double.
-     * @throws ConvirganceException When the keys value is null, or cannot be converted to a Double.
+     * @return The key's value or a String coerced into a Double.
+     * @throws ConvirganceException When the key's value is null, or its type cannot be coerced to a Double.
      */
     public double getDouble(String key) throws ConvirganceException
     {
