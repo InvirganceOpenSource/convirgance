@@ -58,11 +58,6 @@ public class JSONParser implements AutoCloseable
         this(new StringReader(json));
     }
     
-    /**
-     * 
-     * @return
-     * @throws IOException 
-     */
     private char next() throws IOException
     {
         int c;
@@ -82,11 +77,6 @@ public class JSONParser implements AutoCloseable
         return (char)c;
     }
 
-    /**
-     * 
-     * @return
-     * @throws IOException 
-     */
     private char nextPrintable() throws IOException
     {
         int c;
@@ -108,12 +98,7 @@ public class JSONParser implements AutoCloseable
         
         throw new IOException("Reached end of readable stream without finding a non-whitespace character");
     }
-    
-    /**
-     * 
-     * @return
-     * @throws IOException 
-     */
+
     private char parseUnicode() throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -128,24 +113,14 @@ public class JSONParser implements AutoCloseable
         
         return (char)Integer.parseInt(buffer.toString(), 16);
     }
-    
-    /**
-     * 
-     * @return
-     * @throws IOException 
-     */
+
     private char peek() throws IOException
     {
         next = reader.read();
             
         return (char)next;
     }
-    
-    /**
-     * 
-     * @return
-     * @throws IOException 
-     */
+
     private char peekPrintable() throws IOException
     {
         int c;
@@ -163,9 +138,10 @@ public class JSONParser implements AutoCloseable
     }
     
     /**
+     * Attempts to parse the JSON 'null' literal from the current position in the reader.
      * 
-     * @return
-     * @throws IOException 
+     * @return null if the literal 'null' is successfully parsed.
+     * @throws IOException if the next 4 characters do not exactly match 'null'.
      */
     public Object parseNull() throws IOException
     {
