@@ -365,7 +365,8 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the keys value and returns its string representation, returns null if the key's value is null.
+     * Gets the keys value and returns its string representation.
+     * Returns null if the key's value is null.
      * @param key The key.
      * @return A string representation of the key's value or null.
      */
@@ -379,10 +380,11 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the keys value and returns its string representation, returns defaultValue if the key's value is null.     * 
+     * Gets the key's value and returns its string representation.
+     * Otherwise returns the provided default value if the key doesn't exist or the key's value is null. 
      * @param key The key.
-     * @param defaultValue The value to return if the key's value is null.
-     * @return A string representation of the key's value or a defaultValue.
+     * @param defaultValue The value to return if the key is missing or the key's value is null.
+     * @return A string representation of the key's value or the provided defaultValue.
      */
     public String getString(String key, String defaultValue)
     {
