@@ -65,9 +65,11 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Creates a JSONWriter using another Writer object. Example writing to
+     * memory, string, network. Uses the provided indent when writing content.
      *
-     * @param writer
-     * @param indent
+     * @param writer The writer that should be used.
+     * @param indent The indentation to use when writing.
      */
     public JSONWriter(Writer writer, int indent)
     {
