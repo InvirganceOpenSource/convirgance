@@ -107,11 +107,6 @@ public class JSONWriter implements AutoCloseable
         this.indent = indent;
     }
 
-    /**
-     *
-     * @param c
-     * @return
-     */
     private String encodeUnicodeHex(char c)
     {
         StringBuilder buffer = new StringBuilder("\\u");
@@ -127,11 +122,6 @@ public class JSONWriter implements AutoCloseable
         return buffer.toString();
     }
 
-    /**
-     *
-     * @param level
-     * @throws IOException
-     */
     private void indent(int level) throws IOException
     {
         for (int i = 0; i < level; i++)
