@@ -157,7 +157,7 @@ public class JSONParser implements AutoCloseable
      * Attempts to parse 'true' or 'false' from the current position in the reader.
      * 
      * @return the parsed Boolean value.
-     * @throws IOException Trying to parse at the current reader when the current reader position does not start with 't' or 'f'.
+     * @throws IOException The current reader position does not start with 't' or 'f'.
      */
     public Boolean parseBoolean() throws IOException
     {
