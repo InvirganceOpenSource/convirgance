@@ -238,10 +238,11 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes the JSON of the provided object, using indentation if set.
      *
-     * @param object
-     * @return
-     * @throws IOException
+     * @param object The JSONObject to write.
+     * @return This JSONWriter.
+     * @throws IOException If writing fails.
      */
     public JSONWriter write(JSONObject object) throws IOException
     {
