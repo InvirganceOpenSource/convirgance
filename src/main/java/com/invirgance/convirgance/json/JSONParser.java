@@ -177,9 +177,13 @@ public class JSONParser implements AutoCloseable
     }
     
     /**
-     * 
-     * @return
-     * @throws IOException 
+     * Parses a JSON number from the current reader position.
+     * Will parse:
+     * - Scientific Notation
+     * - Integer
+     * - Double
+     * @return The parsed Double or Integer.
+     * @throws IOException If the number's format is invalid or end of input is reached.
      */
     public Number parseNumber() throws IOException
     {
