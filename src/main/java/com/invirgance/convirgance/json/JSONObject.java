@@ -530,25 +530,13 @@ public class JSONObject implements Map<String, Object>
         return hash + size();
     }
     
-    /**
-     * A hybrid collection that maintains insertion order like an ArrayList while ensuring
-     * unique elements like a Set.
-     * @param <T> The type of elements maintained by this collection.
-     */
     private class OrderedKeys<T> extends ArrayList<T> implements Set<T>
     {
-        /**
-        * Constructs an empty ordered set.
-        */
         public OrderedKeys()
         {
             super();
         }
-        
-        /**
-        * Constructs an ordered set containing the elements of the specified collection.
-        * @param collection The collection whose elements are to be placed into this ordered set.
-        */
+
         public OrderedKeys(Collection collection)
         {
             super(collection);
