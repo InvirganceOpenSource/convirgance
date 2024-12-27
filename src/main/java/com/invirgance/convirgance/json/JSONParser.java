@@ -496,8 +496,11 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
+     * Parses the JSON and returns its relevant type.
      *
-     * @return @throws IOException
+     * @return JSONObject for objects, JSONArray for arrays, String for strings,
+     * Number for numbers, Boolean for booleans, or null.
+     * @throws IOException If JSON is malformed or stream ends unexpectedly.
      */
     public Object parse() throws IOException
     {
