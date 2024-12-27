@@ -51,8 +51,9 @@ public class JSONParser implements AutoCloseable
     }
     
     /**
-     * 
-     * @param json 
+     * Creates a JSONParser that will parse the provided JSON formatted string.
+     * Internally creates a StringReader to read the JSON content.
+     * @param json The JSON string to parse.
      */
     public JSONParser(String json)
     {
