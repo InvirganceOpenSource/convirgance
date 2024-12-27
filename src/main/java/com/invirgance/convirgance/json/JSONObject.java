@@ -346,10 +346,12 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the value for a key. Returning default if null otherwise the value as a JSONObject.
+     * Gets the value for a key. 
+     * Returning the provided default if the key's value is null. 
+     * Otherwise the key's value as a JSONObject.
      * @param key The key.
      * @param defaultValue The default to use when the key's value is null.
-     * @return The key's value as a JSONObject or the provided default.
+     * @return The key's value as a JSONObject, or the provided default.
      * @throws ConvirganceException When the key's value is not of type JSONObject and is not null.
      */
     public JSONObject getJSONObject(String key, JSONObject defaultValue) throws ConvirganceException
