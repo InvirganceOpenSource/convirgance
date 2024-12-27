@@ -449,8 +449,11 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
+     * Parses a JSON array from the current reader position.
      *
-     * @return @throws IOException
+     * @return A JSONArray based on the array encountered by the reader's
+     * stream.
+     * @throws IOException If JSON is malformed or stream ends unexpectedly.
      */
     public JSONArray parseArray() throws IOException
     {
