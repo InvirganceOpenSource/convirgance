@@ -24,6 +24,7 @@ package com.invirgance.convirgance.json;
 import java.io.*;
 
 /**
+ * Parses JSON content into their relevant types.
  *
  * @author jbanes
  */
