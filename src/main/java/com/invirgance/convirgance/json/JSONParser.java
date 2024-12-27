@@ -32,6 +32,13 @@ public class JSONParser implements AutoCloseable
     private Reader reader;
     private int next = -1;
 
+    /**
+     * Creates a JSONParser with the provided reader.
+     * Sets the objects reader to use the supplied Reader.
+     * If the provided reader doesn't support marking a new BufferedReader is assigned to reader.
+     * 
+     * @param reader 
+     */
     public JSONParser(Reader reader)
     {
         this.reader = reader;
