@@ -54,8 +54,10 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Creates a JSONWriter using another Writer object. Example writing to
+     * memory, string, network.
      *
-     * @param writer
+     * @param writer The writer that should be used.
      */
     public JSONWriter(Writer writer)
     {
