@@ -150,7 +150,7 @@ public class JSONObject implements Map<String, Object>
     /**
      * Checks if a key's value is null.
      * Returns true if the key itself is not present.
-     * Or is the key's value is null.
+     * Or if the key's value is null.
      * @param key The key.
      * @return If the key is not present or the key's value is null.
      */
