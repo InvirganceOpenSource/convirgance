@@ -98,8 +98,9 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Sets the indentation to use when writing.
      *
-     * @param indent
+     * @param indent The indentation.
      */
     public void setIndent(int indent)
     {
