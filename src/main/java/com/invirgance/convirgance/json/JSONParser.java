@@ -387,8 +387,11 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
+     * Parses a JSON object from the current reader position, with ordering.
      *
-     * @return @throws IOException
+     * @return A ordered JSONObject based on the key value pairs encountered by
+     * the readers stream.
+     * @throws IOException If JSON is malformed or stream ends unexpectedly.
      */
     public JSONObject parseObject() throws IOException
     {
