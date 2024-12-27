@@ -43,8 +43,10 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Creates a new JSONWriter that will use the provided indentation when
+     * writing.
      *
-     * @param indent
+     * @param indent The indentation to use when writing.
      */
     public JSONWriter(int indent)
     {
