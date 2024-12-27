@@ -78,8 +78,9 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Returns the current writer.
      *
-     * @return
+     * @return This objects current writer.
      */
     public Writer getWriter()
     {
@@ -87,8 +88,9 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Returns the current indent being used when writing.
      *
-     * @return
+     * @return The indentation.
      */
     public int getIndent()
     {
