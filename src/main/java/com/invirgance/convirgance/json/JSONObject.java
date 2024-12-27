@@ -179,7 +179,7 @@ public class JSONObject implements Map<String, Object>
     
     /**
      * Attempts to coerce the key's value to a Boolean. 
-     * Returns true if the value is already a Boolean.
+     * If the key's value is of type Boolean its value will be returned.
      * For String values, uses Boolean.parseBoolean() which:
      *   - Returns true only if the string equals "true" (case-insensitive)
      *   - Returns false for all other string values including "false", "yes", "no", "1", "0"
