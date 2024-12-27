@@ -154,9 +154,10 @@ public class JSONParser implements AutoCloseable
     }
     
     /**
+     * Attempts to parse 'true' or 'false' from the current position in the reader.
      * 
-     * @return
-     * @throws IOException 
+     * @return the parsed Boolean value.
+     * @throws IOException Trying to parse at the current reader when the current reader position does not start with 't' or 'f'.
      */
     public Boolean parseBoolean() throws IOException
     {
@@ -428,7 +429,6 @@ public class JSONParser implements AutoCloseable
         if(c == '[') return parseArray();
         if(c == '"') return parseString();
         if(c == 'n') return parseNull();
-        
         if(c == 't' || c == 'f') return parseBoolean();
         if(c == '-' || Character.isDigit(c)) return parseNumber();
         
