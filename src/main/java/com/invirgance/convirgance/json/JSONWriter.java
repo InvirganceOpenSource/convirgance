@@ -224,10 +224,11 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes the given number.
      *
-     * @param number
-     * @return
-     * @throws IOException
+     * @param number The number to write.
+     * @return This JSONWriter.
+     * @throws IOException If writing fails.
      */
     public JSONWriter write(Number number) throws IOException
     {
