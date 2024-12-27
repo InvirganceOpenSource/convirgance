@@ -305,9 +305,12 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
+     * Parses a JSON string from the current reader position.
      *
-     * @return @throws IOException When the string doesn't begin with a quote.
-     * On invalid escape sequences. And when we reach the end of stream before
+     * @return The parsed string.
+     * @throws IOException When the string doesn't begin with a quote.
+     * @throws IOException On invalid escape sequences.
+     * @throws IOException If the end of the stream is reached before
      * encountering an end quote.
      */
     public String parseString() throws IOException
