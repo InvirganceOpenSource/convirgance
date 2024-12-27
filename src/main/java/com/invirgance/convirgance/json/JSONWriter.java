@@ -161,7 +161,7 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
-     * Writes the JSON equivalent of the provided String.
+     * Writes the JSON equivalent/with proper escaping of the provided String.
      *
      * @param string The String to write.
      * @return This JSONWriter.
