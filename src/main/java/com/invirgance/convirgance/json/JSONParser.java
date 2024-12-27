@@ -34,12 +34,11 @@ public class JSONParser implements AutoCloseable
 
     /**
      * Creates a JSONParser with the provided reader.
-     * Sets the objects reader to use the supplied Reader.
-     * If the provided reader doesn't support marking,
-     * a new BufferedReader is created and assigned based on the provided reader.
+     * If the provided reader doesn't support marking, wraps it in a BufferedReader 
+     * with a 16KB buffer size (16 * 1024 bytes).
      * 
-     * 
-     * @param reader 
+     * @param reader The Reader to use for parsing. If it doesn't support marking,
+     *               it will be wrapped in a BufferedReader.
      */
     public JSONParser(Reader reader)
     {
