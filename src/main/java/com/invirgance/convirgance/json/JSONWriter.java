@@ -161,10 +161,11 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes the JSON equivalent of the provided String.
      *
-     * @param string
-     * @return
-     * @throws IOException
+     * @param string The String to write.
+     * @return This JSONWriter.
+     * @throws IOException If writing fails.
      */
     public JSONWriter write(String string) throws IOException
     {
