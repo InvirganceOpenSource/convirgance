@@ -83,10 +83,8 @@ public class JSONObject implements Map<String, Object>
     /**
       * Creates a JSONObject based on the provided map parameter. 
       * If the map is a JSONObject and is ordered, a shallow copy of the ordered keys is made.
-      * Additionally, this object's internal map is populated with the contents of the provided map.
       * 
-      * @param map A map of key-value pairs. If the map is an instance of JSONObject and is ordered, 
-      *            this JSONObject will inherit the ordering and its ordered keys.
+      * @param map A map of key-value pairs.
      */
     public JSONObject(Map<String, Object> map)
     {
