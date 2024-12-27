@@ -297,10 +297,11 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes out the given JSONArray, using indentation if set.
      *
-     * @param array
-     * @return
-     * @throws IOException
+     * @param array The JSONArray.
+     * @return This JSONWriter.
+     * @throws IOException If writing fails.
      */
     public JSONWriter write(JSONArray array) throws IOException
     {
