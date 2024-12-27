@@ -179,7 +179,7 @@ public class JSONObject implements Map<String, Object>
      * Otherwise if the value is a String, Boolean.parseBoolean() is used (case-insensitive)
      * @param key A key.
      * @return The value parsed to a Boolean.
-     * @throws ConvirganceException When the key doesn't exist or key's value is not of type Boolean or String or is null.
+     * @throws ConvirganceException When the key doesn't exist or key's value is not of type Boolean, String or is null.
      */
     public boolean getBoolean(String key) throws ConvirganceException
     {
@@ -193,12 +193,15 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the Boolean equivalent value for the given key with a given default alternative.
+     * Gets the Boolean equivalent of value for the given key with a given default alternative.
+     * Returns true if the value is already a Boolean.
+     * Otherwise if the value is a String, Boolean.parseBoolean() is used (case-insensitive)
+     * If the value is null or the given key doesn't exist the default value is returned.
      * @param key
      * @param defaultValue A Boolean to return if the keys value is null.
-     * @return The keys value parsed with Boolean.parseBoolean().
+     * @return The key's value parsed with Boolean.parseBoolean().
      * Otherwise if the key's value is null defaultValue will be returned.
-     * @throws ConvirganceException When the key or key's value is not null, Boolean or String.
+     * @throws ConvirganceException When the key's value is not of type null, Boolean or String.
      */
     public boolean getBoolean(String key, boolean defaultValue) throws ConvirganceException
     {
