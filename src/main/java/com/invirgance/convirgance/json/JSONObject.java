@@ -179,7 +179,7 @@ public class JSONObject implements Map<String, Object>
      * Otherwise if the value is a String, Boolean.parseBoolean() is used (case-insensitive)
      * @param key A key.
      * @return The value parsed to a Boolean.
-     * @throws ConvirganceException When the value is not of type Boolean or String or is null.
+     * @throws ConvirganceException When the key doesn't exist or key's value is not of type Boolean or String or is null.
      */
     public boolean getBoolean(String key) throws ConvirganceException
     {
@@ -198,7 +198,7 @@ public class JSONObject implements Map<String, Object>
      * @param defaultValue A Boolean to return if the keys value is null.
      * @return The keys value parsed with Boolean.parseBoolean().
      * Otherwise if the key's value is null defaultValue will be returned.
-     * @throws ConvirganceException When the key's value is not null, Boolean or String.
+     * @throws ConvirganceException When the key or key's value is not null, Boolean or String.
      */
     public boolean getBoolean(String key, boolean defaultValue) throws ConvirganceException
     {
@@ -217,7 +217,7 @@ public class JSONObject implements Map<String, Object>
      * If the key's value is a String we pass the toString() of value to Double.parseDouble() 
      * @param key The key whose associated value is to be retrieved.
      * @return The key's value or a String coerced into a Double.
-     * @throws ConvirganceException When the key's value is null, or its type cannot be coerced to a Double.
+     * @throws ConvirganceException When the key or key's value is null, or its type cannot be coerced to a Double.
      */
     public double getDouble(String key) throws ConvirganceException
     {
@@ -233,10 +233,13 @@ public class JSONObject implements Map<String, Object>
     /**
      * Gets the value associated with the specified key as a Double returning the 
      * provided default if the value is null.
+     * If the key's value is a Double its returned.
+     * If the key's value is a String we pass the toString() of value to Double.parseDouble() 
+     * Otherwise if the key's value was null, defaultValue is returned.
      * @param key The key whose associated value is to be retrieved.
      * @param defaultValue The default Double value to return if the key's value is null.
-     * @return The key's value parsed to Double, or defaultValue if value is null.
-     * @throws ConvirganceException When the keys value cannot be converted to a Double.
+     * @return The key's value parsed to Double, or defaultValue if value or key is null.
+     * @throws ConvirganceException When the key's value cannot be converted to a Double.
      */
     public double getDouble(String key, double defaultValue) throws ConvirganceException
     {
