@@ -178,7 +178,9 @@ public class JSONObject implements Map<String, Object>
     /**
      * Attempts to coerce the key's value to a Boolean. 
      * Returns true if the value is already a Boolean.
-     * Otherwise if the value is a String, Boolean.parseBoolean() is used (case-insensitive)
+     * For String values, uses Boolean.parseBoolean() which:
+     *   - Returns true only if the string equals "true" (case-insensitive)
+     *   - Returns false for all other string values including "false", "yes", "no", "1", "0"
      * @param key A key.
      * @return The value parsed to a Boolean.
      * @throws ConvirganceException When the key doesn't exist or key's value is not of type Boolean, String or is null.
