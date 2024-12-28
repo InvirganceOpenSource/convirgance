@@ -160,9 +160,18 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Gets the Boolean value for the data at given index.
      *
-     * @param index
-     * @return
+     * Supported types:
+     *
+     * - Boolean
+     *
+     * - String that is then parsed using Boolean.parseBoolean
+     *
+     * @param index The array index.
+     * @return the indexes value as a Boolean.
+     * @throw ConvirganceException When the indexes value cannot be converted
+     * into a Boolean. Or when the indexes value is null.
      */
     public boolean getBoolean(int index)
     {
