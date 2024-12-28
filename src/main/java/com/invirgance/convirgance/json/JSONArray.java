@@ -304,10 +304,14 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Gets the JSONObject at the specified index, returning a default value if
+     * null.
      *
-     * @param index
-     * @param defaultValue
-     * @return
+     * @param index Position in this array to retrieve the value from.
+     * @param defaultValue The value to return if the array element is null.
+     * @return The JSONObject at the given index, or defaultValue if the value
+     * is null.
+     * @throws ConvirganceException If the value exists but is not a JSONObject.
      */
     public JSONObject getJSONObject(int index, JSONObject defaultValue)
     {
