@@ -54,7 +54,7 @@ public class JSONArray<T> implements List<T>
      * Creates a JSONArray by parsing a JSON string.
      *
      * @param json The JSON string to parse, must represent a valid JSON array.
-     * @throw ConvirganceException If the JSON string is invalid or cannot be
+     * @throws ConvirganceException If the JSON string is invalid or cannot be
      * parsed.
      */
     public JSONArray(String json)
@@ -167,7 +167,7 @@ public class JSONArray<T> implements List<T>
      *
      * @param index The array index.
      * @return the indexes value as a Boolean.
-     * @throw ConvirganceException When the indexes value cannot be converted
+     * @throws ConvirganceException When the indexes value cannot be converted
      * into a Boolean. Or when the index's value is null.
      */
     public boolean getBoolean(int index)
@@ -194,7 +194,7 @@ public class JSONArray<T> implements List<T>
      * @param index The array index.
      * @param defaultValue The default Boolean value to return.
      * @return the indexes value as a Boolean.
-     * @throw ConvirganceException When the indexes value cannot be converted
+     * @throws ConvirganceException When the indexes value cannot be converted
      * into a Boolean.
      */
     public boolean getBoolean(int index, boolean defaultValue)
@@ -251,7 +251,7 @@ public class JSONArray<T> implements List<T>
      *
      * @param index Position in this array to retrieve the value from.
      * @return The JSONObject at the given index, or null if the value is null.
-     * @throw ConvirganceException When the index's value exists but is not a
+     * @throws ConvirganceException When the index's value exists but is not a
      * JSONObject.
      */
     public JSONObject getJSONObject(int index)
