@@ -350,10 +350,12 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Gets the string representation of the value at the specified index.
      *
-     * @param index
-     * @param defaultValue
-     * @return
+     * @param index Position in this array to retrieve the value from.
+     * @param defaultValue The string to return if the array element is null.
+     * @return The value's string representation, or defaultValue if the value
+     * is null.
      */
     public Object getString(int index, String defaultValue)
     {
