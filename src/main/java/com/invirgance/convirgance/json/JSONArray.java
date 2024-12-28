@@ -171,7 +171,7 @@ public class JSONArray<T> implements List<T>
      * @param index The array index.
      * @return the indexes value as a Boolean.
      * @throw ConvirganceException When the indexes value cannot be converted
-     * into a Boolean. Or when the indexes value is null.
+     * into a Boolean. Or when the index's value is null.
      */
     public boolean getBoolean(int index)
     {
