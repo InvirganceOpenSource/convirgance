@@ -222,6 +222,7 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
+    
     /**
      * Gets the JSONArray at the given index. Returns the provided default if
      * the index's value is null.
@@ -242,6 +243,7 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
+    
     /**
      * Gets the JSONObject at the given index.
      *
@@ -259,6 +261,7 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
+    
     /**
      * Gets the JSONObject at the specified index, returning a default value if
      * null.
@@ -278,6 +281,7 @@ public class JSONArray<T> implements List<T>
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
+    
     /**
      * Gets the string value for the specified index. If the index has no value
      * null is returned.
@@ -294,6 +298,7 @@ public class JSONArray<T> implements List<T>
         
         return value.toString();
     }
+    
     /**
      * Gets the string representation of the value at the specified index.
      *
@@ -368,6 +373,7 @@ public class JSONArray<T> implements List<T>
         }
         catch(IOException e) { throw new ConvirganceException(e); }
     }
+    
     /**
      * Converts this JSONArray to a formatted JSON string with indentation.
      *
