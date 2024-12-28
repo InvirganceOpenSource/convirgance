@@ -280,9 +280,12 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Gets the JSONObject at the given index.
      *
-     * @param index
-     * @return
+     * @param index The index.
+     * @return The JSONObject at the given index, or null if the value is null.
+     * @throw ConvirganceException When the index's value exists but is not a
+     * JSONObject.
      */
     public JSONObject getJSONObject(int index)
     {
