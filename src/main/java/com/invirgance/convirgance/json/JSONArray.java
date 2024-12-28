@@ -369,9 +369,11 @@ public class JSONArray<T> implements List<T>
         catch(IOException e) { throw new ConvirganceException(e); }
     }
     /**
-     * 
-     * @param indent
-     * @return 
+     * Converts this JSONArray to a formatted JSON string with indentation.
+     *
+     * @param indent The indentation to use for the JSONWriter.
+     * @return A formatted JSON string representation of this array.
+     * @throws ConvirganceException If there is an error during JSON writing.
      */
     public String toString(int indent)
     {
