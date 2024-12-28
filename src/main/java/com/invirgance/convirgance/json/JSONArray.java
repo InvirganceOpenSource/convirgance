@@ -180,10 +180,20 @@ public class JSONArray<T> implements List<T>
     }
     
     /**
-     * 
-     * @param index
-     * @param defaultValue
-     * @return 
+     * Gets the Boolean value for the data at given index. Returns the provided
+     * default if the index's value is null.
+     *
+     * Supported types:
+     *
+     * - Boolean
+     *
+     * - String that is then parsed using Boolean.parseBoolean
+     *
+     * @param index The array index.
+     * @param defaultValue The default Boolean value to return.
+     * @return the indexes value as a Boolean.
+     * @throw ConvirganceException When the indexes value cannot be converted
+     * into a Boolean.
      */
     public boolean getBoolean(int index, boolean defaultValue)
     {
