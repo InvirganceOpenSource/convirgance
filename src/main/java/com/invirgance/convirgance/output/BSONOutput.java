@@ -48,8 +48,9 @@ public class BSONOutput implements Output
     }
 
     /**
+     * Creates a new BSONOutput with optional compression support.
      *
-     * @param compressed
+     * @param compressed If compression is enabled.
      */
     public BSONOutput(boolean compressed)
     {
