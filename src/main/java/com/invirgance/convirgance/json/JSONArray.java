@@ -330,9 +330,12 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Gets the string value for the specified index. If the index has no value
+     * null is returned.
      *
-     * @param index
-     * @return
+     * @param index The index.
+     * @return null if the index value is null, otherwise the values toString()
+     * representation.
      */
     public Object getString(int index)
     {
