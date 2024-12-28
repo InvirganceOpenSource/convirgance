@@ -431,9 +431,11 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Converts this JSONArray to a formatted JSON string with indentation.
      *
-     * @param indent
-     * @return
+     * @param indent The indentation to use for the JSONWriter.
+     * @return A formatted JSON string representation of this array.
+     * @throws ConvirganceException If there is an error during JSON writing.
      */
     public String toString(int indent)
     {
