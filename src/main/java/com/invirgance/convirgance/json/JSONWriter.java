@@ -347,10 +347,12 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
+     * Writes a value to JSON based on its type.
      *
-     * @param object
-     * @return
-     * @throws IOException
+     * @param object The value to write (supports null, Boolean, String, Number,
+     * JSONObject, JSONArray)
+     * @return This JSONWriter.
+     * @throws IOException When the given object's type is unsupported.
      */
     public JSONWriter write(Object object) throws IOException
     {
