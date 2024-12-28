@@ -207,9 +207,11 @@ public class JSONArray<T> implements List<T>
     }
     
     /**
-     * 
-     * @param index
-     * @return 
+     * Gets the JSONArray at the specified index.
+     *
+     * @param index The index.
+     * @return The JSONArray at the given index, or null if the value is null.
+     * @throws ConvirganceException If the value exists but is not a JSONArray.
      */
     public JSONArray getJSONArray(int index)
     {
