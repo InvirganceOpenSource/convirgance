@@ -356,34 +356,13 @@ public class JSONWriter implements AutoCloseable
      */
     public JSONWriter write(Object object) throws IOException
     {
-        if (object == null)
-        {
-            return writeNull();
-        }
-        else if (object instanceof Boolean)
-        {
-            return write((boolean) object);
-        }
-        else if (object instanceof String)
-        {
-            return write((String) object);
-        }
-        else if (object instanceof Number)
-        {
-            return write((Number) object);
-        }
-        else if (object instanceof JSONObject)
-        {
-            return write((JSONObject) object);
-        }
-        else if (object instanceof JSONArray)
-        {
-            return write((JSONArray) object);
-        }
-        else
-        {
-            throw new IOException("Unrecognized object type " + object.getClass().getName());
-        }
+        if(object == null) return writeNull();
+        else if(object instanceof Boolean) return write((boolean)object);
+        else if(object instanceof String) return write((String)object);
+        else if(object instanceof Number) return write((Number)object);
+        else if(object instanceof JSONObject) return write((JSONObject)object);
+        else if(object instanceof JSONArray) return write((JSONArray)object);
+        else throw new IOException("Unrecognized object type " + object.getClass().getName());
     }
 
     @Override
