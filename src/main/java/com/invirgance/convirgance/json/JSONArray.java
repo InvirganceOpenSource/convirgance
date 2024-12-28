@@ -51,8 +51,11 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
+     * Creates a JSONArray by parsing a JSON string.
      *
-     * @param json
+     * @param json The JSON string to parse, must represent a valid JSON array.
+     * @throw ConvirganceException If the JSON string is invalid or cannot be
+     * parsed.
      */
     public JSONArray(String json)
     {
