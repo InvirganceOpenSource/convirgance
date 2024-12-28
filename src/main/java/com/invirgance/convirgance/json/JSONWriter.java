@@ -26,7 +26,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 /**
- *
+ * Converts data into JSON format and writes it to an output stream.
  *
  * @author jbanes
  */
