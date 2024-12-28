@@ -58,8 +58,9 @@ public class BSONOutput implements Output
     }
 
     /**
+     * Returns whether BSON compression is enabled.
      *
-     * @return
+     * @return True if compression is enabled, false otherwise
      */
     public boolean isCompressed()
     {
@@ -67,8 +68,9 @@ public class BSONOutput implements Output
     }
 
     /**
+     * Enables or disables BSON compression.
      *
-     * @param compressed
+     * @param compressed True to enable compression, false to disable it.
      */
     public void setCompressed(boolean compressed)
     {
