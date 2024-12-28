@@ -1,22 +1,22 @@
 /*
  * Copyright 2024 INVIRGANCE LLC
 
-Permission is hereby granted, free of charge, to any person obtaining a copy 
-of this software and associated documentation files (the “Software”), to deal 
-in the Software without restriction, including without limitation the rights to 
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-of the Software, and to permit persons to whom the Software is furnished to do 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all 
+The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 package com.invirgance.convirgance.json;
@@ -32,25 +32,27 @@ import java.util.*;
  */
 public class JSONArray<T> implements List<T>
 {
+
     private final ArrayList<T> list;
 
     public JSONArray()
     {
         this.list = new ArrayList<>();
     }
-    
+
     /**
-     * 
-     * @param list 
+     * Creates a JSONArray from a List with a shallow copy of its elements.
+     *
+     * @param list The source List to copy elements from.
      */
     public JSONArray(List<T> list)
     {
         this.list = new ArrayList<>(list);
     }
-    
+
     /**
-     * 
-     * @param json 
+     *
+     * @param json
      */
     public JSONArray(String json)
     {
@@ -58,9 +60,12 @@ public class JSONArray<T> implements List<T>
         {
             this.list = new JSONParser(json).parseArray().list;
         }
-        catch(IOException e) { throw new ConvirganceException(e); }
+        catch (IOException e)
+        {
+            throw new ConvirganceException(e);
+        }
     }
-    
+
     @Override
     public int size()
     {
@@ -150,123 +155,176 @@ public class JSONArray<T> implements List<T>
     {
         return this.list.get(index);
     }
-    
+
     /**
-     * 
+     *
      * @param index
-     * @return 
+     * @return
      */
     public boolean getBoolean(int index)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) throw new ConvirganceException("Index " + index + " is null and therefore can't be converted to a boolean");
-        if(value instanceof Boolean) return ((Boolean)value);
-        if(value instanceof String) return Boolean.parseBoolean(value.toString());
-        
+
+        if (value == null)
+        {
+            throw new ConvirganceException("Index " + index + " is null and therefore can't be converted to a boolean");
+        }
+        if (value instanceof Boolean)
+        {
+            return ((Boolean) value);
+        }
+        if (value instanceof String)
+        {
+            return Boolean.parseBoolean(value.toString());
+        }
+
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a boolean");
     }
-    
+
     /**
-     * 
+     *
      * @param index
      * @param defaultValue
-     * @return 
+     * @return
      */
     public boolean getBoolean(int index, boolean defaultValue)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return defaultValue;
-        if(value instanceof Boolean) return ((Boolean)value);
-        if(value instanceof String) return Boolean.parseBoolean(value.toString());
-        
+
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        if (value instanceof Boolean)
+        {
+            return ((Boolean) value);
+        }
+        if (value instanceof String)
+        {
+            return Boolean.parseBoolean(value.toString());
+        }
+
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a boolean");
     }
-    
+
     /**
-     * 
+     *
      * @param index
-     * @return 
+     * @return
      */
     public JSONArray getJSONArray(int index)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return null;
-        if(value instanceof JSONArray) return ((JSONArray)value);
-        
+
+        if (value == null)
+        {
+            return null;
+        }
+        if (value instanceof JSONArray)
+        {
+            return ((JSONArray) value);
+        }
+
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
+
     /**
-     * 
+     *
      * @param index
      * @param defaultValue
-     * @return 
+     * @return
      */
     public JSONArray getJSONArray(int index, JSONArray defaultValue)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return defaultValue;
-        if(value instanceof JSONArray) return ((JSONArray)value);
-        
+
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        if (value instanceof JSONArray)
+        {
+            return ((JSONArray) value);
+        }
+
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
+
     /**
-     * 
+     *
      * @param index
-     * @return 
+     * @return
      */
     public JSONObject getJSONObject(int index)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return null;
-        if(value instanceof JSONObject) return ((JSONObject)value);
-        
+
+        if (value == null)
+        {
+            return null;
+        }
+        if (value instanceof JSONObject)
+        {
+            return ((JSONObject) value);
+        }
+
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
+
     /**
-     * 
+     *
      * @param index
      * @param defaultValue
-     * @return 
+     * @return
      */
     public JSONObject getJSONObject(int index, JSONObject defaultValue)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return defaultValue;
-        if(value instanceof JSONObject) return ((JSONObject)value);
-        
+
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        if (value instanceof JSONObject)
+        {
+            return ((JSONObject) value);
+        }
+
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
+
     /**
-     * 
+     *
      * @param index
-     * @return 
+     * @return
      */
     public Object getString(int index)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return null;
-        
+
+        if (value == null)
+        {
+            return null;
+        }
+
         return value.toString();
     }
+
     /**
-     * 
+     *
      * @param index
      * @param defaultValue
-     * @return 
+     * @return
      */
     public Object getString(int index, String defaultValue)
     {
         Object value = this.list.get(index);
-        
-        if(value == null) return defaultValue;
-        
+
+        if (value == null)
+        {
+            return defaultValue;
+        }
+
         return value.toString();
     }
 
@@ -317,7 +375,7 @@ public class JSONArray<T> implements List<T>
     {
         return new JSONArray<>(this.list.subList(fromIndex, toIndex));
     }
-    
+
     @Override
     public String toString()
     {
@@ -325,12 +383,16 @@ public class JSONArray<T> implements List<T>
         {
             return new JSONWriter().write(this).toString();
         }
-        catch(IOException e) { throw new ConvirganceException(e); }
+        catch (IOException e)
+        {
+            throw new ConvirganceException(e);
+        }
     }
+
     /**
-     * 
+     *
      * @param indent
-     * @return 
+     * @return
      */
     public String toString(int indent)
     {
@@ -338,9 +400,12 @@ public class JSONArray<T> implements List<T>
         {
             return new JSONWriter(indent).write(this).toString();
         }
-        catch(IOException e) { throw new ConvirganceException(e); }
+        catch (IOException e)
+        {
+            throw new ConvirganceException(e);
+        }
     }
-    
+
     @Override
     public boolean equals(Object obj)
     {
@@ -349,45 +414,72 @@ public class JSONArray<T> implements List<T>
         Iterator iteratorRight;
         Object left;
         Object right;
-        
-        if(obj == this) return true;
-        if(!(obj instanceof JSONArray)) return false;
-        
-        other = (JSONArray)obj;
-        
-        if(other.size() != size()) return false;
-        
+
+        if (obj == this)
+        {
+            return true;
+        }
+        if (!(obj instanceof JSONArray))
+        {
+            return false;
+        }
+
+        other = (JSONArray) obj;
+
+        if (other.size() != size())
+        {
+            return false;
+        }
+
         iteratorLeft = iterator();
         iteratorRight = other.iterator();
-        
-        while(iteratorLeft.hasNext())
+
+        while (iteratorLeft.hasNext())
         {
             left = iteratorLeft.next();
             right = iteratorRight.next();
-            
-            if(left == null && right == null) continue;
-            if(left == null) return false;
-            if(right == null) return false;
 
-            if(!left.getClass().equals(right.getClass())) return false;
-            if(!left.equals(right)) return false;
+            if (left == null && right == null)
+            {
+                continue;
+            }
+            if (left == null)
+            {
+                return false;
+            }
+            if (right == null)
+            {
+                return false;
+            }
+
+            if (!left.getClass().equals(right.getClass()))
+            {
+                return false;
+            }
+            if (!left.equals(right))
+            {
+                return false;
+            }
         }
-        
+
         return true;
     }
-    
+
     @Override
     public int hashCode()
     {
         int hash = 0xC011EC7;
-        
-        for(Object value : this)
+
+        for (Object value : this)
         {
-            if(value == null) continue;
-            
+            if (value == null)
+            {
+                continue;
+            }
+
             hash += value.hashCode();
         }
-        
+
         return hash + size();
     }
 }
