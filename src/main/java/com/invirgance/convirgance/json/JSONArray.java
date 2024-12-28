@@ -223,10 +223,15 @@ public class JSONArray<T> implements List<T>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONArray");
     }
     /**
-     * 
-     * @param index
-     * @param defaultValue
-     * @return 
+     * Gets the JSONArray at the given index. Returns the provided default if
+     * the index's value is null.
+     *
+     * @param index The index.
+     * @param defaultValue A JSONArray to return when index's value is null.
+     * @return The provided default when index's value is null, otherwise
+     * returns the index's value.
+     * @throws ConvirganceException If the value exists but is not a JSONArray.
+     *
      */
     public JSONArray getJSONArray(int index, JSONArray defaultValue)
     {
