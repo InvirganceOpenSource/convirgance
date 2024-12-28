@@ -279,9 +279,12 @@ public class JSONArray<T> implements List<T>
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a JSONObject");
     }
     /**
-     * 
-     * @param index
-     * @return 
+     * Gets the string value for the specified index. If the index has no value
+     * null is returned.
+     *
+     * @param index The index.
+     * @return null if the index value is null, otherwise the values toString()
+     * representation.
      */
     public Object getString(int index)
     {
