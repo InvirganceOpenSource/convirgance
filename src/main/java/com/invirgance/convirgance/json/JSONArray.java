@@ -26,7 +26,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Used to convert JSON into an List of key:value pairs. 
+ * A List implementation to work JSON data as an array.
+ * 
  * @author jbanes
  * @param <T> Optional typing to apply to the array
  */
