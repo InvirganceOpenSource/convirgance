@@ -75,8 +75,8 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * 
-     * @return 
+     * Gets the current character used when delimiting content.
+     * @return The delimiting character in use.
      */
     public char getDelimiter()
     {
@@ -84,8 +84,8 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * 
-     * @param delimiter 
+     * Sets the character to use when delimiting.
+     * @param delimiter The character to delimit on.
      */
     public void setDelimiter(char delimiter)
     {
@@ -93,8 +93,8 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * 
-     * @return 
+     * Gets the current text encoding.
+     * @return String representation of the encoding.
      */
     public String getEncoding()
     {
@@ -102,8 +102,8 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * 
-     * @param encoding 
+     * Set the text encoding.
+     * @param encoding Encoding type.
      */
     public void setEncoding(String encoding)
     {
@@ -131,22 +131,12 @@ public class DelimitedOutput implements Output
         private PrintWriter out;
         private String[] columns;
 
-        /**
-         * 
-         * @param target
-         * @param columns 
-         */
         public DelimitedOutputWriter(Target target, String[] columns)
         {
             this.target = target;
             this.columns = columns;
         }
     
-        /**
-         * 
-         * @param record
-         * @return 
-         */
         private String[] detectColumns(JSONObject record)
         {
             Set<String> keys = record.keySet();
@@ -154,11 +144,6 @@ public class DelimitedOutput implements Output
             return keys.toArray(String[]::new);
         }
     
-        /**
-         * 
-         * @param columns
-         * @return 
-         */
         private String stringify(String[] columns)
         {
             StringBuffer buffer = new StringBuffer();
@@ -173,11 +158,6 @@ public class DelimitedOutput implements Output
             return buffer.toString();
         }
     
-        /**
-         * 
-         * @param record
-         * @return 
-         */
         private String stringify(JSONObject record)
         {
             StringBuffer buffer = new StringBuffer();
