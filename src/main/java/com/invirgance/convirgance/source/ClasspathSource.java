@@ -24,7 +24,8 @@ package com.invirgance.convirgance.source;
 import java.io.InputStream;
 
 /**
- *
+ * A Source implementation that loads resources from the classpath.
+ * Resources are loaded relative to a specified class or the current class if none provided.
  * @author jbanes
  */
 public class ClasspathSource implements Source
@@ -43,7 +44,7 @@ public class ClasspathSource implements Source
 
     /**
      * Creates a ClasspathSource with the provided Class, along with the provided file.
-     * @param clazz The class, if the class is null ClasspathSource will be used.
+     * @param clazz The reference class for loading resources,, if the class is null ClasspathSource will be used.
      * @param path A path to a file.
      */
     public ClasspathSource(Class clazz, String path)
