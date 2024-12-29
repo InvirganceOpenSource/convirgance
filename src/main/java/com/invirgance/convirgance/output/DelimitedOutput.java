@@ -46,8 +46,8 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * 
-     * @param delimiter 
+     * Creates a new DelimitedOutput using the provided character to delimit content.
+     * @param delimiter The delimiting character.
      */
     public DelimitedOutput(char delimiter)
     {
