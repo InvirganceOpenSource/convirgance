@@ -32,11 +32,20 @@ public class ClasspathSource implements Source
     private Class clazz;
     private String path;
 
+    /**
+     * Creates a ClasspathSource with the provided path.
+     * @param path A path to a file.
+     */
     public ClasspathSource(String path)
     {
         this(null, path);
     }
 
+    /**
+     * Creates a ClasspathSource with the provided Class, along with the provided file.
+     * @param clazz The class, if null the class is set to ClasspathSource.
+     * @param path A path to a file.
+     */
     public ClasspathSource(Class clazz, String path)
     {
         this.clazz = clazz == null ? getClass() : clazz;
