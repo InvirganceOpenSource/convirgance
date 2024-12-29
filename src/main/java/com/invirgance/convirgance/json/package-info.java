@@ -24,15 +24,6 @@
 
 /**
 * Provides classes for reading, writing, and manipulating JSON data.
-* <p>
-* Key classes include:
-* <ul>
-*   <li>{@link JSONArray} - A List implementation for working with JSON arrays</li>
-*   <li>{@link JSONObject} - A Map implementation for working with JSON objects</li>
-*   <li>{@link JSONParser} - Parses JSON text into objects and arrays</li>
-*   <li>{@link JSONWriter} - Writes JSON objects and arrays to an output stream</li>
-* </ul>
-* <p>
 * This package supports standard JSON data types and formatting according to the
 * JSON specification.
 */
