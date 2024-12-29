@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * A Source implementation that provides stream access to a file.
+ * Reads stream of data from a file.
  * @author jbanes
  */
 public class FileSource implements Source
