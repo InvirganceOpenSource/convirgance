@@ -61,6 +61,6 @@ public class InputStreamSource implements Source
     @Override
     public boolean isUsed()
     {
-        return true;
+        return this.used;
     }
 }

@@ -393,10 +393,15 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
-     * Parses a JSON array from the current reader position.
-     *
-     * @return A JSONArray based on the array encountered by the reader's
-     * stream.
+     * Parses a JSON array from the current reader position. Looping through any
+     * values in the array and parsing them to their relevant types.
+     * Ex:
+     *  '[
+     *      "tag1", -> parseString()
+     *      2 -> parseInt()
+     * ]'
+     * 
+     * @return A JSONArray containing parsed values (if any).
      * @throws IOException If JSON is malformed or stream ends unexpectedly.
      */
     public JSONArray parseArray() throws IOException
