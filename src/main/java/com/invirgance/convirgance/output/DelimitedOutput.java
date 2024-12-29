@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 import java.util.Set;
 
 /**
- *
+ * Used to write delimited content to a Target.
  * @author jbanes
  */
 public class DelimitedOutput implements Output
