@@ -37,6 +37,9 @@ public class DelimitedOutput implements Output
     private char delimiter;
     private String encoding = "UTF-8";
     
+    /**
+     * Creates a new DelimitedOutput, delimiting on '|'.
+     */
     public DelimitedOutput()
     {
         this(null, '|');
