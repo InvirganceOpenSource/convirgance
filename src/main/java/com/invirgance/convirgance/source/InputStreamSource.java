@@ -25,7 +25,7 @@ import com.invirgance.convirgance.ConvirganceException;
 import java.io.InputStream;
 
 /**
- *
+ * A Source implementation that wraps an InputStream and provides one-time access to it.
  * @author jbanes
  */
 public class InputStreamSource implements Source
@@ -33,6 +33,10 @@ public class InputStreamSource implements Source
     private InputStream in;
     private boolean used;
 
+    /**
+     * Creates a InputStreamSource based on the provided InputStream.
+     * @param in The InputStream to use.
+     */
     public InputStreamSource(InputStream in)
     {
         this.in = in;
