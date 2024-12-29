@@ -26,13 +26,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
- *
+ * A Target implementation that provides access to byte array output.
  * @author jbanes
  */
 public class ByteArrayTarget implements Target
 {
     private ByteArrayOutputStream out;
     
+    /**
+     * Gets the current output stream contents as a byte array.
+     * @return The output stream as a byte array. 
+     */
     public byte[] getBytes()
     {
         return out.toByteArray();
