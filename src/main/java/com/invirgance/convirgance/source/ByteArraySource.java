@@ -25,7 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
- * 
+ * A Source implementation that provides stream access to a byte array.
  * @author jbanes
  */
 public class ByteArraySource implements Source
@@ -34,7 +34,7 @@ public class ByteArraySource implements Source
 
     /**
      * Creates a ByteArraySource with the provided buffer.
-     * @param buffer An array of byte.
+     * @param buffer An array of bytes to read from.
      */
     public ByteArraySource(byte[] buffer)
     {
