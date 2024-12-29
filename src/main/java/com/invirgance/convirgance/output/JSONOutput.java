@@ -28,7 +28,7 @@ import com.invirgance.convirgance.target.Target;
 import java.io.*;
 
 /**
- *
+ * An Output implementation that writes JSON arrays.
  * @author jbanes
  */
 public class JSONOutput implements Output

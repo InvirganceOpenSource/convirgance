@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
+ * Used to convert JSON into an List of key:value pairs. 
  * @author jbanes
  * @param <T> Optional typing to apply to the array
  */
@@ -35,6 +35,9 @@ public class JSONArray<T> implements List<T>
 
     private final ArrayList<T> list;
 
+    /**
+     * Creates a new empty JSONArray.
+     */
     public JSONArray()
     {
         this.list = new ArrayList<>();
