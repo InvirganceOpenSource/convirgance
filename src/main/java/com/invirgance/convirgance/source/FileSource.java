@@ -28,18 +28,26 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * A Source implementation that provides stream access to a file.
  * @author jbanes
  */
 public class FileSource implements Source
 {
     private final File file;
 
+    /**
+     * Creates a new FileSource based on the provided File.
+     * @param file The file to read from.
+     */
     public FileSource(File file)
     {
         this.file = file;
     }
 
+    /**
+     * Returns the current file.
+     * @return The file in use by this object.
+     */
     public File getFile()
     {
         return file;
