@@ -26,7 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
- * A Target implementation that provides access to byte array output.
+ * A Target implementation that provides single use to a byte array output.
  * @author jbanes
  */
 public class ByteArrayTarget implements Target

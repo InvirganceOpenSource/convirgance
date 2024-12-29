@@ -24,7 +24,7 @@ package com.invirgance.convirgance.target;
 import java.io.OutputStream;
 
 /**
- *
+ * A Target implementation that manages single-use output stream access.
  * @author jbanes
  */
 public class OutputStreamTarget implements Target
@@ -32,6 +32,10 @@ public class OutputStreamTarget implements Target
     private OutputStream out;
     private boolean used;
 
+    /**
+     * Creates a OutputStreamTarget from a provided OutputStream.
+     * @param out The OutputStream to use.
+     */
     public OutputStreamTarget(OutputStream out)
     {
         this.out = out;
