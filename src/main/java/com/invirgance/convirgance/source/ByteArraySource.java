@@ -25,13 +25,17 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
- *
+ * 
  * @author jbanes
  */
 public class ByteArraySource implements Source
 {
     private byte[] buffer;
 
+    /**
+     * Creates a ByteArraySource with the provided buffer.
+     * @param buffer An array of byte.
+     */
     public ByteArraySource(byte[] buffer)
     {
         this.buffer = buffer;
