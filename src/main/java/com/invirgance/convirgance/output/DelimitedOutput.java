@@ -55,8 +55,8 @@ public class DelimitedOutput implements Output
     }
     
     /**
-     * 
-     * @param columns 
+     * Creates a DelimitedOuput with specified columns.
+     * @param columns A String array of column names.
      */
     public DelimitedOutput(String[] columns)
     {
@@ -64,9 +64,9 @@ public class DelimitedOutput implements Output
     }
     
     /**
-     * 
-     * @param columns
-     * @param delimiter 
+     * Creates a DelimitedOuput with specified columns and delimiter.
+     * @param columns A String array of column names.
+     * @param delimiter The character to delimit on.
      */
     public DelimitedOutput(String[] columns, char delimiter)
     {
