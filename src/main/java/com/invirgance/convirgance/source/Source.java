@@ -24,7 +24,7 @@ package com.invirgance.convirgance.source;
 import java.io.InputStream;
 
 /**
- *
+ * An interface for providing input stream access.
  * @author jbanes
  */
 public interface Source
