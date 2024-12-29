@@ -28,18 +28,26 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- *
+ * A Target implementation that provides access to file output.
  * @author jbanes
  */
 public class FileTarget implements Target
 {
     private File file;
 
+    /**
+     * Creates a FileTarget based on the provided File.
+     * @param file The File source to use.
+     */
     public FileTarget(File file)
     {
         this.file = file;
     }
 
+    /**
+     * Returns the file.
+     * @return The targets file.
+     */
     public File getFile()
     {
         return file;
