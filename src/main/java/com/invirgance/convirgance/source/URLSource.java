@@ -26,7 +26,6 @@ package com.invirgance.convirgance.source;
 import com.invirgance.convirgance.ConvirganceException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -39,8 +38,7 @@ public class URLSource implements Source
 {
 
     private final URL url;
-    private InputStream currentStream;
-
+    
     /**
      * The URL to source data from.
      *
@@ -59,12 +57,7 @@ public class URLSource implements Source
         try
         {
             connection = url.openConnection();
-            currentStream = connection.getInputStream();
-            return currentStream;
-        }
-        catch (MalformedURLException ex)
-        {
-            throw new ConvirganceException(ex);
+            return connection.getInputStream();
         }
         catch (IOException ex)
         {
