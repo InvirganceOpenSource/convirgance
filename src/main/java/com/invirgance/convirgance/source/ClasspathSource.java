@@ -44,7 +44,7 @@ public class ClasspathSource implements Source
 
     /**
      * Creates a ClasspathSource with the provided Class, along with the provided file.
-     * @param clazz The reference class for loading resources,, if the class is null ClasspathSource will be used.
+     * @param clazz The reference class for loading resources, if the class is null ClasspathSource will be used.
      * @param path A path to a file.
      */
     public ClasspathSource(Class clazz, String path)
