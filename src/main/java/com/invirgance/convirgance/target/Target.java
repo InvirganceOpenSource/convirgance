@@ -24,7 +24,9 @@ package com.invirgance.convirgance.target;
 import java.io.OutputStream;
 
 /**
- * An interface for providing output stream access.
+ * An interface providing output stream access. 
+ * Provides a way to safely write out content to a Object implementing Target.
+ * 
  * @author jbanes
  */
 public interface Target
