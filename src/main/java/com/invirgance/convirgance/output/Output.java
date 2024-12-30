@@ -26,7 +26,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 
 /**
- * Defines a format-specific output factory that creates cursors for writing JSON data
+ * Defines a format-specific output factory that utilizes OutputCursors for writing JSON data
  * to targets. 
  * @author jbanes
  */
