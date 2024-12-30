@@ -26,7 +26,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
- * A Target implementation that provides single use to a byte array output.
+ * A temporary, single-use byte array buffer for data processing.
+ * Once the output stream is retrieved, it cannot be accessed again, 
+ * ensuring content is not overwritten and remains unchanged.
+ * 
  * @author jbanes
  */
 public class ByteArrayTarget implements Target

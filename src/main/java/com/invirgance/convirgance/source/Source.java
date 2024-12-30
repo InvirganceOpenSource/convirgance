@@ -24,8 +24,11 @@ package com.invirgance.convirgance.source;
 import java.io.InputStream;
 
 /**
- * An interface providing input stream access. 
- * Used to provide a secure way to receive content from a Object implementing Source.
+ * Used to provide a secure way to receive content from a InputStream. 
+ * Preventing: Rereading from a empty stream/source, IO/resource leaking. 
+ * 
+ * Used when needing safe, managed access to a input stream for file processing or
+ * network reads.
  * @author jbanes
  */
 public interface Source
