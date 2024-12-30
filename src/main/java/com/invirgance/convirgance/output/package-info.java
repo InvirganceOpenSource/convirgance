@@ -22,8 +22,6 @@
  * THE SOFTWARE.
  */
 
-
-
 /**
 * Provides classes for reliably handling writing JSON to various Output targets.
 * This package includes interfaces and implementations for different output formats and destinations.
