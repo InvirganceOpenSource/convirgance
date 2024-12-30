@@ -38,7 +38,7 @@ import java.net.URLConnection;
 public class URLSource implements Source
 {
 
-    private final java.net.URL url;
+    private final URL url;
     private InputStream currentStream;
 
     /**
