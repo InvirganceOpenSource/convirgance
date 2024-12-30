@@ -58,6 +58,7 @@ public class URLSource implements Source
         {
             connection = url.openConnection();
             return connection.getInputStream();
+            
         }
         catch (IOException ex)
         {
