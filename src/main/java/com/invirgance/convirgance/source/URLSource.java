@@ -35,7 +35,7 @@ import java.util.Base64;
  * Allows streaming in JSON from a URL
  * @author tadghh
  */
-public class URLPathSource implements Source
+public class URLSource implements Source
 {
     private final java.net.URI uri;
     private InputStream currentStream;
@@ -44,7 +44,7 @@ public class URLPathSource implements Source
      * The URL/URI to source JSON from, supporting base64 encoded data:application/json URIs
      * @param uri 
      */
-    public URLPathSource(URI uri)
+    public URLSource(URI uri)
     {
           this.uri = uri;
     }
