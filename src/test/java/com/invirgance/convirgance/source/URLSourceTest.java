@@ -26,7 +26,6 @@ package com.invirgance.convirgance.source;
 import com.invirgance.convirgance.input.JSONInput;
 import com.invirgance.convirgance.output.JSONOutput;
 import com.invirgance.convirgance.target.ByteArrayTarget;
-import com.invirgance.convirgance.target.FileTarget;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -55,11 +54,8 @@ public class URLSourceTest
     @Test
     public void testGetInputStream()
     {
-        System.out.println("getInputStream");
-//        src/test/resources/urlsource/getinputstream/customer.json
         File file = new File("src/test/resources/urlsource/getinputstream/customer.json");
 
-        FileTarget fTarget = new FileTarget(file);
         try
         {
             URL url = file.toURI().toURL();
