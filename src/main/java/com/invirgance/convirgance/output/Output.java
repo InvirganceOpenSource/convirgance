@@ -27,7 +27,7 @@ import com.invirgance.convirgance.target.Target;
 
 /**
  * Defines a format-specific output factory that utilizes OutputCursors for writing JSON data
- * to targets. 
+ * to targets. Ensuring all data is written to the provided target.
  * @author jbanes
  */
 public interface Output
