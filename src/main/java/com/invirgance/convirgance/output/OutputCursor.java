@@ -25,7 +25,10 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.Iterator;
 
 /**
- *
+ * Handles reliably writing out JSON records to an output destination. Supports writing
+ * both individual records and collections, with implementations managing the specific 
+ * details of the output destination (e.g. files, databases, network streams).
+ * 
  * @author jbanes
  */
 public interface OutputCursor extends AutoCloseable
