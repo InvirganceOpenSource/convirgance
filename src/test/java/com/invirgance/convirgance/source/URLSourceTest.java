@@ -23,17 +23,12 @@
  */
 package com.invirgance.convirgance.source;
 
-import com.invirgance.convirgance.input.JSONInput;
-import com.invirgance.convirgance.output.JSONOutput;
-import com.invirgance.convirgance.target.ByteArrayTarget;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -52,46 +47,46 @@ public class URLSourceTest
      * Test of getInputStream method, of class URLSource.
      */
     @Test
-    public void testGetInputStream()
+    public void testGetInputStream() throws Exception
     {
-        File file = new File("src/test/resources/urlsource/getinputstream/customer.json");
+        int c;
 
-        try
+        String expected = "This is a test";
+        StringBuffer buffer = new StringBuffer();
+        File file = new File("src/test/resources/urlsource/getinputstream/urlTestData.txt");
+        URL url = file.toURI().toURL();
+        URLSource source = new URLSource(url);
+
+        // These methods have not been overwritten.
+        assertTrue(source.isReusable());
+        assertFalse(source.isUsed());
+
+        try (InputStream in = source.getInputStream())
         {
-            URL url = file.toURI().toURL();
-           
-            URLSource instance = new URLSource(url);
-            
-            // These methods have not been overwritten.
-            assertTrue(instance.isReusable());
-            assertFalse(instance.isUsed());
-            
-            byte[] fileBytes = Files.readAllBytes(file.toPath());
-            // Load in comparison data
-            ByteArraySource target = new ByteArraySource(fileBytes);
-            
-            // Setup comparison targets
-            ByteArrayTarget targetURL = new ByteArrayTarget();
-            ByteArrayTarget targetTestByteSource = new ByteArrayTarget();
-            
-            // Our writer/output
-            JSONOutput out = new JSONOutput();
-            
-            out.write(targetTestByteSource, new JSONInput().read(target));
-            out.write(targetURL, new JSONInput().read(instance));
-       
-            assertArrayEquals(targetURL.getBytes(), targetTestByteSource.getBytes());
-            
-            //Content has been read. Ensure flags have not been flipped.
-            assertTrue(instance.isReusable());
-            assertFalse(instance.isUsed());
-            
+            while ((c = in.read()) >= 0)
+            {
+                buffer.append((char) c);
+            }
+
+            assertEquals(expected, buffer.toString());
         }
-        catch (IOException ex)
+
+        // Verify that the source can be reused
+        buffer.setLength(0);
+
+        try (InputStream in = source.getInputStream())
         {
-            fail("Test failed, missing customer.json in the URLSource test resource folder.");
-          
+            while ((c = in.read()) >= 0)
+            {
+                buffer.append((char) c);
+            }
+
+            assertEquals(expected, buffer.toString());
         }
+
+        //Content has been read. Ensure flags have not been flipped.
+        assertTrue(source.isReusable());
+        assertFalse(source.isUsed());
     }
 
 }
