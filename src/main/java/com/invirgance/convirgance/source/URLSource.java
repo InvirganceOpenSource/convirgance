@@ -27,7 +27,6 @@ import com.invirgance.convirgance.ConvirganceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Allows streaming in data from a URL.
@@ -52,12 +51,9 @@ public class URLSource implements Source
     @Override
     public InputStream getInputStream()
     {
-        URLConnection connection;
-        
         try
-        {
-            connection = url.openConnection();
-            return connection.getInputStream();
+        { 
+            return url.openConnection().getInputStream();
             
         }
         catch (IOException ex)
