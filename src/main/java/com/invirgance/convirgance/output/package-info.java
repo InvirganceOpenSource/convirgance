@@ -23,7 +23,7 @@
  */
 
 /**
-* Provides classes for reliably handling writing JSON to various Output targets.
+* Provides classes for reliably writing JSON to various Output targets.
 * This package includes interfaces and implementations for different output formats and destinations.
 * 
 * All implementations ensure proper resource management through AutoCloseable and handle 
