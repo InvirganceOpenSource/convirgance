@@ -27,52 +27,40 @@ import com.invirgance.convirgance.ConvirganceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
+import java.net.URL;
 import java.net.URLConnection;
-import java.util.Base64;
 
 /**
- * Allows streaming in JSON from a URL
+ * Allows streaming in data from a URL.
+ *
  * @author tadghh
  */
 public class URLSource implements Source
 {
-    private final java.net.URI uri;
+
+    private final java.net.URL url;
     private InputStream currentStream;
-    
+
     /**
-     * The URL/URI to source JSON from, supporting base64 encoded data:application/json URIs
-     * @param uri 
+     * The URL to source data from.
+     *
+     * @param url The URL pointing to some data.
      */
-    public URLSource(URI uri)
+    public URLSource(URL url)
     {
-          this.uri = uri;
+        this.url = url;
     }
-    
+
     @Override
     public InputStream getInputStream()
     {
+        URLConnection connection;
+        
         try
         {
-         if ("data".equals(uri.getScheme())) 
-         {
-            String data = uri.getSchemeSpecificPart();
-            String[] parts = data.split(",", 2);
-            
-            if (parts.length != 2) 
-            {
-                throw new IOException("Invalid data URI format");
-            }
-            
-            String encodedData = parts[1];
-            byte[] decodedData = Base64.getDecoder().decode(encodedData);
-            currentStream = new ByteArraySource(decodedData).getInputStream();
+            connection = url.openConnection();
+            currentStream = connection.getInputStream();
             return currentStream;
-        }
-        
-        URLConnection connection = uri.toURL().openConnection();
-        currentStream = connection.getInputStream();
-        return currentStream;
         }
         catch (MalformedURLException ex)
         {
@@ -82,6 +70,5 @@ public class URLSource implements Source
         {
             throw new ConvirganceException(ex);
         }
-
     }
 }
