@@ -24,8 +24,7 @@ package com.invirgance.convirgance.source;
 import java.io.InputStream;
 
 /**
- * Used to provide a secure way to receive content from a InputStream. 
- * Preventing: Rereading from a empty stream/source, IO/resource leaking. 
+ * Used to provide a reliable way to receive content from a InputStream.
  * 
  * Used when needing safe, managed access to a input stream for file processing or
  * network reads.

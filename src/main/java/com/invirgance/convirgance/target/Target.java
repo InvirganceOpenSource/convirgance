@@ -25,7 +25,6 @@ import java.io.OutputStream;
 
 /**
  * Provides a safe way to write out content to a Object implementing Target.
- * Preventing: Stream corruption, IO/resource leaking, preventing concurrent writes.
  * 
  * Used when needing to write data for file operations, network transfers.
  * @author jbanes
