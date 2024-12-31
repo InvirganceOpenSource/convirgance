@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- *
+ * Creates a cursor for traversing JSON data while maintaining proper resource handling.
  * @author jbanes
  */
 public class JSONInput implements Input<JSONObject>
