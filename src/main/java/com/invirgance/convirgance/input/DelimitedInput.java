@@ -46,21 +46,43 @@ public class DelimitedInput implements Input<JSONObject>
         this('|');
     }
 
+    /**
+     * Creates a new DelimitedInput with the provided delimiter.
+     * @param delimiter The character that the input content is delimited with.
+     */
     public DelimitedInput(char delimiter)
     {
         this(null, "UTF-8", delimiter);
     }
     
+    /**
+     * Creates a new DelimitedInput with the provided column headers and value delimiter.
+     * @param columns The column headers.
+     * @param delimiter The character that the input content is delimited with.
+     */
     public DelimitedInput(String[] columns, char delimiter)
     {
         this(columns, "UTF-8", delimiter);
     }
     
+    /**
+     * Creates a new DelimitedInput with custom text encoding and a specified value delimiter.
+     * @param encoding The text encoding of the input content.
+     * @param delimiter The delimiter of the input content.
+     */
     public DelimitedInput(String encoding, char delimiter)
     {
         this(null, encoding, delimiter);
     }
     
+    /**
+     * Creates a new DelimitedInput with the provided column headers and value
+     * delimiter along with the specified content encoding.
+     *
+     * @param columns The column headers.
+     * @param encoding The text encoding of the input content.
+     * @param delimiter The character that the input content is delimited with.
+     */ 
     public DelimitedInput(String[] columns, String encoding, char delimiter)
     {
         this.columns = columns;
