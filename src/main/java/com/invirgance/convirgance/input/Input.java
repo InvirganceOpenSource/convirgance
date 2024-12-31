@@ -25,6 +25,8 @@ import com.invirgance.convirgance.source.Source;
 
 /**
  * Interface for reading and processing data from a Source into a specified type.
+ * The implementing class determines the type T, providing type safety and flexibility.
+ * 
  * @author jbanes
  * @param <T> The type of data being read.
  */
