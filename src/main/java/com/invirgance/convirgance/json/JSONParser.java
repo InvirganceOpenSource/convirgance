@@ -35,9 +35,9 @@ public class JSONParser implements AutoCloseable
     private int next = -1;
 
     /**
-     * Creates a JSONParser with the provided stream reader. 
+     * Creates a JSONParser with the provided stream reader that will be used to parse values from. 
      *
-     * @param reader A reader with a stream, ex an InputStreamReader.
+     * @param reader A reader with a stream.
      */
     public JSONParser(Reader reader)
     {
@@ -50,7 +50,7 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
-     * Creates a JSONParser that will parse the provided JSON formatted string.
+     * Creates a JSONParser with the JSON formatted string that will be used to parse values from.
      *
      * @param json The JSON string to parse.
      */
