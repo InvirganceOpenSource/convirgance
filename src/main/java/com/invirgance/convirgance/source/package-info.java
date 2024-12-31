@@ -23,7 +23,7 @@
  */
 
 /**
- * Provides classes for accessing and reading data from various input sources (URLs, files, byte arrays).
+ * Provides classes with controlled access for reliably reading data from various input sources (URLs, files, byte arrays).
  * Used in conjunction with Input implementations to read and process source data.
  *
  */
