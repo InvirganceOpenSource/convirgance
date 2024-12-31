@@ -25,7 +25,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *
+ * Encapsulates a single database operation within a managed transaction. 
+ * Implementations define logic using the provided Connection. 
+ * Connection lifecycle and transaction handling are managed externally.
  * @author jbanes
  */
 public interface AtomicOperation
