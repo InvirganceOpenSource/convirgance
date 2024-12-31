@@ -148,13 +148,21 @@ public class CoerceStringsTransformer implements IdentityTransformer
         // TODO: Possible null pointer ref?
         return excluded.toArray(String[]::new);
     }
-
+    
+    /**
+     * Set field names to include when evaluating types during parsing.
+     * @param included Array of field/header names to include.
+     */
     public void setIncluded(String[] included)
     {
         if(included == null) this.included = null;
         else this.included = new HashSet<>(Arrays.asList(included));
     }
-
+    
+    /**
+     * Set field names to exclude when evaluating types.
+     * @param excluded Array of fields/headers to exclude.
+     */
     public void setExcluded(String[] excluded)
     {
         if(excluded == null) this.excluded = null;
