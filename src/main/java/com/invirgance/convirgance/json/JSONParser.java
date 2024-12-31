@@ -24,7 +24,7 @@ package com.invirgance.convirgance.json;
 import java.io.*;
 
 /**
- * Parses JSON content into their relevant types.
+ * Supports parsing a Stream containing JSON, processing values as their relevant data type.
  *
  * @author jbanes
  */
@@ -35,11 +35,9 @@ public class JSONParser implements AutoCloseable
     private int next = -1;
 
     /**
-     * Creates a JSONParser with the provided reader. If the provided reader
-     * doesn't support marking, wraps it in a BufferedReader with a 16KB buffer
-     * size (16 * 1024 bytes).
+     * Creates a JSONParser with the provided stream reader. 
      *
-     * @param reader The Reader to use for parsing.
+     * @param reader A reader with a stream, ex an InputStreamReader.
      */
     public JSONParser(Reader reader)
     {
