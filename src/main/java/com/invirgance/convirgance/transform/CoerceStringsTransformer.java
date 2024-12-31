@@ -169,6 +169,12 @@ public class CoerceStringsTransformer implements IdentityTransformer
         else this.excluded = new HashSet<>(Arrays.asList(excluded));
     }
     
+    /**
+     * Attempts to coerce a string into its 'real' datatype.
+     * @param value The string to coerce.
+     * @return The value of the string, as the coerced datatype.
+     * @throws NumberFormatException If parsing the string to a double or integer fails.
+     */
     public Object coerce(String value)
     {
         char c;
