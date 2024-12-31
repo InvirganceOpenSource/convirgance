@@ -264,7 +264,7 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
-     * Parses a JSON string from the current reader position.
+     * Parses a JSON from the current reader position escaping unsafe characters when required.
      *
      * @return The parsed string.
      * @throws IOException When the string doesn't begin with a quote.
@@ -340,7 +340,8 @@ public class JSONParser implements AutoCloseable
     }
 
     /**
-     * Parses a JSON object from the current reader position, with ordering.
+     * Parses a JSON object from the current reader position, with ordering. 
+     * Handles string parsing and character escaping.
      *
      * @return A ordered JSONObject based on the key value pairs encountered by
      * the readers stream.
@@ -394,7 +395,7 @@ public class JSONParser implements AutoCloseable
 
     /**
      * Parses a JSON array from the current reader position. Looping through any
-     * values in the array and parsing them to their relevant types.
+     * values in the array and parsing them to their relevant types and escaping characters when required.
      * Ex:
      *  '[
      *      "tag1", -> parseString()
