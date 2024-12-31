@@ -90,31 +90,55 @@ public class DelimitedInput implements Input<JSONObject>
         this.delimiter = delimiter;
     }
 
+    /**
+     * Returns the column headers of the expected input content.
+     * @return The column headers.
+     */
     public String[] getColumns()
     {
         return columns;
     }
 
+    /**
+     * Set the columns to use.
+     * @param columns 
+     */
     public void setColumns(String[] columns)
     {
         this.columns = columns;
     }
 
+    /**
+     * Get the delimiter used to split the input content.
+     * @return The delimiter in use.
+     */
     public char getDelimiter()
     {
         return delimiter;
     }
 
+    /**
+     * Set the delimiter to split values on.
+     * @param delimiter The delimiter to use.
+     */
     public void setDelimiter(char delimiter)
     {
         this.delimiter = delimiter;
     }
 
+    /**
+     * Returns the current encoding in use.
+     * @return The current expected content encoding.
+     */
     public String getEncoding()
     {
         return encoding;
     }
 
+    /**
+     * Set the content encoding to use for the input.
+     * @param encoding The content encoding to use.
+     */
     public void setEncoding(String encoding)
     {
         this.encoding = encoding;
