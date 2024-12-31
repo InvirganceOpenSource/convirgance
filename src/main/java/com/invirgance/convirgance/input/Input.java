@@ -24,8 +24,9 @@ package com.invirgance.convirgance.input;
 import com.invirgance.convirgance.source.Source;
 
 /**
- *
+ * Interface for reading and processing data from a Source into a specified type.
  * @author jbanes
+ * @param <T> The type of data being read.
  */
 public interface Input<T>
 {
