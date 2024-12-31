@@ -80,17 +80,26 @@ public class CoerceStringsTransformer implements IdentityTransformer
         //this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
         //this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
     }
-    
+
+    /**
+     * @return True if boolean string parsing is enabled.
+     */
     public boolean isBooleans()
     {
         return booleans;
     }
 
+    /**
+     * @return True if decimal number parsing is enabled.
+     */
     public boolean isDoubles()
     {
         return doubles;
     }
 
+    /**
+     * @return True if integer parsing is enabled.
+     */
     public boolean isIntegers()
     {
         return integers;
