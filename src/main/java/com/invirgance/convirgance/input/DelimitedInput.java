@@ -39,7 +39,7 @@ public class DelimitedInput implements Input<JSONObject>
     private char delimiter;
 
     /**
-     * Created a new DelimitedInput, with '|' as the delimiter.
+     * Creates a new DelimitedInput, with '|' as the delimiter.
      */
     public DelimitedInput()
     {
