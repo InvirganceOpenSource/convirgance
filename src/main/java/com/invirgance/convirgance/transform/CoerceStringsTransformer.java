@@ -42,23 +42,43 @@ public class CoerceStringsTransformer implements IdentityTransformer
     private Set<String> included;
     private Set<String> excluded;
 
+    /**
+     * Creates a new Transformer with support enabled for parsing booleans, doubles, and integers to their string equivalent. 
+     */
     public CoerceStringsTransformer()
     {
         this(true, true, true, null, null);
     }
 
+    /**
+     * Creates a new Transformer that parses string values into specified types.
+     *
+     * @param booleans If true, parse boolean strings ("true"/"false")
+     * @param doubles If true, parse decimal numbers
+     * @param integers If true, parse whole numbers
+     */
     public CoerceStringsTransformer(boolean booleans, boolean doubles, boolean integers)
     {
         this(booleans, doubles, integers, null, null);
     }
 
+    /**
+     * Creates a Transformer with specified type parsing and field filters.
+     *
+     * @param booleans If true, parse boolean strings
+     * @param doubles If true, parse decimal numbers
+     * @param integers If true, parse whole numbers
+     * @param included Only parse fields matching these names (null for all)
+     * @param excluded Skip parsing for fields matching these names (e.g. "ZIP")
+     */
     public CoerceStringsTransformer(boolean booleans, boolean doubles, boolean integers, String[] included, String[] excluded)
     {
         this.booleans = booleans;
         this.doubles = doubles;
         this.integers = integers;
-        
-        
+        //TODO: set included and excluded, add tests
+        //this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
+        //this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
     }
     
     public boolean isBooleans()
