@@ -105,28 +105,47 @@ public class CoerceStringsTransformer implements IdentityTransformer
         return integers;
     }
 
+    /**
+     * @param booleans True to enable boolean string parsing.
+     */
     public void setBooleans(boolean booleans)
     {
         this.booleans = booleans;
     }
 
+    /**
+     * @param doubles True to enable decimal number parsing.
+     */
     public void setDoubles(boolean doubles)
     {
         this.doubles = doubles;
     }
 
+    /**
+     * @param integers True to enable integer parsing.
+     */
     public void setIntegers(boolean integers)
     {
         this.integers = integers;
     }
 
+    /**
+     * @return Array of field names to include when parsing --(null if none
+     * specified)-- An empty array is returned if none.
+     */
     public String[] getIncluded()
     {
+        // TODO: Possible null pointer ref?
         return included.toArray(String[]::new);
     }
 
+    /**
+     * @return Array of field names to exclude when parsing --(null if none
+     * specified)-- An empty array is returned if none.
+     */
     public String[] getExcluded()
     {
+        // TODO: Possible null pointer ref?
         return excluded.toArray(String[]::new);
     }
 
