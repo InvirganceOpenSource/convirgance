@@ -29,6 +29,6 @@
 * 
 * All implementations ensure proper resource management through AutoCloseable and handle 
 * cleanup of their underlying streams.
-* @see Target Interface for writing to destinations
+* See Target Interface for writing to destinations
 */
 package com.invirgance.convirgance.output;
