@@ -24,7 +24,9 @@ package com.invirgance.convirgance.input;
 import com.invirgance.convirgance.CloseableIterator;
 
 /**
- *
+ * A cursor interface for iterating over data read by an Input implementation.
+ * Extends Iterable to provide type-safe iteration while ensuring resources are
+ * properly closed via CloseableIterator.
  * @author jbanes
  */
 public interface InputCursor<T> extends Iterable<T>
