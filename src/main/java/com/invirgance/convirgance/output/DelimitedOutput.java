@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 import java.util.Set;
 
 /**
- * Used to write delimited content to a Target.
+ * Support for writing delimited file formats like tab delimited and pipe delimited formats.
  * @author jbanes
  */
 public class DelimitedOutput implements Output
