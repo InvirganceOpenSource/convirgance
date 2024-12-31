@@ -29,18 +29,28 @@ import java.util.Iterator;
 import javax.sql.DataSource;
 
 /**
- *
+ * Provides a standardized way to interact with a source database. 
  * @author jbanes
  */
 public class DBMS
 {
     private final DataSource source;
     
+    /**
+     * Creates a new instance of the DBMS with the specified DataSource. The
+     * DataSource provides a connection pool or means to acquire database
+     * connections. Methods/Operations will be executed against this connection.
+     *
+     * @param source The DataSource used to obtain database connections.
+     */
     public DBMS(DataSource source)
     {
         this.source = source;
     }
 
+    /**
+     * @return Returns the current DataSource being used for database operations.
+     */
     public DataSource getSource()
     {
         return source;
