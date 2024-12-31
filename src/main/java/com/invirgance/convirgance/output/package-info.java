@@ -23,10 +23,12 @@
  */
 
 /**
-* Provides classes for reliably writing JSON to various Output targets.
-* This package includes interfaces and implementations for different output formats and destinations.
+* Support for writing file formats like JSON, CSV, tab delimited, and binary encodings.
+* This package also includes interfaces and implementations for efficiently writing to the 
+* outputStream of different targets.
 * 
 * All implementations ensure proper resource management through AutoCloseable and handle 
 * cleanup of their underlying streams.
+* @see Target Interface for writing to destinations
 */
 package com.invirgance.convirgance.output;
