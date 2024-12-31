@@ -28,7 +28,7 @@ import com.invirgance.convirgance.target.Target;
 import java.io.*;
 
 /**
- * An Output implementation that writes JSON arrays.
+ * Support for writing JSON formatted data.
  * @author jbanes
  */
 public class JSONOutput implements Output

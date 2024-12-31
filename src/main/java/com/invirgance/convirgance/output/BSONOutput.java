@@ -31,7 +31,7 @@ import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
 /**
- *
+ * Support for writing BSON encoded content.
  * @author jbanes
  */
 public class BSONOutput implements Output
