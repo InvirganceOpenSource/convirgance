@@ -37,12 +37,6 @@ import org.junit.jupiter.api.Test;
  */
 public class URLSourceTest
 {
-
-    //TODO: 
-    // - bad url test
-    // - bad json content
-    // - fail on bad url
-    // - ?
     /**
      * Test of getInputStream method, of class URLSource.
      */
@@ -57,7 +51,7 @@ public class URLSourceTest
         URL url = file.toURI().toURL();
         URLSource source = new URLSource(url);
 
-        // These methods have not been overwritten.
+        // These should pass as isReusable and isUsed have not been over-ridden.
         assertTrue(source.isReusable());
         assertFalse(source.isUsed());
 
