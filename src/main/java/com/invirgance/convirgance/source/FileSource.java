@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Reads stream of data from a file.
+ * Provides a reliable, controlled way to get the InputStream of a File.
  * @author jbanes
  */
 public class FileSource implements Source
@@ -37,7 +37,7 @@ public class FileSource implements Source
 
     /**
      * Creates a new FileSource based on the provided File.
-     * @param file The file to read from.
+     * @param file The file.
      */
     public FileSource(File file)
     {
