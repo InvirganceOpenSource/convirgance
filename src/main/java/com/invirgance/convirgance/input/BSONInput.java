@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 /**
- *
+ * Used for reliably working with BSON input, binary representation of JSON.
  * @author jbanes
  */
 public class BSONInput implements Input<JSONObject>
