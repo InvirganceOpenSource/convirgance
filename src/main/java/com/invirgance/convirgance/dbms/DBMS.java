@@ -29,7 +29,13 @@ import java.util.Iterator;
 import javax.sql.DataSource;
 
 /**
- * Provides a standardized way to interact with a source database. 
+ * Provides a standardized way to interact with a source database. Handling connections and committing data.
+ * This class abstracts the database connection management and transaction handling for more efficient and 
+ * consistent interaction with the database.
+ * 
+ * 
+ * If you need to create custom query implementations, refer to the {@link AtomicOperation} interface to define 
+ * your own batch or transaction operations.
  * @author jbanes
  */
 public class DBMS
