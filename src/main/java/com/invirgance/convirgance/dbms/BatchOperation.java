@@ -27,7 +27,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- *
+ * Provides a way to execute a query using a batch of JSON objects. 
+ * Batching operations together is more efficient than executing separate queries for each operation.
+ * This class facilitates executing bulk operations in a single query, improving performance.
  * @author jbanes
  */
 public class BatchOperation implements AtomicOperation
@@ -36,15 +38,33 @@ public class BatchOperation implements AtomicOperation
     private Iterable<JSONObject> records;
     private int commit = 10000;
 
+    /**
+     * Default constructor for BatchOperation. Initializes an empty
+     * BatchOperation without a predefined query or records.
+     */
     public BatchOperation()
     {
     }
     
+    /**
+     * Constructs a BatchOperation with the specified query. This query will be
+     * used to perform batch operations.
+     *
+     * @param query The query to be executed in batch operations.
+     */
     public BatchOperation(Query query)
     {
         this.query = query;
     }
 
+    /**
+     * This constructor allows specifying both the query to be executed and the
+     * records to be processed with the query.
+     *
+     * @param query The query to be executed in batch operations.
+     * @param records The records (as an Iterable of JSONObjects) to be
+     * processed in the batch.
+     */
     public BatchOperation(Query query, Iterable<JSONObject> records)
     {
         this.query = query;
