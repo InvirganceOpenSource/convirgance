@@ -22,14 +22,14 @@ SOFTWARE.
 package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.CloseableIterator;
-import com.invirgance.convirgance.source.Source;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.source.Source;
 import java.io.*;
 import java.util.ArrayList;
 
 /**
- * 
+ * A class used when working with delimited input.  
  * @author jbanes
  */
 public class DelimitedInput implements Input<JSONObject>
@@ -38,6 +38,9 @@ public class DelimitedInput implements Input<JSONObject>
     private String encoding; 
     private char delimiter;
 
+    /**
+     * Created a new DelimitedInput, with '|' as the delimiter.
+     */
     public DelimitedInput()
     {
         this('|');
