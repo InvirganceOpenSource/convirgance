@@ -220,7 +220,9 @@ public class Query
     }
 
     /**
-     * @return Gets the current string SQL query.
+     * Gets the current SQL query before parameters have been bound (if there are any).
+     * 
+     * @return The current SQL query.
      */
     public String getSQL()
     {
@@ -228,7 +230,9 @@ public class Query
     }
     
     /**
-     * @return A new JSONOBject based on the bindings from the current JSONOBject used to create the query.
+     * A new JSONOBject based on the bindings from the current JSONOBject used to create the query.
+     * 
+     * @return A new JSONOBject copied from the JSONOBject in use.
      */
     public JSONObject getBindings()
     {
@@ -238,9 +242,10 @@ public class Query
     }
     
     /**
-     * Get the binding in use by the provided parameter.
+     * Get the binding value used for the provided parameter name.
+     * 
      * @param parameter The parameter associated to a binding.
-     * @return The bindings value as its Type (Object, Boolean, String, etc).
+     * @return The value bound to the provided parameter as its Type (Object, Boolean, String, etc).
      */
     public Object getBinding(String parameter)
     {
@@ -253,8 +258,8 @@ public class Query
      * value if the parameter already exists. Useful for dynamically updating or
      * adding bindings in a query after it has been initialized.
      *
-     * @param parameter The name of the parameter to override or add.
-     * Case-insensitive.
+     * @param parameter The name of the parameter to override or add (Case-insensitive).
+     * 
      * @param value The new value to associate with the parameter.
      *
      */
@@ -265,6 +270,7 @@ public class Query
     
     /**
      * Binds multiple values from a {@link JSONObject} to the parameters in the query.
+     * 
      * @param bindings A {@link JSONObject} containing key-value pairs to bind to query parameters.
      * @throws ConvirganceException If the current bindings contain a parameter found in the provided bindings.
      */
@@ -286,11 +292,23 @@ public class Query
         return markup.toArray(Markup[]::new);
     }
     
+    /**
+     * An array of {@link Parameter} objects representing the current
+     * query parameters. Each {@link Parameter} includes details such as the
+     * name, its index in the query, and the length of the parameter name.
+     * 
+     * @return An array of parameters with info relating to query details.
+     */
     public Parameter[] getParameters()
     {
         return parameters.toArray(Parameter[]::new);
     }
     
+    /**
+     * An array containing the names of the parameters used for binding values.
+     * 
+     * @return An array of the parameters names.
+     */
     public String[] getParameterNames()
     {
         ArrayList<String> list = new ArrayList<>();
@@ -303,6 +321,11 @@ public class Query
         return list.toArray(String[]::new);
     }
     
+    /**
+     * Returns the SQL query with parameter names replaced by their bound values from the JSONObject.
+     *
+     * @return The SQL query ready for execution.
+     */
     public String getDatabaseSQL()
     {
         StringBuilder builder = new StringBuilder();
