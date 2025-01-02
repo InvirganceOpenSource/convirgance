@@ -62,6 +62,21 @@ public class DBMS
         return source;
     }
     
+    /**
+     * Executes a query that returns an iterable of JSONObjects from the
+     * results. This method is useful for comparing the resulting iterable
+     * against another source or for processing the results dynamically in some
+     * way.
+     *
+     * @param query object containing the SQL query string and bindings (if any)
+     * to execute.
+     * @return An {@link Iterable} of {@link JSONObject}, allowing iteration
+     * over the query results.
+     * @throws ConvirganceException If any SQL-related errors occur while
+     * preparing or executing the query, or when attempting to retrieve the
+     * results.
+     *
+     */
     public Iterable<JSONObject> query(Query query) throws ConvirganceException
     {
         return new Iterable<JSONObject>() {
