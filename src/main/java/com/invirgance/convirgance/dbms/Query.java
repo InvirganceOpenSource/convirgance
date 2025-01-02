@@ -237,11 +237,27 @@ public class Query
         return new JSONObject(this.bindings); 
     }
     
+    /**
+     * Get the binding in use by the provided parameter.
+     * @param parameter The parameter associated to a binding.
+     * @return The bindings value as its Type (Object, Boolean, String, etc).
+     */
     public Object getBinding(String parameter)
     {
         return this.bindings.get(parameter.toLowerCase());
     }
     
+
+    /**
+     * Binds a value to a named parameter in the query, overriding the existing
+     * value if the parameter already exists. Useful for dynamically updating or
+     * adding bindings in a query after it has been initialized.
+     *
+     * @param parameter The name of the parameter to override or add.
+     * Case-insensitive.
+     * @param value The new value to associate with the parameter.
+     *
+     */
     public void setBinding(String parameter, Object value)
     {
         this.bindings.put(parameter.toLowerCase(), value);
