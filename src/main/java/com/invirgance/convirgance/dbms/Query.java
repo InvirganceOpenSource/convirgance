@@ -263,6 +263,11 @@ public class Query
         this.bindings.put(parameter.toLowerCase(), value);
     }
     
+    /**
+     * Binds multiple values from a {@link JSONObject} to the parameters in the query.
+     * @param bindings A {@link JSONObject} containing key-value pairs to bind to query parameters.
+     * @throws ConvirganceException If the current bindings contain a parameter found in the provided bindings.
+     */
     public void setBindings(JSONObject bindings)
     {   
         for(String parameter : bindings.keySet())
