@@ -35,31 +35,56 @@ public class TransactionOperation implements AtomicOperation
 {
     private List<AtomicOperation> operations;
 
+    /**
+     * Creates an empty TransactionOperation.
+     */
     public TransactionOperation()
     {
         this(new AtomicOperation[0]);
     }
 
+    /**
+     * Creates a new TransactionOperation based on the supplied operations.
+     * @param operations The operations for this transaction.
+     */
     public TransactionOperation(AtomicOperation... operations)
     {
         setOperations(operations);
     }
     
+    /**
+     * Adds another operation to the transaction.
+     * @param operation The operation to add.
+     */
     public void add(AtomicOperation operation)
     {
         this.operations.add(operation);
     }
     
+    /**
+     * Set the operations to run for this transaction.
+     * @param operations The operations to run.
+     */
     public void setOperations(AtomicOperation... operations)
     {
         this.operations = Arrays.asList(operations);
     }
 
+    /**
+     * Gets the operations planned for this transaction.
+     * @return An array of operations.
+     */
     public AtomicOperation[] getOperations()
     {
         return operations.toArray(AtomicOperation[]::new);
     }
     
+    /**
+     * Executes all the operations planned for this transaction against the provided connection. 
+     * If any operation fails the Database/DataSource will remain unchanged.
+     * @param connection The Database/DataSource connection.
+     * @throws SQLException Thrown when an issue occurs while executing one the operations.
+     */
     @Override
     public void execute(Connection connection) throws SQLException
     {
