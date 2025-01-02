@@ -27,7 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Represents a set of database operations, such as queries or updates, executed as a single transaction against the same Database. 
+ * Ensures atomicity, meaning that either all operations succeed, or none are applied.
  * @author jbanes
  */
 public class TransactionOperation implements AtomicOperation
