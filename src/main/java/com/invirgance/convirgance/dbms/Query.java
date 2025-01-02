@@ -219,14 +219,21 @@ public class Query
         return false;
     }
 
+    /**
+     * @return Gets the current string SQL query.
+     */
     public String getSQL()
     {
         return sql;
     }
     
+    /**
+     * @return A new JSONOBject based on the bindings from the current JSONOBject used to create the query.
+     */
     public JSONObject getBindings()
     {
         // Create a copy to prevent manipulation
+        // TODO: possible null ref
         return new JSONObject(this.bindings); 
     }
     
