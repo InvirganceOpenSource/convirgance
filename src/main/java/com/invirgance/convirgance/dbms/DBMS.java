@@ -111,6 +111,19 @@ public class DBMS
         };
     }
     
+    /**
+     * Executes a transactional database operation using the provided
+     * {@link AtomicOperation}. This method manages the lifecycle of the
+     * {@link Connection}, including starting a transaction, committing it upon
+     * success, and rolling it back in case of an exception.
+     *
+     * @param transaction The atomic operation to be executed. The operation
+     * itself usually contains logic for the database interaction, see
+     * {@link QueryOperation}.
+     * @throws ConvirganceException If an error occurs during the operation.
+     * including SQL errors or transaction failures, the exception is wrapped
+     * and rethrown as a {@link ConvirganceException}.
+     */
     public void update(AtomicOperation transaction) throws ConvirganceException
     {
         Connection connection = null;
