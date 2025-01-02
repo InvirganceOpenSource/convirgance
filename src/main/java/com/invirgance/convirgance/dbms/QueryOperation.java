@@ -26,6 +26,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * Encapsulates a {@link Query} to ensure parameters are properly bound
+ * before execution. This class implements {@link AtomicOperation} to perform
+ * database operations within a transaction.
  *
  * @author jbanes
  */
@@ -33,25 +36,47 @@ public class QueryOperation implements AtomicOperation
 {
     private Query query;
 
+    /**
+     * Creates a new QueryOperation.
+     */
     public QueryOperation()
     {
     }
     
+    /**
+     * Creates a new QueryOperation wrapping the provided query.
+     * @param query The query to wrap.
+     */
     public QueryOperation(Query query)
     {
         this.query = query;
     }
 
+    /**
+     * Get the current wrapped query.
+     * @return The query.
+     */
     public Query getQuery()
     {
         return query;
     }
 
+    /**
+     * Set the query to be wrapped to ensure values are properly bound.
+     * @param query The query.
+     */
     public void setQuery(Query query)
     {
         this.query = query;
     }
-
+    
+    /**
+     * Executes the transaction, binding values at the driver level if needed.
+     *
+     * @param connection The DB connection.
+     * @throws SQLException If an issue occurs while preparing the statement or while
+     * binding values.
+     */
     @Override
     public void execute(Connection connection) throws SQLException
     {
