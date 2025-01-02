@@ -28,7 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
+ * Used for creating queries to be used against some DataSource. 
+ * Use in conjunction with {@link QueryOperation} when modifying the DataSource in some way.
  * @author jbanes
  */
 public class Query
@@ -38,11 +39,28 @@ public class Query
     private ArrayList<Parameter> parameters;
     private ArrayList<Markup> markup;
 
+    /**
+     * Creates a new Query based on the provided string.
+     * @param sql The SQL query.
+     */
     public Query(String sql)
     {
         this(sql, new JSONObject());
     }
 
+    /**
+     * Constructs a new Query object by parsing the provided SQL string and
+     * binding values from the given {@link JSONObject} to the keys found in the
+     * SQL string. This constructor initializes the SQL query, parses parameter
+     * placeholders, and associates the provided bindings to their corresponding
+     * placeholders in the query.
+     *
+     * @param sql The SQL query string, which may include named placeholders in
+     * the format `:KEY` to be replaced by values from the bindings.
+     * @param bindings A {@link JSONObject} containing key-value pairs where the
+     * keys correspond to the placeholders in the SQL query and the values are
+     * the data to be bound.
+     */
     public Query(String sql, JSONObject bindings)
     {
         this.sql = sql;
