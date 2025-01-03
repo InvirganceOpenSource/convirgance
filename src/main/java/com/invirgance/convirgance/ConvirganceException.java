@@ -22,6 +22,8 @@ SOFTWARE.
 package com.invirgance.convirgance;
 
 /**
+ * Represents a runtime exception specific to the Convirgance API, providing
+ * focused and contained error messages for debugging.
  *
  * @author jbanes
  */
