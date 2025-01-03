@@ -76,6 +76,13 @@ public class OrFilter implements Filter
         this.filters = filters;
     }
 
+    /**
+     * Evaluates the record with each filter.
+     *
+     * @param record The record to evaluate.
+     * @return True if at least one filter evaluates the record to true; false
+     * otherwise.
+     */
     @Override
     public boolean test(JSONObject record)
     {
