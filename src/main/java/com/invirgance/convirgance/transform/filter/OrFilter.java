@@ -58,11 +58,19 @@ public class OrFilter implements Filter
         this.filters = Arrays.asList(filters);
     }
 
+    /**
+     * Returns the current filters used for evaluation.
+     * @return The current filters.
+     */
     public List<Filter> getFilters()
     {
         return filters;
     }
 
+    /**
+     * Sets the filters to use for evaluation.
+     * @param filters A list of filters.
+     */
     public void setFilters(List<Filter> filters)
     {
         this.filters = filters;
