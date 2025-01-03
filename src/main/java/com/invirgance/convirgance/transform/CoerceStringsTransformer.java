@@ -218,6 +218,15 @@ public class CoerceStringsTransformer implements IdentityTransformer
         return value;
     }
 
+    /**
+     * Transforms the given JSONObject by coercing the values of specified keys,
+     * including those in the 'included' set and excluding those in the
+     * 'excluded' set.
+     *
+     * @param record The record to modify.
+     * @return The modified JSONObject with values transformed as per the inclusion and exclusion criteria.
+     * @throws ConvirganceException If an error occurs during coercion.
+     */
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException
     {
