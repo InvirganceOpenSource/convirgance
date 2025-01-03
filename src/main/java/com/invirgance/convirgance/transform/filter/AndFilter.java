@@ -40,21 +40,41 @@ public class AndFilter implements Filter
     {
     }
 
+    /**
+     * Creates a AndFilter with the list of filters that need to pass during
+     * evaluation.
+     *
+     * @param filters List of filters to use.
+     */
     public AndFilter(List<Filter> filters)
     {
         this.filters = filters;
     }
     
+    /**
+     * Creates a AndFilter with the list of filters that need to pass during
+     * evaluation.
+     *
+     * @param filters List of filters to use.
+     */
     public AndFilter(Filter... filters)
     {
         this.filters = Arrays.asList(filters);
     }
 
+    /**
+     * Returns the current filters that form the criteria.
+     * @return The filters.
+     */
     public List<Filter> getFilters()
     {
         return filters;
     }
 
+    /**
+     * Sets the filters used to form the criteria.
+     * @param filters The filters.
+     */
     public void setFilters(List<Filter> filters)
     {
         this.filters = filters;
