@@ -25,7 +25,8 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 
 /**
- *
+ * Modifies the JSONObject with the provided key and value. 
+ * Replacing the keys value if present.
  * @author jbanes
  */
 public class InsertKeyTransformer implements IdentityTransformer
@@ -33,10 +34,19 @@ public class InsertKeyTransformer implements IdentityTransformer
     private String key;
     private Object value;
 
+    
+    /**
+     * Creates a new Transformer.
+     */
     public InsertKeyTransformer()
     {
     }
 
+    /**
+     * Creates a new InsertKeyTransformer to modify JSONObjects, the provided key will either be modified or inserted.
+     * @param key The key to insert/modify.
+     * @param value The value to insert or replace.
+     */
     public InsertKeyTransformer(String key, Object value)
     {
         this.key = key;
