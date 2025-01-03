@@ -71,6 +71,10 @@ public class BatchOperation implements AtomicOperation
         this.records = records;
     }
 
+    /**
+     * Gets the query to be executed across the records.
+     * @return The query.
+     */
     public Query getQuery()
     {
         return query;
