@@ -26,11 +26,19 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.Iterator;
 
 /**
- *
+ * This interface provides a way to apply on the fly data transformations to JSONObjects. 
+ * Use to clean, filter, or enrich data lazily during iteration.
  * @author jbanes
  */
 public interface Transformer
 {
+    /**
+     * Lazily transforms a collection of JSON objects.
+     *
+     * @param iterable The source data.
+     * @return A lazily-transformed iterable.
+     * @throws ConvirganceException If a transformation error occurs.
+     */
     public default Iterable<JSONObject> transform(final Iterable<JSONObject> iterable) throws ConvirganceException
     {
         return new Iterable<JSONObject>() {
@@ -43,5 +51,11 @@ public interface Transformer
         };
     }
     
+    /**
+     * Returns an iterator that applies transformations to each element.
+     *
+     * @param iterator The source data iterator.
+     * @return A transformed iterator.
+     */
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator);
 }
