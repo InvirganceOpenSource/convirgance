@@ -98,6 +98,10 @@ public class BatchOperation implements AtomicOperation
         return records;
     }
 
+    /**
+     * Sets the records that will be used with to create the query during execution.
+     * @param records The JSONObjects to use.
+     */
     public void setRecords(Iterable<JSONObject> records)
     {
         this.records = records;
