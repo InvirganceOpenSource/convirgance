@@ -107,11 +107,21 @@ public class BatchOperation implements AtomicOperation
         this.records = records;
     }
     
+    /**
+     * Returns the current auto commit interval used when processing the transactions. 
+     * After this many transactions are processed, the current batch will be executed.
+     * @return The auto commit interval.
+     */
     public int getAutoCommit()
     {
         return commit;
     }
 
+    /**
+     * Sets the auto commit interval to use when executing the operation. 
+     * After this many transactions are processed, the current batch will be executed before continuing. 
+     * @param commit The auto commit interval.
+     */
     public void setAutoCommit(int commit)
     {
         this.commit = commit;
