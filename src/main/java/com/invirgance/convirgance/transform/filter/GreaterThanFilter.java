@@ -24,7 +24,7 @@ package com.invirgance.convirgance.transform.filter;
 import com.invirgance.convirgance.json.JSONObject;
 
 /**
- *
+ * Used to check if a JSONObjects key has a value greater than the provided minimum value.
  * @author jbanes
  */
 public class GreaterThanFilter extends ComparatorFilter
@@ -34,11 +34,21 @@ public class GreaterThanFilter extends ComparatorFilter
         super();
     }
 
+    /**
+     * Creates a new Comparator to check the expected key against the minimum value.
+     * @param key The key to check.
+     * @param value The minimum value.
+     */
     public GreaterThanFilter(String key, Object value)
     {
         super(key, value);
     }
     
+    /**
+     * Tests the record to see if the expected key has a value greater than the comparison value.
+     * @param record The record to test.
+     * @return True if the record's key has a value greater than the comparison value.
+     */
     @Override
     public boolean test(JSONObject record)
     {
