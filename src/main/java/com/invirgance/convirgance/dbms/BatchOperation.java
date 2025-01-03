@@ -74,6 +74,7 @@ public class BatchOperation implements AtomicOperation
     /**
      * Gets the query to be executed across the records.
      * @return The query.
+     * @throws NullPointerException If the query has not been initialized.
      */
     public Query getQuery()
     {
@@ -92,6 +93,7 @@ public class BatchOperation implements AtomicOperation
     /**
      * Returns the records that will be used by this BatchOperation during execution.
      * @return The JSONObjects used for the operation.
+     * @throws NullPointerException If the records have not been initialized.
      */
     public Iterable<JSONObject> getRecords()
     {
@@ -163,7 +165,9 @@ public class BatchOperation implements AtomicOperation
      * An auto commit value is to execute the batch operation after a specified amount of records.
      * 
      * @param connection The connection to a DataSource.
-     * @throws SQLException when an issue occurs while preparing the statement for the given records. Or while executing the batch operation.
+     * @throws SQLException When an issue occurs while preparing the statement for the given records. Or while executing the batch operation.
+     * @throws NullPointerException If the records have not been initialized.
+     * @throws NullPointerException If the query has not been set.
      */
     @Override
     public void execute(Connection connection) throws SQLException
