@@ -26,13 +26,16 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Used to filter JSONObjects that need to pass all of a set criteria.
  * @author jbanes
  */
 public class AndFilter implements Filter
 {
     private List<Filter> filters;
 
+    /**
+     * Creates an empty AndFilter.
+     */
     public AndFilter()
     {
     }
