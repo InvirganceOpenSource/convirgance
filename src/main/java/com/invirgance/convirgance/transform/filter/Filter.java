@@ -26,6 +26,9 @@ import com.invirgance.convirgance.transform.Transformer;
 import java.util.Iterator;
 
 /**
+ * Defines a filter that evaluates each record in a collection against a
+ * condition. Records that pass the condition are returned in the transformed
+ * iterator.
  *
  * @author jbanes
  */
@@ -38,6 +41,13 @@ public interface Filter extends Transformer
             
             private JSONObject next;
             
+            /**
+             * Checks if there is a next record that passes the filter
+             * condition. Iterates over the source iterator and finds the next
+             * record that passes the filter.
+             *
+             * @return `true` if a valid record is found, `false` otherwise.
+             */
             @Override
             public boolean hasNext()
             {
@@ -55,6 +65,12 @@ public interface Filter extends Transformer
                 return (this.next != null);
             }
 
+            /**
+             * Returns the next valid record that passes the filter condition.
+             * Calls `hasNext()` to ensure the record is valid before returning.
+             *
+             * @return The next valid JSONObject.
+             */
             @Override
             public JSONObject next()
             {
@@ -73,5 +89,11 @@ public interface Filter extends Transformer
         };
     }
     
+    /**
+     * Tests if the given record meets the filter condition.
+     *
+     * @param record The JSONObject to test.
+     * @return If the record passed or failed.
+     */
     public boolean test(JSONObject record);
 }
