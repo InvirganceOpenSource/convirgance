@@ -158,6 +158,13 @@ public class BatchOperation implements AtomicOperation
         statement.addBatch();
     }
     
+    /**
+     * Executes the operation, using the provided query for each record in the dataset. 
+     * An auto commit value is to execute the batch operation after a specified amount of records.
+     * 
+     * @param connection The connection to a DataSource.
+     * @throws SQLException when an issue occurs while preparing the statement for the given records. Or while executing the batch operation.
+     */
     @Override
     public void execute(Connection connection) throws SQLException
     {
