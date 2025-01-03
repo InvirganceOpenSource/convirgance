@@ -22,7 +22,8 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 /**
- *
+ * Filters data by comparing a specified key-value pair using a flexible coercive comparator.
+ * 
  * @author jbanes
  */
 public abstract class ComparatorFilter implements Filter
@@ -32,10 +33,18 @@ public abstract class ComparatorFilter implements Filter
     private String key;
     private Object value;
 
+    /**
+     * Creates a new ComparatorFilter.
+     */
     public ComparatorFilter()
     {
     }
 
+    /**
+     * Creates a ComparatorFilter to use with a provided key and value.
+     * @param key The key to compare.
+     * @param value The key's value.
+     */
     public ComparatorFilter(String key, Object value)
     {
         this.key = key;
@@ -47,11 +56,16 @@ public abstract class ComparatorFilter implements Filter
         return comparator;
     }
     
+    /**
+     * Gets the comparison key in use.
+     * @return The key.
+     */
     public String getKey()
     {
         return key;
     }
 
+    
     public void setKey(String key)
     {
         this.key = key;
