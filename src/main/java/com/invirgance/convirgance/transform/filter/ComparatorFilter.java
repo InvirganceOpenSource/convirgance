@@ -84,8 +84,8 @@ public abstract class ComparatorFilter implements Filter
     }
 
     /**
-     * Set the key's expected value for comparison.
-     * @param value The value.
+     * Sets the value to use for comparison on the provided key.
+     * @param value The comparison value.
      */
     public void setValue(Object value)
     {
