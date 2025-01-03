@@ -23,6 +23,6 @@
  */
 
 /**
- * Provides reliable ways to bind values to queries and execute large, or batched operations against a DataSource.
+ * Provides reliable ways to bind values to queries and execute multiple, or batched operations against a DataSource.
  */
 package com.invirgance.convirgance.dbms;
