@@ -237,7 +237,6 @@ public class Query
     public JSONObject getBindings()
     {
         // Create a copy to prevent manipulation
-        // TODO: possible null ref
         return new JSONObject(this.bindings); 
     }
     
