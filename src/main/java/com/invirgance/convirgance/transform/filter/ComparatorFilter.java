@@ -65,17 +65,28 @@ public abstract class ComparatorFilter implements Filter
         return key;
     }
 
-    
+    /**
+     * Set the comparison key.
+     * @param key The key.
+     */
     public void setKey(String key)
     {
         this.key = key;
     }
 
+    /**
+     * Gets the expected value for the key.
+     * @return The value.
+     */
     public Object getValue()
     {
         return value;
     }
 
+    /**
+     * Set the key's expected value for comparison.
+     * @param value The value.
+     */
     public void setValue(Object value)
     {
         this.value = value;
