@@ -26,7 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Used to filter JSONObjects that need to pass all of a set criteria.
+ * Filters JSONObjects based on multiple criteria, requiring all conditions to be met.
+ * Combines multiple filters, returning true only if every filter evaluates the 
+ * given record as true.
  * @author jbanes
  */
 public class AndFilter implements Filter
@@ -80,6 +82,13 @@ public class AndFilter implements Filter
         this.filters = filters;
     }
 
+    /**
+     * Evaluates the given record against all the filters.
+     *
+     * @param record The record to evaluate.
+     * @return True if the record meets all the criteria defined by the filters,
+     * false if it fails any of them.
+     */
     @Override
     public boolean test(JSONObject record)
     {
