@@ -24,7 +24,11 @@ package com.invirgance.convirgance;
 import java.util.Iterator;
 
 /**
+ * Extends Iterator and AutoCloseable for safe iteration and resource
+ * management. Used in the Convirgance system to ensure proper cleanup of
+ * resources like streams or database cursors after iteration.
  *
+ * @param <T> The type of elements returned by the iterator.
  * @author jbanes
  */
 public interface CloseableIterator<T> extends Iterator<T>, AutoCloseable
