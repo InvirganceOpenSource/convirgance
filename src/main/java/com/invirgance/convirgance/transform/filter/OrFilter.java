@@ -26,17 +26,24 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Used to filter JSONObjects that can meet and of a given criteria.
  * @author jbanes
  */
 public class OrFilter implements Filter
 {
     private List<Filter> filters;
 
+    /**
+     * Creates a new OrFilter without any filters.
+     */
     public OrFilter()
     {
     }
 
+    /**
+     * Creates a new OrFilter with the list of filters to evaluate with.
+     * @param filters A list of filters.
+     */
     public OrFilter(List<Filter> filters)
     {
         this.filters = filters;
