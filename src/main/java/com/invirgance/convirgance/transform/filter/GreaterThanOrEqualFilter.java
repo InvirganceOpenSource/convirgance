@@ -24,21 +24,36 @@ package com.invirgance.convirgance.transform.filter;
 import com.invirgance.convirgance.json.JSONObject;
 
 /**
+ * Filters JSONObjects where the value of a specified key is greater than or
+ * equal to a comparison value.
  *
  * @author jbanes
  */
 public class GreaterThanOrEqualFilter extends ComparatorFilter
 {
+    /**
+     * Creates a new unset ComparatorFilter.
+     */
     public GreaterThanOrEqualFilter()
     {
         super();
     }
 
+    /**
+     * Creates a new ComparatorFilter for the expected key, with the provided value to use for comparison.
+     * @param key The key.
+     * @param value The comparison value.
+     */
     public GreaterThanOrEqualFilter(String key, Object value)
     {
         super(key, value);
     }
-    
+
+    /**
+     * Returns true when the JSONObject has the expected key and its value is greater than or equal to the comparison.
+     * @param record The record the compare.
+     * @return True if the record's key has a value greater than or equal to the comparison value.
+     */
     @Override
     public boolean test(JSONObject record)
     {
