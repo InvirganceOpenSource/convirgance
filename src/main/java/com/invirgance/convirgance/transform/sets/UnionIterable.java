@@ -46,6 +46,11 @@ public class UnionIterable implements Iterable<JSONObject>
         this.streams = Arrays.asList(streams);
     }
 
+    /**
+     * Returns an iterator that iterates through all provided sources sequentially.
+     * 
+     * @return An iterator that contains the supplied streams.
+     */
     @Override
     public Iterator<JSONObject> iterator()
     {
