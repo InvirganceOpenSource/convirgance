@@ -79,7 +79,11 @@ public class BatchOperation implements AtomicOperation
     {
         return query;
     }
-
+    
+    /**
+     * Sets the query that each record will use when the operation is executed.
+     * @param query The query.
+     */
     public void setQuery(Query query)
     {
         this.query = query;
