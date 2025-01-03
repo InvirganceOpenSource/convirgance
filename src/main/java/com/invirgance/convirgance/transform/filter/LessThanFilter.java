@@ -24,21 +24,34 @@ package com.invirgance.convirgance.transform.filter;
 import com.invirgance.convirgance.json.JSONObject;
 
 /**
- *
+ * Filters JSONObjects where the value of the specified key is less than the provided comparison value.
  * @author jbanes
  */
 public class LessThanFilter extends ComparatorFilter
 {
+    /**
+     * Creates a new LessThanFilter.
+     */
     public LessThanFilter()
     {
         super();
     }
 
+    /**
+     * Creates a new LessThanFilter for evaluating whether the value of a specified key is less than the comparison value.
+     * @param key The key to evaluate.
+     * @param value The comparison value.
+     */
     public LessThanFilter(String key, Object value)
     {
         super(key, value);
     }
     
+    /**
+     * Tests if the value of the specified key in the record is less than the comparison value.
+     * @param record The record to evaluate.
+     * @return True if the value of the record's specified key is less than the comparison value.
+     */
     @Override
     public boolean test(JSONObject record)
     {
