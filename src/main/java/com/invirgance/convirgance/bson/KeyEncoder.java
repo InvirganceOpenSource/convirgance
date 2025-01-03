@@ -26,7 +26,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
- *
+ * Interface for encoding and decoding key-value data, enabling custom serialization for keys in binary data streams.
  * @author jbanes
  */
 public interface KeyEncoder
@@ -34,15 +34,55 @@ public interface KeyEncoder
     public static final int KEY_REGISTER_OPERATION = 0xF1;
     public static final int KEY_RESET_OPERATION = 0xF2;
     
+    /**
+     * Resets the encoder state.
+     *
+     * @param out The output stream.
+     */
     public void reset(DataOutput out);
+    
+    /**
+     * Retrieves the integer value associated with a key.
+     * 
+     * @param key The key.
+     * @return The corresponding integer value.
+     */    
     public Integer get(String key);
+    
+    /**
+     * Retrieves the key associated with an integer ID.
+     *
+     * @param id The ID.
+     * @return The corresponding key.
+     */ 
     public String get(int id);
+    
+    /**
+     * Returns the encoder size.
+     *
+     * @return The size.
+     */ 
     public int size();
     
+    /**
+     * Reads the encoder state from an input stream (default implementation is
+     * blank).
+     *
+     * @param in The input stream.
+     * @throws IOException If reading fails.
+     */
     public default void read(DataInput in) throws IOException
     {
         // Default implementation is blank
     }
     
+    /**
+     * Writes a key to an output stream.
+     *
+     * @param key The key.
+     * @param out The output stream.
+     * @return The number of bytes written.
+     * @throws IOException If writing fails.
+     */
     public int write(String key, DataOutput out) throws IOException;
 }
