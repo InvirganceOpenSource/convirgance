@@ -53,21 +53,38 @@ public class InsertKeyTransformer implements IdentityTransformer
         this.value = value;
     }
 
+    /**
+     * Gets the key that will either be inserted or modified.
+     * @return The name of the key.
+     */
     public String getKey()
     {
         return key;
     }
 
+    /**
+     * Sets the name of the key to be inserted or modified.
+     * @param key The name of the key.
+     */
     public void setKey(String key)
     {
         this.key = key;
     }
 
+    /**
+     * Gets the value to be used with the new or modified key.
+     *
+     * @return The value to be inserted.
+     */
     public Object getValue()
     {
         return value;
     }
 
+    /**
+     * Sets the value to be used for the key.
+     * @param value The key's value.
+     */
     public void setValue(Object value)
     {
         this.value = value;
