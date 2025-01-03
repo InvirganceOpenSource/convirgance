@@ -24,7 +24,7 @@ package com.invirgance.convirgance.transform.filter;
 import java.util.Comparator;
 
 /**
- *
+ * Compares objects of different types, supporting nulls, numbers, and comparables.
  * @author jbanes
  */
 public class CoerciveComparator implements Comparator
