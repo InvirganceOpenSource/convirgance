@@ -49,6 +49,10 @@ public class OrFilter implements Filter
         this.filters = filters;
     }
     
+    /**
+     * Creates a new OrFilter with the provided filters to evaluate with.
+     * @param filters The filters.
+     */
     public OrFilter(Filter... filters)
     {
         this.filters = Arrays.asList(filters);
