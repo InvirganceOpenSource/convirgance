@@ -90,6 +90,13 @@ public class InsertKeyTransformer implements IdentityTransformer
         this.value = value;
     }
 
+    /**
+     * Transforms the JSONObject either replacing or inserting the key.
+     * 
+     * @param record The JSONObject to modify.
+     * @return The modified record.
+     * @throws ConvirganceException If an issue occurs when inserting/modifying the key. 
+     */
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException
     {
