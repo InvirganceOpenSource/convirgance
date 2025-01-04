@@ -78,6 +78,12 @@ public class KeyStreamEncoder implements KeyEncoder
         return index;
     }
     
+    /**
+     * Reads a key from the DataInput.
+     * @param in The stream.
+     * @throws IOException If an error occurs while reading.
+     * @throws IllegalStateException if the maximum number of keys is exceeded.
+     */
     @Override
     public void read(DataInput in) throws IOException
     {
@@ -94,7 +100,7 @@ public class KeyStreamEncoder implements KeyEncoder
     
     /**
      * Encodes a key and writes it to the DataOutput.
-     * @param key The key to encode
+     * @param key The key to encode.
      * @param out The stream to write to.
      * @return The key index.
      * @throws IOException If an error occurs during writing.
