@@ -113,7 +113,11 @@ public class BinaryEncoder
     {
         return keys;
     }
-
+    
+    /**
+     * Returns the current StringEncoder.
+     * @return The StringEncoder.
+     */
     public StringEncoder getStringEncoder()
     {
         return strings;
@@ -223,6 +227,7 @@ public class BinaryEncoder
      * @param value The Object to encode and write.
      * @param out The output stream to write to.
      * @throws IOException If an error occurs while writing to the stream.
+     * @throws IllegalStateException If the Object has no encoding implementation.
      */
     public void write(Object value, DataOutput out) throws IOException
     {
