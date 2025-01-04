@@ -60,11 +60,23 @@ public class StringEncoder
         return lookup.get(value);
     }
     
+    /**
+     * Returns the key of the specified index.
+     * @param i The index.
+     * @return The key at the index.
+     */
     public String get(Integer i)
     {
         return keys[i];
     }
     
+    /**
+     * Writes the string value to the output stream and returns its unique index.
+     * @param value The string to write.
+     * @param out The output stream to write to.
+     * @return The index of the string.
+     * @throws IOException If an error occurs while writing to the stream.
+     */
     public Integer write(String value, DataOutput out) throws IOException
     {
         Integer id = get(value);
