@@ -23,8 +23,6 @@
  */
 
 /**
- * Includes interfaces for lazily transforming collections of JSONOBjects. 
- * These can be used to efficiently process/modify or filter large sets of data on the fly.
- * 
+ * A library of common transformations for working with streams of JSONObjects.
  */
 package com.invirgance.convirgance.transform;
