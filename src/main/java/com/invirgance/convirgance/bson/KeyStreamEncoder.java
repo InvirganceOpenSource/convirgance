@@ -57,12 +57,23 @@ public class KeyStreamEncoder implements KeyEncoder
         catch(IOException e) { throw new ConvirganceException(e); }
     }
 
+    /**
+     * Gets the index associated with the key.
+     * @param key The key.
+     * @return The index or null.
+     */
     @Override
     public Integer get(String key)
     {
         return lookup.get(key);
     }
-
+    
+    /**
+     * Gets the Key value for the provided id.
+     * @param id The id.
+     * @return The key.
+     * @throws IllegalArgumentException Occurs if the id is greater, or equal to the key index count.
+     */
     @Override
     public String get(int id)
     {
@@ -71,7 +82,11 @@ public class KeyStreamEncoder implements KeyEncoder
         
         return keys[id];
     }
-
+    
+    /**
+     * The current number of keys stored.
+     * @return The key count.
+     */
     @Override
     public int size()
     {
