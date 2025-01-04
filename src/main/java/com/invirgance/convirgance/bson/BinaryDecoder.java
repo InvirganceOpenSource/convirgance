@@ -25,7 +25,6 @@ package com.invirgance.convirgance.bson;
 import static com.invirgance.convirgance.bson.BinaryEncoder.*;
 import static com.invirgance.convirgance.bson.KeyEncoder.*;
 import static com.invirgance.convirgance.bson.StringEncoder.*;
-
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.io.DataInput;
@@ -33,7 +32,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- *
+ * Deserializes BSON data back into its actual type.
  * @author jbanes
  */
 public class BinaryDecoder
@@ -41,32 +40,56 @@ public class BinaryDecoder
     private KeyEncoder keys;
     private StringEncoder strings;
 
+    /**
+     * Creates a new BinaryDecoder.
+     */
     public BinaryDecoder()
     {
         this(new KeyStreamEncoder());
     }
     
+    /**
+     * Creates a new BinaryDecoder with the provided KeyEncoder for decoding.
+     * @param keys The KeyEncoder.
+     */
     public BinaryDecoder(KeyEncoder keys)
     {
         this.keys = keys;
         this.strings = new StringEncoder();
     }
     
+    /**
+     * Gets the key with the associated id.
+     * @param id The id.
+     * @return The associated string.
+     */
     public String getKey(int id)
     {
         return keys.get(id);
     }
     
+    /**
+     * Gets the current key count
+     * @return The total.
+     */
     public int getKeyCount()
     {
         return keys.size();
     }
 
+    /**
+     * Gets the current key encoder.
+     * @return The encoder.
+     */
     public KeyEncoder getKeyEncoder()
     {
         return keys;
     }
 
+    /**
+     * Returns the StringEncoder in use.
+     * @return The encoder.
+     */
     public StringEncoder getStringEncoder()
     {
         return strings;
@@ -113,6 +136,13 @@ public class BinaryDecoder
         return new String(buffer, "UTF-8");
     }
     
+    /**
+     * Deserializes data from an input stream.
+     * @param in The input stream.
+     * @return The decoded Object.
+     * @throws IOException If an error occurs during deserialization.
+     * @throws IllegalStateException If an incorrectly/unknown byte is read.
+     */
     public Object read(DataInput in) throws IOException
     {
         int type = in.readByte() & 0xFF;
