@@ -92,6 +92,14 @@ public class KeyStreamEncoder implements KeyEncoder
         lookup.put(keys[id], id);
     }
     
+    /**
+     * Encodes a key and writes it to the DataOutput.
+     * @param key The key to encode
+     * @param out The stream to write to.
+     * @return The key index.
+     * @throws IOException If an error occurs during writing.
+     * @throws IllegalStateException If the maximum number of keys is exceeded.
+     */
     @Override
     public int write(String key, DataOutput out) throws IOException
     {
