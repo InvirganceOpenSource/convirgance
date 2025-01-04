@@ -96,6 +96,11 @@ public class KeyTableEncoder implements KeyEncoder
         return keys[id];
     }
     
+    /**
+     * Reads key mappings from the provided input stream.
+     * @param in The stream to read from.
+     * @throws IOException If an error occurs while reading from the stream.
+     */
     @Override
     public void read(DataInput in) throws IOException
     {
@@ -109,6 +114,11 @@ public class KeyTableEncoder implements KeyEncoder
         }
     }
     
+    /**
+     * Writes out the current key mappings to the provided stream.
+     * @param out The output stream.
+     * @throws IOException If an error occurs when writing to the stream.
+     */
     public void write(DataOutput out) throws IOException
     {
         out.writeShort(index);
@@ -119,12 +129,25 @@ public class KeyTableEncoder implements KeyEncoder
         }
     }
     
+    /**
+     * Writes the value for the provided key to the output stream. // TODO: not implemented?
+     *
+     * @param key The key to retrieve the index for.
+     * @param out The output stream (not used in the current implementation).
+     * @return The index of the provided key.
+     * @throws IOException If an error occurs while interacting with the output
+     * stream (if used in the future).
+     */
     @Override
     public int write(String key, DataOutput out) throws IOException
     {
         return get(key);
     }
     
+    /**
+     * Returns the current index size.
+     * @return Index size.
+     */
     @Override
     public int size()
     {
