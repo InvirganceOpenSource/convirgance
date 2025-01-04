@@ -37,11 +37,19 @@ public class KeyStreamEncoder implements KeyEncoder
     private String[] keys; 
     private int index;
     
+    /**
+     * Creates a new KeyStreamEncoder with no output stream.
+     */
     public KeyStreamEncoder()
     {
         reset(null);
     }
 
+    /**
+     * Resets the current stream encoder.
+     * @param out The output stream.
+     * @throws ConvirganceException If an issue occurs when writing to the output stream.
+     */
     @Override
     public void reset(DataOutput out)
     {
