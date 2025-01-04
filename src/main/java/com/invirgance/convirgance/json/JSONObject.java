@@ -134,12 +134,21 @@ public class JSONObject implements Map<String, Object>
         this.ordered = ordered;
     }
     
+    
+    /**
+     * Returns the size of the JSONObjects map.
+     * @return The size.
+     */
     @Override
     public int size()
     {
         return this.map.size();
     }
 
+    /**
+     * Returns if the JSONObjects map is empty.
+     * @return True if empty, otherwise false.
+     */
     @Override
     public boolean isEmpty()
     {
@@ -158,18 +167,33 @@ public class JSONObject implements Map<String, Object>
         return (this.map.get(key) == null);
     }
 
+    /**
+     * Used to check if the JSONObject contains a key.
+     * @param key The key.
+     * @return If the key is present.
+     */
     @Override
     public boolean containsKey(Object key)
     {
         return this.map.containsKey(key);
     }
 
+    /**
+     * Used to check if the JSONObject contains a given value.
+     * @param value The value.
+     * @return If the value is present.
+     */
     @Override
     public boolean containsValue(Object value)
     {
         return this.map.containsValue(value);
     }
 
+    /**
+     * Gets the value for the provided key.
+     * @param key The key.
+     * @return Null if they key is not present, otherwise the key's value.
+     */
     @Override
     public Object get(Object key)
     {
@@ -400,6 +424,12 @@ public class JSONObject implements Map<String, Object>
         return value.toString();
     }
 
+    /**
+     * Adds or updates a key value pair for the JSONObject.
+     * @param key The key.
+     * @param value The value.
+     * @return The replaced value or null.
+     */
     @Override
     public Object put(String key, Object value)
     {
@@ -407,7 +437,12 @@ public class JSONObject implements Map<String, Object>
         
         return this.map.put(key, value);
     }
-
+    
+    /**
+     * Removes a key value pair from the JSONObject.
+     * @param key The key to remove.
+     * @return The removed value, or null.
+     */
     @Override
     public Object remove(Object key)
     {
@@ -416,6 +451,10 @@ public class JSONObject implements Map<String, Object>
         return this.map.remove(key);
     }
 
+    /**
+     * Adds all the provided key value pairs to the JSONObject.
+     * @param map A map consisting of keys and values.
+     */
     @Override
     public void putAll(Map<? extends String, ? extends Object> map)
     {
@@ -445,7 +484,11 @@ public class JSONObject implements Map<String, Object>
         
         return this.map.keySet();
     }
-
+    
+    /**
+     * Returns all the values contained by the JSONObject.
+     * @return All of the values.
+     */
     @Override
     public Collection<Object> values()
     {

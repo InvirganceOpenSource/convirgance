@@ -460,7 +460,11 @@ public class JSONParser implements AutoCloseable
         
         throw new IOException("Unrecognized character: " + c);
     }
-
+    
+    /**
+     * Closes the stream reader.
+     * @throws Exception If an issue occurs while closing the reader.
+     */
     @Override
     public void close() throws Exception
     {
