@@ -468,7 +468,10 @@ public class JSONObject implements Map<String, Object>
         
         this.map.putAll(map);
     }
-
+    
+    /**
+     * Clears the keys value pairs.
+     */
     @Override
     public void clear()
     {
@@ -477,6 +480,10 @@ public class JSONObject implements Map<String, Object>
         this.map.clear();
     }
 
+    /**
+     * Returns a set of the keys.
+     * @return A set view of the keys.
+     */
     @Override
     public Set<String> keySet()
     {
@@ -495,12 +502,18 @@ public class JSONObject implements Map<String, Object>
         return this.map.values();
     }
 
+    
     @Override
     public Set<Entry<String, Object>> entrySet()
     {
         return this.map.entrySet();
     }
 
+    /**
+     * Returns the string representation of the JSONObject.
+     * @return A string.
+     * @throws ConvirganceException If an issue occurs while creating the string from the object.
+     */
     @Override
     public String toString()
     {
@@ -526,6 +539,11 @@ public class JSONObject implements Map<String, Object>
         catch(IOException e) { throw new ConvirganceException(e); }
     }
     
+    /**
+     * Used to see if another object has the same key value pairs.
+     * @param obj The object to compare to.
+     * @return True, if the two objects have the same key value pairs.
+     */
     @Override
     public boolean equals(Object obj)
     {
@@ -558,6 +576,10 @@ public class JSONObject implements Map<String, Object>
         return true;
     }
     
+    /**
+     * Creates a hashcode from this objects values.
+     * @return A hashcode.
+     */
     @Override
     public int hashCode()
     {
