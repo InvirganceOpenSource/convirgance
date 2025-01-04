@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Used to filter JSONObjects that can meet and of a given criteria.
+ * Used to filter JSONObjects that meet any of a given criteria.
  * @author jbanes
  */
 public class OrFilter implements Filter
