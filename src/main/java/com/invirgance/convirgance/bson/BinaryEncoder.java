@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- *
+ * Used for encoding BSON.
+ * It supports encoding of keys, strings, and various primitive types (e.g., integers, booleans, dates) with efficient serialization.
  * @author jbanes
  */
 public class BinaryEncoder
@@ -57,32 +58,57 @@ public class BinaryEncoder
     private StringEncoder strings;
     
 
+    /**
+     * Creates a new BinaryEncoder.
+     */
     public BinaryEncoder()
     {
         this(new KeyStreamEncoder());
     }
 
+    /**
+     * Creates a new BinaryEncoder using the provided KeyEncoder.
+     * @param keys The KeyEncoder to use.
+     */
     public BinaryEncoder(KeyEncoder keys)
     {
         this.keys = keys;
         this.strings = new StringEncoder();
     }
     
+    /**
+     * Returns the value for the provided key.
+     * @param key The key.
+     * @return The value associated with the key.
+     */
     public Integer getKey(String key)
     {
         return keys.get(key);
     }
     
+    /**
+     * Used to get the key based on an index.
+     * @param id The index.
+     * @return The keys value for the index.
+     */
     public String getKey(int id)
     {
         return keys.get(id);
     }
     
+    /**
+     * Returns the size of the keys.
+     * @return The total size.
+     */
     public int getKeyCount()
     {
         return keys.size();
     }
 
+    /**
+     * Returns the KeyEncoder in use.
+     * @return The KeyEncoder.
+     */
     public KeyEncoder getKeyEncoder()
     {
         return keys;
@@ -192,6 +218,12 @@ public class BinaryEncoder
         out.writeLong(value.getTime());
     }
     
+    /**
+     * Writes out the encoded object to the provided output stream.
+     * @param value The Object to encode and write.
+     * @param out The output stream to write to.
+     * @throws IOException If an error occurs while writing to the stream.
+     */
     public void write(Object value, DataOutput out) throws IOException
     {
         if(value == null) out.writeByte(TYPE_NULL);
