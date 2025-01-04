@@ -27,7 +27,9 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- *
+ * The StringEncoder class maps strings to unique integer indexes, supporting up to 256 strings.
+ * It is ideal for memory-constrained environments, efficient serialization, and quick lookups.
+ * 
  * @author jbanes
  */
 public class StringEncoder
@@ -38,6 +40,9 @@ public class StringEncoder
     private String[] keys; 
     private int index;
 
+    /**
+     * Creates a new StringEncoder.
+     */
     public StringEncoder()
     {
         this.lookup = new HashMap<>();
@@ -45,6 +50,11 @@ public class StringEncoder
         this.index = 0;
     }
     
+    /**
+     * Gets the value for the provided key.
+     * @param value The key.
+     * @return The value for the key.
+     */
     public Integer get(String value)
     {
         return lookup.get(value);
