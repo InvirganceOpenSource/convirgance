@@ -99,6 +99,11 @@ public class StringEncoder
         return id;
     }
     
+    /**
+     * Reads a string value from the input stream and registers it with a unique index.
+     * @param in The input stream to read from.
+     * @throws IOException If an error occurs while reading from the input stream.
+     */
     public void read(DataInput in) throws IOException
     {
         String value = in.readUTF();
