@@ -65,8 +65,7 @@ public interface KeyEncoder
     public int size();
     
     /**
-     * Reads the encoder state from an input stream (default implementation is
-     * blank).
+     * Reads the encoder state from an input stream.
      *
      * @param in The input stream.
      * @throws IOException If reading fails.

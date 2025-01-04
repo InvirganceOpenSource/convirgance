@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- *
+ * Use when you need to map string keys to unique integer IDs for stream processing.
  * @author jbanes
  */
 public class KeyStreamEncoder implements KeyEncoder
