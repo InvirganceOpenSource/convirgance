@@ -58,6 +58,12 @@ public class KeyTableEncoder implements KeyEncoder
         this.index = 0;
     }
     
+    /**
+     * Retrieves the integer index associated with the specified key.
+     * @param key The key.
+     * @return The index of the corresponding key.
+     * @throws IllegalStateException Occurs if the index is greater or equal to the current keys.
+     */
     @Override
     public Integer get(String key)
     {
@@ -76,6 +82,12 @@ public class KeyTableEncoder implements KeyEncoder
         return id;
     }
     
+    /**
+     * Returns the key for the provided index.
+     * @param id The index.
+     * @return The key at the associated index.
+     * @throws IllegalArgumentException The id is greater or equal to the max index.
+     */
     @Override
     public String get(int id)
     {
