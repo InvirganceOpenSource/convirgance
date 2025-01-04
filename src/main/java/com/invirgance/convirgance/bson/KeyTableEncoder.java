@@ -27,7 +27,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- *
+ * KeyTableEncoder provides a fixed-size mapping between string keys and unique integer indexes. 
+ * It supports efficient key encoding/decoding, serialization, and deserialization of the mappings.
  * @author jbanes
  */
 public class KeyTableEncoder implements KeyEncoder
@@ -36,11 +37,18 @@ public class KeyTableEncoder implements KeyEncoder
     private String[] keys; 
     private int index;
 
+    /**
+     * Creates a new KeyTableEncoder without an output stream.
+     */
     public KeyTableEncoder()
     {
         reset(null);
     }
     
+    /**
+     * Resets the encoder state.
+     * @param out Not implemented.
+     */
     @Override
     public void reset(DataOutput out)
     {
