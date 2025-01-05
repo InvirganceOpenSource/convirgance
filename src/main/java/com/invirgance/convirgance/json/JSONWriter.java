@@ -37,6 +37,9 @@ public class JSONWriter implements AutoCloseable
     private int indent;
     private int level;
 
+    /**
+     * Creates a new JSONWriter.
+     */
     public JSONWriter()
     {
         this(new StringWriter());
@@ -365,12 +368,20 @@ public class JSONWriter implements AutoCloseable
         else throw new IOException("Unrecognized object type " + object.getClass().getName());
     }
 
+    /**
+     * Closes the current writer.
+     * @throws Exception If an error occurs while closing the writer.
+     */
     @Override
     public void close() throws Exception
     {
         this.writer.close();
     }
-
+    
+    /**
+     * Returns the JSON content written so far.
+     * @return A string of JSON content.
+     */
     @Override
     public String toString()
     {
