@@ -32,8 +32,19 @@ import com.invirgance.convirgance.target.Target;
  */
 public interface Output
 {
+    /**
+     * Returns a {@link OutputCursor} to some target that will be written to.
+     * @param target The target to write to.
+     * @return The OutputCursor to write to the provided target.
+     */
     public OutputCursor write(Target target);
     
+    /**
+     * Used when writing a 'collection' of JSONObjects to some target.
+     * @param target The target to write to.
+     * @param records A 'collection' of JSONObjects to sequentially write.
+     * @throws ConvirganceException If an error occurs while writing to the target.
+     */
     default public void write(Target target, Iterable<JSONObject> records)
     {
         try(OutputCursor cursor = write(target))
