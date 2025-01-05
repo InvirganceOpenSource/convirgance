@@ -30,14 +30,26 @@ import java.io.OutputStream;
  * @author jbanes
  */
 public interface Target
-{
+{  
+    /**
+     * Gets the output stream to write to.
+     * @return The {@link OutputStream}.
+     */
     public OutputStream getOutputStream();
     
+    /**
+     * Returns if the output stream for the target can be reused, default true.
+     * @return true.
+     */
     default public boolean isReusable()
     {
         return true;
     }
     
+    /**
+     * Returns if the output stream for the target has been used, default false.
+     * @return false.
+     */
     default public boolean isUsed()
     {
         return false;
