@@ -32,5 +32,10 @@ import java.sql.SQLException;
  */
 public interface AtomicOperation
 {
+    /**
+     * Executes the implemented function.
+     * @param connection A connection to some source.
+     * @throws SQLException If an error occurs during execution.
+     */
     public void execute(Connection connection) throws SQLException;
 }
