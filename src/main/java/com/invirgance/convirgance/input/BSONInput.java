@@ -37,6 +37,11 @@ import java.util.zip.GZIPInputStream;
  */
 public class BSONInput implements Input<JSONObject>
 {
+    /**
+     * Creates a new InputCursor for JSONObjects encoded with BSON.
+     * @param source A {@link Source} to BSON encoded data.
+     * @return A BSONInputCursor with the decoded stream.
+     */
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
