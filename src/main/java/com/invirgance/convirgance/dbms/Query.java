@@ -286,6 +286,10 @@ public class Query
         }
     }
     
+    /**
+     * Gets the markup representation of the query.
+     * @return The markup values.
+     */
     public Markup[] getMarkup()
     {
         return markup.toArray(Markup[]::new);
@@ -378,8 +382,8 @@ public class Query
         }
 
         /**
-         * 
-         * @return 
+         * Returns the parameter name.
+         * @return The name.
          */
         public String getName()
         {
