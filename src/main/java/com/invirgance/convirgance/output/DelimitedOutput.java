@@ -110,12 +110,23 @@ public class DelimitedOutput implements Output
         this.encoding = encoding;
     }
 
+    /**
+     * Creates a new writer to output delimited data to the specified target.
+     * Uses the current column definitions of this object to format the output.
+     * 
+     * @param target The target writeable output stream.
+     * @return The OutputCursor to write delimited data.
+     */
     @Override
     public OutputCursor write(Target target)
     {
         return new DelimitedOutputWriter(target, this.columns);
     }
     
+    /**
+     * Returns 'text/plain', but if the delimiter in use is ',' 'text/csv' is returned.
+     * @return One of the two content mime types.
+     */
     @Override
     public String getContentType()
     {
