@@ -25,7 +25,7 @@ import com.invirgance.convirgance.CloseableIterator;
 
 /**
  * A cursor interface for iterating over data read by an Input
- * implementation.Extends Iterable to provide type-safe iteration while ensuring
+ * implementation. Extends Iterable to provide type-safe iteration while ensuring
  * resources are properly closed via CloseableIterator.
  *
  * @author jbanes
