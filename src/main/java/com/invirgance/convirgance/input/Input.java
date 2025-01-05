@@ -32,6 +32,12 @@ import com.invirgance.convirgance.source.Source;
  */
 public interface Input<T>
 {
+    /**
+     * Reads data from the specified source and returns an {@link InputCursor} 
+     * for iterating over the data.
+     * @param source An input stream to read from.
+     * @return An {@link InputCursor} to iterate over some type.
+     */
     public InputCursor<T> read(Source source);
  
 }
