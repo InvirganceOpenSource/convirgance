@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * A List implementation to work JSON data as an array.
+ * A List implementation to work with JSON data as an array.
  * 
  * @author jbanes
  * @param <T> Optional typing to apply to the array
@@ -369,7 +369,12 @@ public class JSONArray<T> implements List<T>
     {
         return new JSONArray<>(this.list.subList(fromIndex, toIndex));
     }
-
+    
+    /**
+     * Returns the string representation of the array.
+     * @return A string.
+     * @throws ConvirganceException If an error occurs while 'writing' the array to a string.
+     */
     @Override
     public String toString()
     {
@@ -399,6 +404,11 @@ public class JSONArray<T> implements List<T>
         catch(IOException e) { throw new ConvirganceException(e); }
     }
 
+    /**
+     * Checks if the provided JSONArray is the exact same as this.
+     * @param obj The comparison array.
+     * @return True if the arrays contain exactly identical items.
+     */
     @Override
     public boolean equals(Object obj)
     {
@@ -434,6 +444,10 @@ public class JSONArray<T> implements List<T>
         return true;
     }
 
+    /**
+     * Creates a based on the values in the array.
+     * @return A hashcode.
+     */
     @Override
     public int hashCode()
     {
