@@ -24,21 +24,34 @@ package com.invirgance.convirgance.transform.filter;
 import com.invirgance.convirgance.json.JSONObject;
 
 /**
- *
+ * Used when filtering data that should be equal to some criteria.
  * @author jbanes
  */
 public class EqualsFilter extends ComparatorFilter
 {
+    /**
+     * Creates a new EqualsFilter.
+     */
     public EqualsFilter()
     {
         super();
     }
 
+    /**
+     * Creates a new EqualsFilter with the key to evaluate and its expected/comparison value.
+     * @param key The key to evaluate for compared Objects.
+     * @param value The comparison value.
+     */
     public EqualsFilter(String key, Object value)
     {
         super(key, value);
     }
     
+    /**
+     * Evaluates the provided JSONObject, checking the key and its value to this Filters comparison value.
+     * @param record The JSONObject to evaluate.
+     * @return True if the record has the expected key and value.
+     */
     @Override
     public boolean test(JSONObject record)
     {
