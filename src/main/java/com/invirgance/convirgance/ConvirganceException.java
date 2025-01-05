@@ -30,6 +30,9 @@ package com.invirgance.convirgance;
 public class ConvirganceException extends RuntimeException
 {
 
+    /**
+     * Creates a new ConvirganceException.
+     */
     public ConvirganceException()
     {
         super();
