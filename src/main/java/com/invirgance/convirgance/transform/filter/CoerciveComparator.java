@@ -68,6 +68,12 @@ public class CoerciveComparator implements Comparator
         return left.intValue() - right.intValue();
     }
     
+    /**
+     * Compares two objects based on their types. Falling back to hashcode comparison if needed.
+     * @param left The first Object.
+     * @param right The second Object
+     * @return An integer from -1 to 1. 0 being equality. 
+     */
     @Override
     public int compare(Object left, Object right)
     {
