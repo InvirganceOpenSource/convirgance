@@ -170,6 +170,17 @@ public class DelimitedInput implements Input<JSONObject>
         return list.toArray(String[]::new);
     }
 
+    /**
+     * Creates a new cursor to read JSON objects from the given presumably
+     * delimited source stream. The method uses the current column definitions
+     * of this object to map data from the source to JSON objects.
+     *
+     * @param source A DataSource representing the input stream of delimited
+     * data.
+     * @return A InputCursor to iterate over the parsed objects.
+     * @throws ConvirganceException If an I/O error occurs while reading from
+     * the source or if parsing fails.
+     */
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
