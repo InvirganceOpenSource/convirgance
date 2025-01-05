@@ -33,13 +33,21 @@ import java.io.*;
  */
 public class JSONOutput implements Output
 {
-
+    /**
+     * Used to reliably write out data to the provided {@link Target}.
+     * @param target A place to write data, ex File, Network.
+     * @return A {@link JSONOutputCursor}.
+     */
     @Override
     public OutputCursor write(Target target)
     {
         return new JSONOutputCursor(target);
     }
 
+    /**
+     * Returns the mime-type 'application/json'.
+     * @return A string with the data's mime-type.
+     */
     @Override
     public String getContentType()
     {
