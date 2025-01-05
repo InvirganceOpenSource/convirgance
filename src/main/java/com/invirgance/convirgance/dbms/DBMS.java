@@ -55,7 +55,8 @@ public class DBMS
     }
 
     /**
-     * @return Returns the current DataSource being used for database operations.
+     * Returns the current DataSource being used for database operations.
+     * @return The DataSource.
      */
     public DataSource getSource()
     {
