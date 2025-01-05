@@ -29,6 +29,10 @@ import com.invirgance.convirgance.json.JSONObject;
  */
 public class GreaterThanFilter extends ComparatorFilter
 {
+    
+    /**
+     * Creates a new GreaterThanFilter.
+     */
     public GreaterThanFilter()
     {
         super();
