@@ -33,13 +33,26 @@ import java.util.Iterator;
  */
 public interface OutputCursor extends AutoCloseable
 {
+    
+    /**
+     * Used to write a record to the stream.
+     * @param record The {@link JSONObject} to write.
+     */
     public void write(JSONObject record);
     
+    /**
+     * Used to write a 'collection' of {@link JSONObject} to the stream.
+     * @param iterable The iterable of JSONObjects to write.
+     */
     default public void write(Iterable<JSONObject> iterable)
     {
         write(iterable.iterator());
     }
     
+    /**
+     * Writes each {@link JSONObject} in the iterator to the source.
+     * @param iterator The iterator of JSONObjects to write.
+     */
     default public void write(Iterator<JSONObject> iterator)
     {
         while(iterator.hasNext()) write(iterator.next());
