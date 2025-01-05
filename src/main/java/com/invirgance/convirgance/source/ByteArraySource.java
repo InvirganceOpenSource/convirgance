@@ -41,6 +41,10 @@ public class ByteArraySource implements Source
         this.buffer = buffer;
     }
 
+    /**
+     * Returns a {@link ByteArrayInputStream} using the current buffer.
+     * @return A input stream.
+     */
     @Override
     public InputStream getInputStream()
     {

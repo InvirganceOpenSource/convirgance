@@ -53,6 +53,10 @@ public class ClasspathSource implements Source
         this.path = path;
     }
     
+    /**
+     * Returns a InputStream using the current path as the stream resource.
+     * @return An InputStream.
+     */
     @Override
     public InputStream getInputStream()
     {

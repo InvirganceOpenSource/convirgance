@@ -71,7 +71,7 @@ public class CoerciveComparator implements Comparator
     /**
      * Compares two objects based on their types. Falling back to hashcode comparison if needed.
      * @param left The first Object.
-     * @param right The second Object
+     * @param right The second Object.
      * @return An integer from -1 to 1. 0 being equality. 
      */
     @Override

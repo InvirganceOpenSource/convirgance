@@ -42,6 +42,11 @@ public class InputStreamSource implements Source
         this.in = in;
     }
 
+    /**
+     * Gets the InputStream.
+     * @return The stream.
+     * @throws ConvirganceException If attempting to reuse the stream.
+     */
     @Override
     public InputStream getInputStream()
     {
@@ -51,13 +56,21 @@ public class InputStreamSource implements Source
         
         return this.in;
     }
-
+    
+    /**
+     * Streams from sources of this type are not reusable.
+     * @return false.
+     */
     @Override
     public boolean isReusable()
     {
         return false;
     }
-
+    
+    /**
+     * If this InputStream has been used.
+     * @return A Boolean.
+     */
     @Override
     public boolean isUsed()
     {

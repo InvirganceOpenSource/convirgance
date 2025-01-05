@@ -53,6 +53,11 @@ public class FileSource implements Source
         return file;
     }
     
+    /**
+     * Returns a new {@link FileInputStream} using the current file as a source.
+     * @return An InputStream.
+     * @throws ConvirganceException If an I/O exception occurs while using this Object's file to create a new {@link FileInputStream}.
+     */
     @Override
     public InputStream getInputStream()
     {
