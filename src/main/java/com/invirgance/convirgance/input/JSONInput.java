@@ -36,7 +36,15 @@ import java.io.InputStreamReader;
  */
 public class JSONInput implements Input<JSONObject>
 {
-
+    
+    /**
+     * Creates a new {@link JSONInputCursor} to use for reading from some data
+     * source/stream.
+     *
+     * @param source The stream.
+     * @return A new {@link InputCursor} that can be used to iterate over
+     * {@link JSONObject} records from the provided source.
+     */
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
