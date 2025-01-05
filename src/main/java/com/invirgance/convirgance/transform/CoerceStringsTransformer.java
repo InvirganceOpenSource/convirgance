@@ -82,7 +82,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @return True if boolean string parsing is enabled.
+     * If Boolean string coercion is enabled.
+     * @return True if enabled.
      */
     public boolean isBooleans()
     {
@@ -90,7 +91,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @return True if decimal number parsing is enabled.
+     * If Double/Decimal/Scientific string coercion is enabled.
+     * @return True if enabled.
      */
     public boolean isDoubles()
     {
@@ -98,7 +100,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @return True if integer parsing is enabled.
+     * If integer string coercion is enabled.
+     * @return True if enabled.
      */
     public boolean isIntegers()
     {
@@ -106,7 +109,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @param booleans True to enable boolean string parsing.
+     * Used to enable coercion of strings to Booleans.
+     * @param booleans If coercion should be done.
      */
     public void setBooleans(boolean booleans)
     {
@@ -114,7 +118,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @param doubles True to enable decimal number parsing.
+     * Used to enable coercion of strings to Double/Decimal/Scientific.
+     * @param doubles If coercion should be done.
      */
     public void setDoubles(boolean doubles)
     {
@@ -122,7 +127,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @param integers True to enable integer parsing.
+     * Used to enable coercion of strings to Integers.
+     * @param integers If coercion should be done.
      */
     public void setIntegers(boolean integers)
     {
@@ -130,22 +136,22 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * @return Array of field names to include when parsing --(null if none
-     * specified)-- An empty array is returned if none.
+     * The array of field names to include when parsing.
+     * @return The included field names.
+     * @throws NullPointerException If included has not been initialized.
      */
     public String[] getIncluded()
     {
-        // TODO: Possible null pointer ref?
         return included.toArray(String[]::new);
     }
 
     /**
-     * @return Array of field names to exclude when parsing --(null if none
-     * specified)-- An empty array is returned if none.
+     * The array of field names to exclude when parsing.
+     * @return The excluded field names.
+     * @throws NullPointerException If excluded has not been initialized.
      */
     public String[] getExcluded()
     {
-        // TODO: Possible null pointer ref?
         return excluded.toArray(String[]::new);
     }
     
