@@ -34,8 +34,24 @@ import java.util.Iterator;
  */
 public interface IdentityTransformer extends Transformer
 {
+    
+    /**
+     * Transforms the provided record in some way.
+     * @param record The JSONObject to transform/modify.
+     * @return The modified JSONObject.
+     * @throws ConvirganceException If an error occurs while making transformations.
+     */
     public JSONObject transform(JSONObject record) throws ConvirganceException;
 
+    /**
+     * Transforms a collection of {@link JSONObject} records by applying the transformation to each element.
+     * This method is intended for use when transforming a collection of records.
+     * It returns an iterator that applies the transformation to each {@link JSONObject} in the collection.
+     *
+     * @param iterator The {@link Iterator} over a collection of {@link JSONObject} to be transformed.
+     * @return An {@link Iterator} of transformed {@link JSONObject}s.
+     * @throws ConvirganceException If an error occurs during the transformation process.
+     */
     @Override
     public default Iterator<JSONObject> transform(final Iterator<JSONObject> iterator) throws ConvirganceException
     {
