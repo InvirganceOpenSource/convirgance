@@ -32,13 +32,25 @@ import java.io.InputStream;
  */
 public interface Source
 {
+    /**
+     * Returns the {@link InputStream} for reading from this source.
+     * @return The InputStream
+     */
     public InputStream getInputStream();
     
+    /**
+     * If the source is reusable, default true.
+     * @return true. 
+     */
     default public boolean isReusable()
     {
         return true;
     }
     
+    /**
+     * If the sources InputStream has been used already, default false.
+     * @return false.
+     */
     default public boolean isUsed()
     {
         return false;
