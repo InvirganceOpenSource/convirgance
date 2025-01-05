@@ -49,6 +49,10 @@ public class OutputStreamTarget implements Target
         return out;
     }
 
+    /**
+     * Streams of this type are not reusable.
+     * @return false.
+     */
     @Override
     public boolean isReusable()
     {

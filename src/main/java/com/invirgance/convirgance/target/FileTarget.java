@@ -47,7 +47,7 @@ public class FileTarget implements Target
     }
 
     /**
-     * Returns the File.
+     * Returns the {@link File}.
      * @return The target file.
      */
     public File getFile()
@@ -55,6 +55,11 @@ public class FileTarget implements Target
         return file;
     }
     
+    /**
+     * Returns a new {@link FileOutputStream} using this objects file.
+     * @return The stream.
+     * @throws ConvirganceException If an error occurs while creating an FileOutputStream from this objects file.
+     */
     @Override
     public OutputStream getOutputStream()
     {

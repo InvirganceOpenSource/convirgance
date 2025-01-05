@@ -45,6 +45,11 @@ public class ByteArrayTarget implements Target
         return out.toByteArray();
     }
     
+    /**
+     * Returns the output stream to write to.
+     * @return The stream.
+     * @throws ConvirganceException If the target stream has already been used.
+     */
     @Override
     public OutputStream getOutputStream()
     {
@@ -55,6 +60,10 @@ public class ByteArrayTarget implements Target
         return out;
     }
 
+    /**
+     * Streams of this type are not reusable.
+     * @return false.
+     */
     @Override
     public boolean isReusable()
     {
