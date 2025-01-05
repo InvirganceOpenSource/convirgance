@@ -50,7 +50,11 @@ public abstract class ComparatorFilter implements Filter
         this.key = key;
         this.value = value;
     }
-
+    
+    /**
+     * Returns the {@link CoerciveComparator} used for filtering. 
+     * @return The CoerciveComparator.
+     */
     protected CoerciveComparator getComparator()
     {
         return comparator;
