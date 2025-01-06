@@ -32,73 +32,17 @@ import java.util.*;
  */
 public class SortedGroupByTransformer implements Transformer 
 {   
-    private Set<String> included;
-    private Set<String> excluded;
-    private String groupByKey;
+    private String[] groupByKey;
+    private String outputKey;
     
     /**
-     * Creates a new GroupByTransformer to group related data with. 
-     * @param key The key we want to group related data on.
+     * Creates a new GroupByTransformer to group related data on provided fields. 
+     * @param keys The fields we want to group related data on.
      */
-    public SortedGroupByTransformer(String key)
+    public SortedGroupByTransformer(String[] keys, String output)
     {
-        this(key, null,null);
-    }
-
-    /**
-     * Creates a new GroupByTransformer with specified fields to group or exclude.
-     *
-     * @param key The key to group on.
-     * @param included Only group these values.
-     * @param excluded Exclude these keys all together.
-     */
-    public SortedGroupByTransformer( String key,String[] included,String[] excluded)
-    {
-        this.groupByKey = key;
-        this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
-        this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
-    }
-
-    /**
-     * The array of field names to include when grouping. 
-     * If null all are included.
-     * 
-     * @return The included field names.
-     * @throws NullPointerException If included has not been initialized.
-     */
-    public String[] getIncluded()
-    {
-        return included.toArray(String[]::new);
-    }
-
-    /**
-     * The array of field names to exclude when grouping.
-     * @return The excluded field names.
-     * @throws NullPointerException If excluded has not been initialized.
-     */
-    public String[] getExcluded()
-    {
-        return excluded.toArray(String[]::new);
-    }
-    
-    /**
-     * Set field names to include when grouping.
-     * @param included Array of field/header names to include.
-     */
-    public void setIncluded(String[] included)
-    {
-        if(included == null) this.included = null;
-        else this.included = new HashSet<>(Arrays.asList(included));
-    }
-    
-    /**
-     * Set field names to exclude when grouping values.
-     * @param excluded Array of fields/headers to exclude.
-     */
-    public void setExcluded(String[] excluded)
-    {
-        if(excluded == null) this.excluded = null;
-        else this.excluded = new HashSet<>(Arrays.asList(excluded));
+        this.groupByKey = keys;
+        this.outputKey = output;
     }
     
    
@@ -122,35 +66,7 @@ public class SortedGroupByTransformer implements Transformer
         
         while (iterator.hasNext())
         {
-            record = iterator.next();
-            groupKey = record.getString(groupByKey);
-            group = groupMap.get(groupKey);
-            
-            if (group == null)
-            {
-                group = new JSONObject();
-                group.put(groupByKey, groupKey);
-                results.add(group);
-                groupMap.put(groupKey, group);
-            }
-
-            for (String field : record.keySet())
-            {
-                if (field.equals(groupByKey)) continue;
-                if (excluded != null && excluded.contains(field)) continue;
-                if (included != null && !included.contains(field)) continue;
-                
-                if (!group.containsKey(field))
-                {
-                    fieldArray = new JSONArray();
-                    group.put(field, fieldArray);
-                }
-                else
-                {
-                    fieldArray = group.getJSONArray(field);
-                }
-                fieldArray.add(record.get(field));
-            }
+           
         }
 
         return results.iterator();
