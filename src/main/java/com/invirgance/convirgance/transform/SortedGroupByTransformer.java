@@ -30,7 +30,7 @@ import java.util.*;
  * 
  * @author tadghh
  */
-public class GroupByTransformer implements Transformer 
+public class SortedGroupByTransformer implements Transformer 
 {   
     private Set<String> included;
     private Set<String> excluded;
@@ -40,7 +40,7 @@ public class GroupByTransformer implements Transformer
      * Creates a new GroupByTransformer to group related data with. 
      * @param key The key we want to group related data on.
      */
-    public GroupByTransformer(String key)
+    public SortedGroupByTransformer(String key)
     {
         this(key, null,null);
     }
@@ -52,7 +52,7 @@ public class GroupByTransformer implements Transformer
      * @param included Only group these values.
      * @param excluded Exclude these keys all together.
      */
-    public GroupByTransformer( String key,String[] included,String[] excluded)
+    public SortedGroupByTransformer( String key,String[] included,String[] excluded)
     {
         this.groupByKey = key;
         this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
