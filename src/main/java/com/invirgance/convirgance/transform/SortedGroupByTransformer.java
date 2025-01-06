@@ -26,7 +26,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
 
 /**
- * Groups data together from an iterator based on a specified key.
+ * Groups data together from an iterator based on a specified keys.
  * 
  * @author tadghh
  */
@@ -38,6 +38,7 @@ public class SortedGroupByTransformer implements Transformer
     /**
      * Creates a new GroupByTransformer to group related data on provided fields. 
      * @param keys The fields we want to group related data on.
+     * @param output The field to output the grouped data to.
      */
     public SortedGroupByTransformer(String[] keys, String output)
     {
@@ -58,6 +59,7 @@ public class SortedGroupByTransformer implements Transformer
                 .allMatch(key -> record.get(key).equals(currentKeys.get(key)));
     }
     
+    
     /**
      * Groups JSONObjects based on a specific matching key value.
      * Ex Collecting atomized weather data for cities and grouping it together.
@@ -68,41 +70,32 @@ public class SortedGroupByTransformer implements Transformer
     @Override
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
     {
-        JSONArray results = new JSONArray();
         Map<String, Object> currentKeys = new HashMap<>();
-        JSONObject group = new JSONObject();
+        JSONArray results = new JSONArray();
         JSONArray fieldArray = new JSONArray();
-        JSONObject record;
-
+        JSONObject group = new JSONObject();
+        Set<String> excludeKeys = new HashSet<>(Arrays.asList(this.groupByKeys));
+        
         while (iterator.hasNext())
         {
-            record = iterator.next();
-            
+             final JSONObject record = iterator.next();
+           
             // Record doesn't contain the required fields.
             if (!containsKeys(record, this.groupByKeys))
             {
                 continue;
             }
 
-            if (currentKeys.isEmpty())
+            if (currentKeys.isEmpty() || !keysMatch(record, currentKeys))
             {
-                for (String key : this.groupByKeys)
-                {
-                    currentKeys.put(key, record.get(key));
-                    group.put(key, record.get(key));
+                if (!currentKeys.isEmpty())
+                {  
+                    results.add(group);
+                    group = new JSONObject();
+                    fieldArray = new JSONArray();
                 }
-                group.put(this.outputKey, fieldArray);
-            }
 
-            // Data should be sorted... New object time
-            if (!keysMatch(record, currentKeys))
-            {
-                results.add(group);
- 
-                group = new JSONObject();
-                fieldArray = new JSONArray();
                 currentKeys.clear();
-
                 for (String key : this.groupByKeys)
                 {
                     currentKeys.put(key, record.get(key));
@@ -110,21 +103,19 @@ public class SortedGroupByTransformer implements Transformer
                 }
                 group.put(this.outputKey, fieldArray);
             }
-
-            JSONObject nestedObj = new JSONObject();
-            for (String key : record.keySet())
-            {
-                if (!Arrays.asList(this.groupByKeys).contains(key))
-                {
-                    nestedObj.put(key, record.get(key));
-                }
-            }
-            fieldArray.add(nestedObj);
+            
+            // Add any other keys on the object, filtering off values we matched on
+            fieldArray.add(
+                    record.keySet().stream()
+                            .filter(key -> !excludeKeys.contains(key))
+                            .collect(JSONObject::new,
+                                    (obj, key) -> obj.put(key, record.get(key)),
+                                    JSONObject::putAll)
+            );
         }
 
         if (!group.isEmpty()) results.add(group);
         
-
         return results.iterator();
     }
 }
