@@ -34,7 +34,6 @@ public class SortedGroupByTransformer implements Transformer
 {   
     private String[] groupByKeys;
     private String outputKey;
-    
     /**
      * Creates a new GroupByTransformer to group related data on provided fields. 
      * @param keys The fields we want to group related data on.
@@ -74,27 +73,29 @@ public class SortedGroupByTransformer implements Transformer
         JSONArray results = new JSONArray();
         JSONArray fieldArray = new JSONArray();
         JSONObject group = new JSONObject();
+
         Set<String> excludeKeys = new HashSet<>(Arrays.asList(this.groupByKeys));
+        Set<String> keepKeys = new HashSet();
         
         while (iterator.hasNext())
         {
-             final JSONObject record = iterator.next();
-           
-            // Record doesn't contain the required fields.
-            if (!containsKeys(record, this.groupByKeys))
-            {
-                continue;
-            }
+            JSONObject record = iterator.next();
 
-            if (currentKeys.isEmpty() || !keysMatch(record, currentKeys))
+            // Record doesn't contain the required fields.
+            if (!containsKeys(record, this.groupByKeys)) continue;
+
+            if (!keysMatch(record, currentKeys))
             {
+                keepKeys = new HashSet<>(record.keySet());
+                keepKeys.removeAll(excludeKeys);
+                
                 if (!currentKeys.isEmpty())
-                {  
+                {
                     results.add(group);
                     group = new JSONObject();
                     fieldArray = new JSONArray();
                 }
-
+                
                 currentKeys.clear();
                 for (String key : this.groupByKeys)
                 {
@@ -103,19 +104,17 @@ public class SortedGroupByTransformer implements Transformer
                 }
                 group.put(this.outputKey, fieldArray);
             }
-            
-            // Add any other keys on the object, filtering off values we matched on
-            fieldArray.add(
-                    record.keySet().stream()
-                            .filter(key -> !excludeKeys.contains(key))
-                            .collect(JSONObject::new,
-                                    (obj, key) -> obj.put(key, record.get(key)),
-                                    JSONObject::putAll)
-            );
+
+            JSONObject filtered = new JSONObject();
+            for (String key : keepKeys)
+            {
+                filtered.put(key, record.get(key));
+            }
+            fieldArray.add(filtered);
         }
 
         if (!group.isEmpty()) results.add(group);
-        
+
         return results.iterator();
     }
 }
