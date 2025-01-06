@@ -24,8 +24,7 @@
 package com.invirgance.convirgance.transform;
 
 import com.invirgance.convirgance.json.JSONArray;
-import com.invirgance.convirgance.json.JSONObject;
-import java.util.Iterator;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -45,20 +44,27 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransform()
     {
-        String jsonArray = "["
+        String equalTest = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"}]}]";
+        String testItems = "["
                 + "{\"city\": \"Tampa\", \"temp\": 35.2, \"weather\": \"rain\"},"
                 + "{\"city\": \"Milwaukee\", \"temp\": 23.2, \"weather\": \"sunny\"},"
                 + "{\"city\": \"Tampa\", \"temp\": 36.2, \"weather\": \"sunny\"},"
                 + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"}"
                 + "]";
-                String[] groupKeys = new String[]{"city"};
-        String outputKey = "temps";
-        JSONArray jsonObjects = new JSONArray(jsonArray);
-        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys,outputKey);
-        Iterator<JSONObject> result = instance.transform(iterator);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String[] groupKeys = new String[]
+        {
+            "city"
+        };
+        
+        JSONArray objects = new JSONArray(testItems);
+        JSONArray expected = new JSONArray(equalTest);
+        JSONArray transformed = new JSONArray();
+        
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        assertTrue(transformed.equals(expected));
     }
     
 }
