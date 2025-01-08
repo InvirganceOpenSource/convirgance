@@ -79,10 +79,12 @@ public class SortedGroupByTransformer implements Transformer
         JSONObject group = new JSONObject();
         Set<String> excludeKeys = new HashSet<>(Arrays.asList(this.groupByKeys));
         Set<String> keepKeys = new HashSet();
+        JSONObject record;
+        JSONObject filtered;
         
         while (iterator.hasNext())
         {
-            JSONObject record = iterator.next();
+            record = iterator.next();
 
             // Record doesn't contain the required fields.
             if (!containsKeys(record, this.groupByKeys)) continue;
@@ -110,7 +112,7 @@ public class SortedGroupByTransformer implements Transformer
                 group.put(this.outputKey, fieldArray);
             }
 
-            JSONObject filtered = new JSONObject();
+            filtered = new JSONObject();
             
             for (String key : keepKeys)
             {
