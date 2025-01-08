@@ -73,10 +73,10 @@ public class SortedGroupByTransformerTest
         assertTrue(transformed.equals(expected));
     }
     
-        /**
-     * Test of transform method, of class SortedGroupByTransformer.
+
+    /**
+     * Test that grouping on multiple fields works as expected.
      */
-    
     @Test
     public void testTransformMultipleFields()
     {
@@ -94,7 +94,7 @@ public class SortedGroupByTransformerTest
         
         SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
-        System.out.println(transformed.toString());
+
         assertTrue(transformed.equals(expected));
     }
     
