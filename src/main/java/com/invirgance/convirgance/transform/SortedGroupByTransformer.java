@@ -47,6 +47,7 @@ public class SortedGroupByTransformer implements Transformer
      */
     public SortedGroupByTransformer(String[] fields, String output)
     {
+        // Test dependent exception messages.
         if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
 
         for (String key : fields)

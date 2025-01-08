@@ -145,7 +145,7 @@ public class SortedGroupByTransformerTest
     {       
         String[] groupKeys = new String[] {"Fish", "Dog"};       
 
-        // Verify that creating the transformer with empty keys throws an exception
+        // Verify that creating the transformer with no output throws an exception
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
             new SortedGroupByTransformer(groupKeys, "");
