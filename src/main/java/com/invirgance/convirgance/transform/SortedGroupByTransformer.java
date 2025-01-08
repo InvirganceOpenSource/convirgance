@@ -47,11 +47,11 @@ public class SortedGroupByTransformer implements Transformer
      */
     public SortedGroupByTransformer(String[] fields, String output)
     {
-        if (fields == null || fields.length == 0) throw new ConvirganceException("fields must not be null or empty.");      
+        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
 
         for (String key : fields)
         {
-            if (key == null || key.isEmpty()) throw new ConvirganceException("fields must not contain null or empty values.");
+            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
         }
 
         if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");

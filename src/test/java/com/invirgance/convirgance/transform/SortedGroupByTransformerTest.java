@@ -23,7 +23,10 @@
  */
 package com.invirgance.convirgance.transform;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -104,15 +107,15 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformNoFields()
     {       
-        String[] groupKeys = new String[]{};
-        
-        JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(testItems);
-        JSONArray transformed = new JSONArray();
-        
-        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+        String[] groupKeys = new String[] {};       
 
-        assertTrue(transformed.equals(expected));
+        // Verify that creating the transformer with empty keys throws an exception
+        Exception exception = assertThrows(ConvirganceException.class, () ->
+        {
+            new SortedGroupByTransformer(groupKeys, "temps");
+        });
+
+        // Assert that the exception message matches what is expected
+        assertEquals("Fields must not be null or empty.", exception.getMessage());
     }
 }
