@@ -38,9 +38,11 @@ import org.junit.jupiter.api.Test;
 public class SortedGroupByTransformerTest
 {
     private static String testItems;
+    
     public SortedGroupByTransformerTest()
     {
     }
+    
     @BeforeAll
     public static void setUpClass() {
         testItems = "["
@@ -49,7 +51,6 @@ public class SortedGroupByTransformerTest
                 + "{\"city\": \"Tampa\", \"temp\": 36.2, \"weather\": \"sunny\"},"
                 + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"}"
                 + "]";
-  
     }
     
     /**
