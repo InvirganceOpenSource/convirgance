@@ -27,7 +27,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
 
 /**
- * Groups data together from an iterator based on a specified keys.
+ * Use this transformer when grouping on common fields with ALREADY sorted data.
  * 
  * @author tadghh
  */
@@ -37,7 +37,7 @@ public class SortedGroupByTransformer implements Transformer
     private String outputKey;
     
     /**
-     * Creates a new GroupByTransformer to group related data on provided fields. 
+     * Creates a new SortedGroupByTransformer to group related data on provided fields. 
      * @param fields The fields we want to group related data on.
      * @param output The field to output the grouped data to.
      * @throws ConvirganceException An error will be thrown when one of the following occurs:
