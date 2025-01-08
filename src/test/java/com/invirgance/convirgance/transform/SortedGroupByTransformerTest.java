@@ -25,6 +25,7 @@ package com.invirgance.convirgance.transform;
 
 import com.invirgance.convirgance.json.JSONArray;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -33,11 +34,21 @@ import org.junit.jupiter.api.Test;
  */
 public class SortedGroupByTransformerTest
 {
-    
+    private static String testItems;
     public SortedGroupByTransformerTest()
     {
     }
-
+    @BeforeAll
+    public static void setUpClass() {
+        testItems = "["
+                + "{\"city\": \"Tampa\", \"temp\": 35.2, \"weather\": \"rain\"},"
+                + "{\"city\": \"Milwaukee\", \"temp\": 23.2, \"weather\": \"sunny\"},"
+                + "{\"city\": \"Tampa\", \"temp\": 36.2, \"weather\": \"sunny\"},"
+                + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"}"
+                + "]";
+  
+    }
+    
     /**
      * Test of transform method, of class SortedGroupByTransformer.
      */
@@ -45,12 +56,7 @@ public class SortedGroupByTransformerTest
     public void testTransform()
     {
         String equalTest = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"}]}]";
-        String testItems = "["
-                + "{\"city\": \"Tampa\", \"temp\": 35.2, \"weather\": \"rain\"},"
-                + "{\"city\": \"Milwaukee\", \"temp\": 23.2, \"weather\": \"sunny\"},"
-                + "{\"city\": \"Tampa\", \"temp\": 36.2, \"weather\": \"sunny\"},"
-                + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"}"
-                + "]";
+
         
         String[] groupKeys = new String[]
         {
@@ -64,6 +70,31 @@ public class SortedGroupByTransformerTest
         SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
 
+        assertTrue(transformed.equals(expected));
+    }
+    
+        /**
+     * Test of transform method, of class SortedGroupByTransformer.
+     */
+    
+    @Test
+    public void testTransformMultipleFields()
+    {
+        String equalTest = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23.2}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36.2}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32.1}]}]";
+
+        
+        String[] groupKeys = new String[]
+        {
+            "city", "weather"
+        };
+        
+        JSONArray objects = new JSONArray(testItems);
+        JSONArray expected = new JSONArray(equalTest);
+        JSONArray transformed = new JSONArray();
+        
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+        System.out.println(transformed.toString());
         assertTrue(transformed.equals(expected));
     }
     
