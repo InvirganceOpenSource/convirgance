@@ -34,6 +34,7 @@ public class SortedGroupByTransformer implements Transformer
 {   
     private String[] groupByKeys;
     private String outputKey;
+    
     /**
      * Creates a new GroupByTransformer to group related data on provided fields. 
      * @param keys The fields we want to group related data on.
@@ -45,10 +46,13 @@ public class SortedGroupByTransformer implements Transformer
         this.outputKey = output;
     }
     
-    private boolean containsKeys(JSONObject object, String[] keys){
-        for(String key : keys){
+    private boolean containsKeys(JSONObject object, String[] keys)
+    {
+        for(String key : keys)
+        {
             if(!object.containsKey(key)) return false;
         }
+        
         return true;
     }
     
@@ -73,7 +77,6 @@ public class SortedGroupByTransformer implements Transformer
         JSONArray results = new JSONArray();
         JSONArray fieldArray = new JSONArray();
         JSONObject group = new JSONObject();
-
         Set<String> excludeKeys = new HashSet<>(Arrays.asList(this.groupByKeys));
         Set<String> keepKeys = new HashSet();
         
@@ -97,19 +100,23 @@ public class SortedGroupByTransformer implements Transformer
                 }
                 
                 currentKeys.clear();
+                
                 for (String key : this.groupByKeys)
                 {
                     currentKeys.put(key, record.get(key));
                     group.put(key, record.get(key));
                 }
+                
                 group.put(this.outputKey, fieldArray);
             }
 
             JSONObject filtered = new JSONObject();
+            
             for (String key : keepKeys)
             {
                 filtered.put(key, record.get(key));
             }
+            
             fieldArray.add(filtered);
         }
 
