@@ -58,13 +58,10 @@ public class SortedGroupByTransformer implements Transformer
     public Iterator<JSONObject> transform(Iterator<JSONObject> sourceIterator) {
         return new Iterator<JSONObject>() {
             private JSONObject currentRecord = null;
-            private final Map<String, Object> currentGroupKeys = new HashMap<>();
             private final Iterator<JSONObject> iterator = sourceIterator;
-
-            
-            // Advance to first valid record
+        
             {
-                advanceToNextValidRecord();
+                if (iterator.hasNext()) currentRecord = iterator.next();
             }
             
             @Override
@@ -83,67 +80,44 @@ public class SortedGroupByTransformer implements Transformer
                 
                 // Initial: Create new group object and array for this group's records
                 JSONObject group = new JSONObject();
-                JSONArray groupRecords = new JSONArray();
+                JSONArray children = new JSONArray();
                  
                 // Set the group keys from current parent record
                 for (String key : groupByKeys) 
                 {
                     group.put(key, currentRecord.get(key));
-                    currentGroupKeys.put(key, currentRecord.get(key));
                 }
                 
                 // Children: Process all records for this group
-                while (currentRecord != null && keysMatch(currentRecord, currentGroupKeys)) 
+                while (currentRecord != null && keysMatch(group)) 
                 {
-                    addFilteredRecordToGroup(groupRecords, currentRecord);
-                    advanceToNextValidRecord();
+                    children.add(addFilteredRecordToGroup(currentRecord));
+
+                    currentRecord = null;
+                    
+                    if(iterator.hasNext()) currentRecord = iterator.next();                 
                 }
                 
-                group.put(outputKey, groupRecords);
+                group.put(outputKey, children);
                 return group;
             }
             
-            private void addFilteredRecordToGroup(JSONArray groupRecords, JSONObject record)
+            private JSONObject addFilteredRecordToGroup(JSONObject record)
             {
                 for (String key : groupByKeys)
                 {
                     record.remove(key);
                 }
 
-                groupRecords.add(record);
+               return record;
             }
             
-            private void advanceToNextValidRecord() 
-            {
-                currentRecord = null;
-                while (iterator.hasNext()) 
-                {
-                    JSONObject next = iterator.next();
-                    
-                    // Skip objects not containing the relavent fields
-                    if (containsRequiredKeys(next)) 
-                    {
-                        currentRecord = next;
-                        break;
-                    }
-                }
-            }
             
-            private boolean containsRequiredKeys(JSONObject obj) 
+            private boolean keysMatch(JSONObject groupKeys)
             {
-                for (String key : groupByKeys) 
+                for (String key : groupKeys.keySet())
                 {
-                    if (!obj.containsKey(key)) return false;
-                }
-                
-                return true;
-            }
-            
-            private boolean keysMatch(JSONObject record, Map<String, Object> groupKeys)
-            {
-                for (Object field : groupKeys.values())
-                {
-                    if (!record.containsValue(field)) return false;
+                    if (!Objects.equals(currentRecord.get(key), groupKeys.get(key))) return false;
                 }
                 
                 return true;
