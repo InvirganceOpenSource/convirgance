@@ -21,6 +21,7 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
@@ -37,12 +38,25 @@ public class SortedGroupByTransformer implements Transformer
     
     /**
      * Creates a new GroupByTransformer to group related data on provided fields. 
-     * @param keys The fields we want to group related data on.
+     * @param fields The fields we want to group related data on.
      * @param output The field to output the grouped data to.
+     * @throws ConvirganceException An error will be thrown when one of the following occurs:
+     *  - One of the provided grouping fields is null or empty.
+     *  - No fields were provided at all.
+     *  - The output field to group data must not be null.
      */
-    public SortedGroupByTransformer(String[] keys, String output)
+    public SortedGroupByTransformer(String[] fields, String output)
     {
-        this.groupByKeys = keys;
+        if (fields == null || fields.length == 0) throw new ConvirganceException("fields must not be null or empty.");      
+
+        for (String key : fields)
+        {
+            if (key == null || key.isEmpty()) throw new ConvirganceException("fields must not contain null or empty values.");
+        }
+
+        if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
+        
+        this.groupByKeys = fields;
         this.outputKey = output;
     }
     

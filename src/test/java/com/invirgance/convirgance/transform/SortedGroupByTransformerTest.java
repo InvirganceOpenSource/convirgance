@@ -98,4 +98,21 @@ public class SortedGroupByTransformerTest
         assertTrue(transformed.equals(expected));
     }
     
+    /**
+     * Test that grouping on no fields works as expected.
+     */
+    @Test
+    public void testTransformNoFields()
+    {       
+        String[] groupKeys = new String[]{};
+        
+        JSONArray objects = new JSONArray(testItems);
+        JSONArray expected = new JSONArray(testItems);
+        JSONArray transformed = new JSONArray();
+        
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        assertTrue(transformed.equals(expected));
+    }
 }
