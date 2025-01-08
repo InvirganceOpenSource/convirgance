@@ -46,84 +46,108 @@ public class SortedGroupByTransformer implements Transformer
         this.outputKey = output;
     }
     
-    private boolean containsKeys(JSONObject object, String[] keys)
-    {
-        for(String key : keys)
-        {
-            if(!object.containsKey(key)) return false;
-        }
-        
-        return true;
-    }
-    
-    private boolean keysMatch(JSONObject record, Map<String, Object> currentKeys)
-    {
-        return Arrays.stream(this.groupByKeys)
-                .allMatch(key -> record.get(key).equals(currentKeys.get(key)));
-    }
-    
-    
     /**
      * Groups JSONObjects based on a specific matching key value.
      * Ex Collecting atomized weather data for cities and grouping it together.
      * 
-     * @param iterator The iterator of JSONObjects
+     * @param sourceIterator The iterator of JSONObjects
+     * @throws NoSuchElementException There was no next element.
      * @return A new iterator with the grouped data.
      */
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
-    {
-        Map<String, Object> currentKeys = new HashMap<>();
-        JSONArray results = new JSONArray();
-        JSONArray fieldArray = new JSONArray();
-        JSONObject group = new JSONObject();
-        Set<String> excludeKeys = new HashSet<>(Arrays.asList(this.groupByKeys));
-        Set<String> keepKeys = new HashSet();
-        JSONObject record;
-        JSONObject filtered;
-        
-        while (iterator.hasNext())
-        {
-            record = iterator.next();
+    public Iterator<JSONObject> transform(Iterator<JSONObject> sourceIterator) {
+        return new Iterator<JSONObject>() {
+            private JSONObject currentRecord = null;
+            private final Map<String, Object> currentGroupKeys = new HashMap<>();
+            private final Iterator<JSONObject> iterator = sourceIterator;
 
-            // Record doesn't contain the required fields.
-            if (!containsKeys(record, this.groupByKeys)) continue;
-
-            if (!keysMatch(record, currentKeys))
-            {
-                keepKeys = new HashSet<>(record.keySet());
-                keepKeys.removeAll(excludeKeys);
-                
-                if (!currentKeys.isEmpty())
-                {
-                    results.add(group);
-                    group = new JSONObject();
-                    fieldArray = new JSONArray();
-                }
-                
-                currentKeys.clear();
-                
-                for (String key : this.groupByKeys)
-                {
-                    currentKeys.put(key, record.get(key));
-                    group.put(key, record.get(key));
-                }
-                
-                group.put(this.outputKey, fieldArray);
-            }
-
-            filtered = new JSONObject();
             
-            for (String key : keepKeys)
+            // Advance to first valid record
             {
-                filtered.put(key, record.get(key));
+                advanceToNextValidRecord();
             }
             
-            fieldArray.add(filtered);
-        }
+            @Override
+            public boolean hasNext() 
+            {
+                return currentRecord != null;
+            }
+            
+            @Override
+            public JSONObject next() 
+            {
+                if (!hasNext()) 
+                {
+                    throw new NoSuchElementException();
+                }
+                
+                // Initial: Create new group object and array for this group's records
+                JSONObject group = new JSONObject();
+                JSONArray groupRecords = new JSONArray();
+                 
+                // Set the group keys from current parent record
+                for (String key : groupByKeys) 
+                {
+                    group.put(key, currentRecord.get(key));
+                    currentGroupKeys.put(key, currentRecord.get(key));
+                }
+                
+                // Children: Process all records for this group
+                while (currentRecord != null && keysMatch(currentRecord, currentGroupKeys)) 
+                {
+                    addFilteredRecordToGroup(groupRecords, currentRecord);
+                    advanceToNextValidRecord();
+                }
+                
+                group.put(outputKey, groupRecords);
+                return group;
+            }
+            
+            private void addFilteredRecordToGroup(JSONArray groupRecords, JSONObject record)
+            {
+                for (String key : groupByKeys)
+                {
+                    record.remove(key);
+                }
 
-        if (!group.isEmpty()) results.add(group);
-
-        return results.iterator();
+                groupRecords.add(record);
+            }
+            
+            private void advanceToNextValidRecord() 
+            {
+                currentRecord = null;
+                while (iterator.hasNext()) 
+                {
+                    JSONObject next = iterator.next();
+                    
+                    // Skip objects not containing the relavent fields
+                    if (containsRequiredKeys(next)) 
+                    {
+                        currentRecord = next;
+                        break;
+                    }
+                }
+            }
+            
+            private boolean containsRequiredKeys(JSONObject obj) 
+            {
+                for (String key : groupByKeys) 
+                {
+                    if (!obj.containsKey(key)) return false;
+                }
+                
+                return true;
+            }
+            
+            private boolean keysMatch(JSONObject record, Map<String, Object> groupKeys)
+            {
+                for (Object field : groupKeys.values())
+                {
+                    if (!record.containsValue(field)) return false;
+                }
+                
+                return true;
+            }
+        };
     }
 }
