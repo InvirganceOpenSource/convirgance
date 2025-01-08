@@ -102,7 +102,7 @@ public class SortedGroupByTransformerTest
     }
     
     /**
-     * Test that grouping on no fields works as expected.
+     * Test that grouping on no fields raises and exception.
      */
     @Test
     public void testTransformNoFields()
@@ -117,5 +117,41 @@ public class SortedGroupByTransformerTest
 
         // Assert that the exception message matches what is expected
         assertEquals("Fields must not be null or empty.", exception.getMessage());
+    }
+    
+    /**
+     * Test that grouping on empty fields will throw.
+     */
+    @Test
+    public void testTransformSillyFields()
+    {       
+        String[] groupKeys = new String[] {"Fish", ""};       
+
+        // Verify that creating the transformer with empty keys throws an exception
+        Exception exception = assertThrows(ConvirganceException.class, () ->
+        {
+            new SortedGroupByTransformer(groupKeys, "temps");
+        });
+
+        // Assert that the exception message matches what is expected
+        assertEquals("Fields must not contain null or empty values.", exception.getMessage());
+    }
+
+    /**
+     * Test that an exception will throw when no output key is provided.
+     */
+    @Test
+    public void testTransformNoOutput()
+    {       
+        String[] groupKeys = new String[] {"Fish", "Dog"};       
+
+        // Verify that creating the transformer with empty keys throws an exception
+        Exception exception = assertThrows(ConvirganceException.class, () ->
+        {
+            new SortedGroupByTransformer(groupKeys, "");
+        });
+
+        // Assert that the exception message matches what is expected
+        assertEquals("Output key must not be null or empty.", exception.getMessage());
     }
 }
