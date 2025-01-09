@@ -151,6 +151,28 @@ public class SortedGroupByTransformerTest
     }
     
     /**
+     * Fields should be case sensitive.
+     */
+    @Test
+    public void testCaseSensitivityInKeys()
+    {
+        String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"City\": \"Tampa\", \"temp\": 36.2}]";
+        String equalObj = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":36.2}]}]";        
+        JSONArray objects = new JSONArray(testItems);
+        JSONArray objectsEq = new JSONArray(equalObj);
+        JSONArray transformed = new JSONArray();
+        String[] groupKeys = new String[]
+        {
+            "city"
+        };
+
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        transformer.transform(objects).forEach(transformed::add);
+
+        assertTrue(objectsEq.equals(transformed));
+    }
+    
+    /**
      * Test that grouping on empty fields will throw.
      */
     @Test
