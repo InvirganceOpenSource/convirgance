@@ -231,4 +231,20 @@ public class SortedGroupByTransformerTest
         // Assert that the exception message matches what is expected
         assertEquals("Output key must not be null or empty.", exception.getMessage());
     }
+    
+    /**
+     * Test that an exception will be raised if we try to iterate when there are no other items.
+     */
+    @Test
+    public void testTransformNoMoreInput()
+    {        
+        // Verify that creating the transformer with no output throws an exception
+        Exception exception = assertThrows(ConvirganceException.class, () ->
+        {           
+           transformer.transform(new JSONArray("[]")).iterator().next();
+        });
+
+        // Assert that the exception message matches what is expected
+        assertEquals("Attempted to iterate with no next element.", exception.getMessage());
+    }    
 }
