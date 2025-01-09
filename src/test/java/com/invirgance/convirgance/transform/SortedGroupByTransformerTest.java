@@ -86,7 +86,26 @@ public class SortedGroupByTransformerTest
 
         assertTrue(transformed.equals(expected));
     }
-    
+    /**
+     * Make sure nested values are grouped correctly
+     */
+    @Test
+    public void testTransformNested()
+    {
+        String equal = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]},{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]}]";
+        String nested = "[{\"city\": \"Tampa\", \"details\": {\"temp\": 35.2, \"weather\": \"rain\"}},"
+          + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
+          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
+          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 32.1, \"weather\": \"overcast\"}},"
+          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
+        
+        JSONArray objects = new JSONArray(nested);
+        JSONArray expected = new JSONArray(equal);
+         
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        assertTrue(transformed.equals(expected));
+    }    
 
     /**
      * Test that grouping on multiple fields works as expected.
