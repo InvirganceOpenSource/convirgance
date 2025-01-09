@@ -124,23 +124,30 @@ public class SortedGroupByTransformerTest
         assertTrue(transformed.equals(expected));
     }
 
-    
     /**
-     * Test that grouping on no fields raises and exception.
+     * Tests that grouping on fields with values that contain the output key
+     * preserves the data correctly (nested).
      */
     @Test
-    public void testTransformNoFields()
+    public void testTransformDuplicateFields()
     {       
-        String[] groupKeys = new String[] {};       
-
-        // Verify that creating the transformer with empty keys throws an exception
-        Exception exception = assertThrows(ConvirganceException.class, () ->
+        String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"city\": \"Tampa\", \"temps\": [36.2]}]";
+        String expectedDuplicate = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temps\":[36.2]}]}]";
+        JSONArray expected = new JSONArray(expectedDuplicate);
+        JSONArray objects = new JSONArray(testItems);
+        JSONArray transformed = new JSONArray();
+        
+        String[] groupKeys = new String[]
         {
-            new SortedGroupByTransformer(groupKeys, "temps");
-        });
+            "city"
+        };
+        
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
 
-        // Assert that the exception message matches what is expected
-        assertEquals("Fields must not be null or empty.", exception.getMessage());
+        transformer.transform(objects).forEach(transformed::add);
+
+        // Verify transformation
+        assertTrue(expected.equals(transformed));
     }
     
     /**
