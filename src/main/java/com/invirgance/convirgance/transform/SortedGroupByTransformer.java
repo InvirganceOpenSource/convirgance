@@ -37,10 +37,12 @@ public class SortedGroupByTransformer implements Transformer
     private String outputKey;
     
     /**
-     * Creates a new SortedGroupByTransformer to group related data on provided fields. 
-     * @param fields The fields we want to group related data on.
+     * Creates a new SortedGroupByTransformer to group JSONObjects with related data on provided the fields. 
+     * Ex Grouping objects based on their city and current weather with the output field holding all data from the grouped records.
+     * 
+     * @param fields The fields you want to group related data on.
      * @param output The field to output the grouped data to.
-     * @throws ConvirganceException An error will be thrown when one of the following occurs:
+     * @throws ConvirganceException An exception will be raised when one of the following occurs:
      *  - One of the provided grouping fields is null or empty.
      *  - No fields were provided at all.
      *  - The output field to group data must not be null.
