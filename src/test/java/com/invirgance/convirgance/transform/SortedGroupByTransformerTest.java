@@ -86,6 +86,7 @@ public class SortedGroupByTransformerTest
 
         assertTrue(transformed.equals(expected));
     }
+    
     /**
      * Make sure nested values are grouped correctly
      */
