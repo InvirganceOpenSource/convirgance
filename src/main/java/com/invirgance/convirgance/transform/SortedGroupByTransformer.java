@@ -62,19 +62,21 @@ public class SortedGroupByTransformer implements Transformer
     }
     
     /**
-     * Groups JSONObjects based on a specific matching key value.
+     * Groups JSONObjects based on a the provided fields, placing similar values under the field provided by output.
      * Ex Collecting atomized weather data for cities and grouping it together.
      * 
      * @param sourceIterator The iterator of JSONObjects
-     * @throws NoSuchElementException There was no next element.
+     * @throws ConvirganceException There was no next element.
      * @return A new iterator with the grouped data.
      */
     @Override
     public Iterator<JSONObject> transform(Iterator<JSONObject> sourceIterator) {
         return new Iterator<JSONObject>() {
-            private JSONObject currentRecord = null;
+            private JSONObject currentRecord = null;          
+            private JSONObject group;
+            private JSONArray children;
             private final Iterator<JSONObject> iterator = sourceIterator;
-        
+            
             {
                 if (iterator.hasNext()) currentRecord = iterator.next();
             }
@@ -88,15 +90,15 @@ public class SortedGroupByTransformer implements Transformer
             @Override
             public JSONObject next() 
             {
-                if (!hasNext()) 
-                {
-                    throw new NoSuchElementException();
-                }
-                
                 // Initial: Create new group object and array for this group's records
-                JSONObject group = new JSONObject();
-                JSONArray children = new JSONArray();
-                 
+                group = new JSONObject();
+                children = new JSONArray();
+                
+                if (!hasNext())
+                {
+                    throw new ConvirganceException("Attempted to iterate with no next element.");
+                }
+        
                 // Set the group keys from current parent record
                 for (String key : groupByKeys) 
                 {
@@ -124,10 +126,9 @@ public class SortedGroupByTransformer implements Transformer
                     record.remove(key);
                 }
 
-               return record;
+                return record;
             }
-            
-            
+                     
             private boolean keysMatch(JSONObject groupKeys)
             {
                 for (String key : groupKeys.keySet())
