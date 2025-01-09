@@ -49,7 +49,8 @@ public class SortedGroupByTransformerTest
                 + "{\"city\": \"Tampa\", \"temp\": 35.2, \"weather\": \"rain\"},"
                 + "{\"city\": \"Milwaukee\", \"temp\": 23.2, \"weather\": \"sunny\"},"
                 + "{\"city\": \"Tampa\", \"temp\": 36.2, \"weather\": \"sunny\"},"
-                + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"}"
+                + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"},"
+                + "{\"city\": \"Tampa\", \"temp\": 22.1, \"weather\": \"overcast\"}"
                 + "]";
     }
     
@@ -59,8 +60,7 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransform()
     {
-        String equalTest = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"}]}]";
-
+        String equalTest = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
         
         String[] groupKeys = new String[]
         {
@@ -84,9 +84,8 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformMultipleFields()
     {
-        String equalTest = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23.2}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36.2}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32.1}]}]";
-
-        
+        String equalTest = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23.2}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36.2}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32.1},{\"temp\":22.1}]}]";
+      
         String[] groupKeys = new String[]
         {
             "city", "weather"
@@ -101,6 +100,30 @@ public class SortedGroupByTransformerTest
 
         assertTrue(transformed.equals(expected));
     }
+
+    /**
+     * Test that grouping on a missing field works (although a null value is added).
+     */
+    @Test
+    public void testTransformOneMissingField()
+    {
+        String equalTest = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
+      
+        String[] groupKeys = new String[]
+        {
+            "city","keyboard"
+        };
+             
+        JSONArray objects = new JSONArray(testItems);
+        JSONArray expected = new JSONArray(equalTest);
+        JSONArray transformed = new JSONArray();
+        
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        assertTrue(transformed.equals(expected));
+    }
+
     
     /**
      * Test that grouping on no fields raises and exception.
