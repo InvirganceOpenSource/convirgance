@@ -30,7 +30,6 @@ import java.io.*;
  */
 public class JSONParser implements AutoCloseable
 {
-
     private Reader reader;
     private int next = -1;
 
@@ -80,24 +79,20 @@ public class JSONParser implements AutoCloseable
 
     private char nextPrintable() throws IOException
     {
-        int c;
-        
-        if(next >= 0 && !Character.isWhitespace((char)next)) 
-        {
-            c = next;
-            next = -1;
-            
-            return (char)c;
-        }
-        
-        while(reader.ready())
+        int c = next >= 0 ? next : reader.read();
+
+        while (Character.isWhitespace((char) c))
         {
             c = reader.read();
             
-            if(!Character.isWhitespace((char)c)) return (char)c;
+            if (c == -1)
+            {
+                throw new IOException("Reached end of readable stream without finding a non-whitespace character");
+            }
         }
-        
-        throw new IOException("Reached end of readable stream without finding a non-whitespace character");
+
+        next = -1;
+        return (char) c;
     }
 
     private char parseUnicode() throws IOException
@@ -124,18 +119,26 @@ public class JSONParser implements AutoCloseable
 
     private char peekPrintable() throws IOException
     {
-        int c;
+        char c;
         
-        if(next >= 0) return (char)next;
-        
-        while(reader.ready())
+        if (next >= 0)
+        {
+            c = (char) next;
+            if (!Character.isWhitespace(c)) return c;          
+        }
+
+        while (true)
         {
             next = reader.read();
             
-            if(!Character.isWhitespace((char)next)) return (char)next;
+            if (next == -1)
+            {
+                throw new IOException("Reached end of readable stream without finding a non-whitespace character");
+            }
+
+            c = (char) next;
+            if (!Character.isWhitespace(c)) return c;          
         }
-        
-        throw new IOException("Reached end of readable stream without finding a non-whitespace character");
     }
 
     /**
@@ -190,75 +193,66 @@ public class JSONParser implements AutoCloseable
      */
     public Number parseNumber() throws IOException
     {
-        StringBuilder buffer = new StringBuilder();
-        
+        StringBuilder buffer = new StringBuilder(16);
         boolean digits = false;
         boolean floating = false;
-        
+
         char c = peekPrintable();
-        Long number;
-        
-        if(c == '-')
+
+        if (c == '-')
         {
             buffer.append(c);
-            
             c = peek();
         }
-        
-        while(reader.ready())
-        {   
-            if(Character.isDigit(c))
+
+        while (true)
+        {
+            if (Character.isDigit(c))
             {
                 buffer.append(c);
-                
                 digits = true;
                 c = peek();
-                
                 continue;
             }
-            
-            if(c == '.')
+
+            if (c == '.')
             {
-                if(!digits || floating) throw new IOException("Invalid number format: " + buffer + ".");
+                if (!digits || floating) throw new IOException("Invalid number format: " + buffer + ".");
                 
                 buffer.append(c);
-                
                 floating = true;
                 c = peek();
-                
                 continue;
             }
-            
-            if(c == 'e' || c == 'E')
+
+            if (c == 'e' || c == 'E')
             {
-                if(!digits) throw new IOException("Invalid number format: " + buffer + ".");
-                
+                if (!digits) throw new IOException("Invalid number format: " + buffer + ".");
+                               
                 buffer.append(c);
-                
                 floating = true;
                 c = peek();
-                
-                if(c != '+' && c != '-' && !Character.isDigit(c)) throw new IOException("Expected + or - but found " + c);
+
+                if (c != '+' && c != '-' && !Character.isDigit(c))
+                {
+                    throw new IOException("Expected + or - but found " + c);
+                }
                 
                 buffer.append(c);
-                
                 c = peek();
-                
                 continue;
             }
+
+            if (!digits) throw new IOException("Invalid number format: " + buffer);           
+
+            String numberStr = buffer.toString();
+            if (floating) return Double.valueOf(numberStr);
             
-            if(!digits) throw new IOException("Invalid number format: " + buffer);
-            
-            if(floating) return Double.valueOf(buffer.toString());
-            
-            number = Long.valueOf(buffer.toString());
-            
-            if(number == number.intValue()) return number.intValue();
+            Long number = Long.valueOf(numberStr);
+            if (number == number.intValue()) return number.intValue();
             
             return number;
         }
-        
-        throw new IOException("Reached end of stream before parsing completed");
     }
 
     /**
@@ -274,67 +268,58 @@ public class JSONParser implements AutoCloseable
     {
         StringBuilder buffer = new StringBuilder();
         char c = nextPrintable();
-        
-        if(c != '"') throw new IOException("Expected \" but found " + c);
-        
-        while(reader.ready())
+
+        if (c != '"') throw new IOException("Expected \" but found " + c);
+               
+        while (true)
         {
-            c = next();
+            c = next(); 
             
-            if(c == '"') return buffer.toString();
+            if (c == '"') break;  
             
-            if(c != '\\')
+            if (c != '\\')
             {
-                buffer.append((char)c);
-                continue;
+                buffer.append(c); 
             }
-            
-            c = next();
-            
-            switch(c)
+            else
             {
-                case '"':
-                    buffer.append('"');
-                    break;
-                    
-                case '\\':
-                    buffer.append('\\');
-                    break;
-                    
-                case '/':
-                    buffer.append('/');
-                    break;
-                    
-                case 'b':
-                    buffer.append('\b');
-                    break;
-                    
-                case 'f':
-                    buffer.append('\f');
-                    break;
-                    
-                case 'n':
-                    buffer.append('\n');
-                    break;
-                    
-                case 'r':
-                    buffer.append('\r');
-                    break;
-                    
-                case 't':
-                    buffer.append('\t');
-                    break;
-                    
-                case 'u':
-                    buffer.append(parseUnicode());
-                    break;
-                    
-                default:
-                    throw new IOException("Unexpected string escape \\" + c);
+                c = next(); 
+                switch (c)
+                {
+                    case '"':
+                        buffer.append('"');
+                        break;
+                    case '\\':
+                        buffer.append('\\');
+                        break;
+                    case '/':
+                        buffer.append('/');
+                        break;
+                    case 'b':
+                        buffer.append('\b');
+                        break;
+                    case 'f':
+                        buffer.append('\f');
+                        break;
+                    case 'n':
+                        buffer.append('\n');
+                        break;
+                    case 'r':
+                        buffer.append('\r');
+                        break;
+                    case 't':
+                        buffer.append('\t');
+                        break;
+                    case 'u':
+                        buffer.append(parseUnicode());
+                        break;
+                    default:
+                        throw new IOException("Unexpected string escape \\" + c);
+                }
             }
         }
         
-        throw new IOException("Reached end of stream before parsing completed");
+        return buffer.toString();        
     }
 
     /**
@@ -349,46 +334,43 @@ public class JSONParser implements AutoCloseable
     {
         JSONObject object = new JSONObject(true);
         String key;
-        
+
         char c = nextPrintable();
         
-        if(c != '{') throw new IOException("Expected {, but found " + c);
+        if (c != '{') throw new IOException("Expected {, but found " + c);
         
-        while(reader.ready())
+        while (true)
         {
             c = peekPrintable();
-            
-            switch(c)
+
+            if (c == '"')
             {
-                case '"':
-                    key = parseString();
-                    break;
-                    
-                case '}':
-                    nextPrintable();
-                    return object;
-                    
-                default:
-                    throw new IOException("Expected \" or }, but found " + c);
+                key = parseString();
             }
+            else if (c == '}')
+            {
+                nextPrintable();
+                return object;
+            }
+            else throw new IOException("Expected \" or }, but found " + c);
             
+
             c = nextPrintable();
-            
-            if(c != ':') throw new IOException("Expected : but found " + c);
+            if (c != ':') throw new IOException("Expected : but found " + c);
             
             object.put(key, parse());
-            
+
             c = nextPrintable();
-            
-            if(c == '}')
+
+            if (c == '}')
             {
                 return object;
             }
-            
-            if(c != ',')  throw new IOException("Expected , but found " + c + " (0x" + Integer.toHexString(c & 0xFF) + ")");
+            else if (c != ',')
+            {
+                throw new IOException("Expected , but found " + c + " (0x" + Integer.toHexString(c & 0xFF) + ")");
+            }
         }
-        
-        throw new IOException("Reached end of stream before parsing completed");
     }
 
     /**
