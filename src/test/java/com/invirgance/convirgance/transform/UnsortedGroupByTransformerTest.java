@@ -32,7 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- *
+ * For testing the UnsortedGroupByTransformer.
  * @author tadghh
  */
 public class UnsortedGroupByTransformerTest
@@ -89,10 +89,10 @@ public class UnsortedGroupByTransformerTest
     {
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}},{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]}]";
         String nested = "[{\"city\": \"Tampa\", \"details\": {\"temp\": 35.2, \"weather\": \"rain\"}},"
-          + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
-          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
-          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 32.1, \"weather\": \"overcast\"}},"
-          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
+                + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
+                + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
+                + "{\"city\": \"Tampa\", \"details\": {\"temp\": 32.1, \"weather\": \"overcast\"}},"
+                + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
         
         JSONArray objects = new JSONArray(nested);
         JSONArray expected = new JSONArray(known);
@@ -108,8 +108,7 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformMultipleFields()
     {
-        String known = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32},{\"temp\":22}]}]";
-        
+        String known = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32},{\"temp\":22}]}]";      
         String[] fields = new String[]
         {
             "city","weather"
@@ -131,8 +130,7 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformOneMissingField()
     {
-        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
-      
+        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";   
         String[] fields = new String[]
         {
             "city","keyboard"
@@ -155,12 +153,12 @@ public class UnsortedGroupByTransformerTest
     public void testTransformDuplicateFields()
     {       
         String test = "["
-        + "{\"city\": \"Tampa\", \"temp\": 35.2},"
-        + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
-        + "{\"city\": \"Mexico\", \"temp\": 30.2},"
-        + "{\"city\": \"Tampa\", \"temp\": 32},"
-        + "{\"city\": \"Tampa\", \"temp\": 31}"
-        + "]";
+                + "{\"city\": \"Tampa\", \"temp\": 35.2},"
+                + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
+                + "{\"city\": \"Mexico\", \"temp\": 30.2},"
+                + "{\"city\": \"Tampa\", \"temp\": 32},"
+                + "{\"city\": \"Tampa\", \"temp\": 31}"
+                + "]";
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":32},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]}]";
         
         JSONArray objects = new JSONArray(test);
@@ -178,24 +176,30 @@ public class UnsortedGroupByTransformerTest
         // Verify transformation
         assertEquals(transformed.toString(),expected.toString());
     }
-//
-//    Bad Test     
-//    /**
-//     * Fields should be case sensitive.
-//     */
-//    @Test
-//    public void testCaseSensitivityInKeys()
-//    {
-//        String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"City\": \"Tampa\", \"temp\": 36.2}]";
-//        String equalObj = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":36.2}]}]";        
-//        
-//        JSONArray objects = new JSONArray(testItems);
-//        JSONArray objectsEq = new JSONArray(equalObj);
-//     
-//        transformer.transform(objects).forEach(transformed::add);
-//
-//        assertTrue(objectsEq.equals(transformed));
-//    }
+ 
+    /**
+     * Fields should be case sensitive.
+     */
+    @Test
+    public void testCaseSensitivityInKeys()
+    {
+        String test = "["
+                + "{\"city\": \"Tampa\", \"temp\": 35.2},"
+                + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
+                + "{\"city\": \"Mexico\", \"temp\": 30.2},"
+                + "{\"City\": \"Tampa\", \"temp\": 32},"
+                + "{\"city\": \"Tampa\", \"temp\": 31},"
+                + "{\"City\": \"Washington\", \"temp\": 32}"
+                + "]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":32},{\"City\":\"Washington\",\"temp\":32}]}]";        
+        
+        JSONArray objects = new JSONArray(test);
+        JSONArray expected = new JSONArray(known);
+     
+        transformer.transform(objects).forEach(transformed::add);
+
+        assertEquals(transformed.toString(),expected.toString());
+    }
     
     /**
      * Test that grouping on empty fields will throw.

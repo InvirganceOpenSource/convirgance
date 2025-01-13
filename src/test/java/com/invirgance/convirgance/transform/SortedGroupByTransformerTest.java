@@ -33,7 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- *
+ * For testing the SortedGroupByTransformer.
  * @author tadghh
  */
 public class SortedGroupByTransformerTest
@@ -95,10 +95,10 @@ public class SortedGroupByTransformerTest
     {
         String equal = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]},{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]}]";
         String nested = "[{\"city\": \"Tampa\", \"details\": {\"temp\": 35.2, \"weather\": \"rain\"}},"
-          + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
-          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
-          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 32.1, \"weather\": \"overcast\"}},"
-          + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
+                + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
+                + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
+                + "{\"city\": \"Tampa\", \"details\": {\"temp\": 32.1, \"weather\": \"overcast\"}},"
+                + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
         
         JSONArray objects = new JSONArray(nested);
         JSONArray expected = new JSONArray(equal);
@@ -136,8 +136,7 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformOneMissingField()
     {
-        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
-      
+        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";     
         String[] fields = new String[]
         {
             "city","keyboard"
@@ -160,16 +159,16 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformDuplicateFields()
     {       
-        String testItems = "["
-        + "{\"city\": \"Tampa\", \"temp\": 35.2},"
-        + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
-        + "{\"city\": \"Mexico\", \"temp\": 30.2},"
-        + "{\"city\": \"Tampa\", \"temp\": 32},"
-        + "{\"city\": \"Tampa\", \"temp\": 31}"
-        + "]";
+        String test = "["
+                + "{\"city\": \"Tampa\", \"temp\": 35.2},"
+                + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
+                + "{\"city\": \"Mexico\", \"temp\": 30.2},"
+                + "{\"city\": \"Tampa\", \"temp\": 32},"
+                + "{\"city\": \"Tampa\", \"temp\": 31}"
+                + "]";
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":32},{\"temp\":31}]}]";
         
-        JSONArray objects = new JSONArray(testItems);
+        JSONArray objects = new JSONArray(test);
         JSONArray expected = new JSONArray(known);      
 
         transformer.transform(objects).forEach(transformed::add);
@@ -184,8 +183,15 @@ public class SortedGroupByTransformerTest
     @Test
     public void testCaseSensitivityInKeys()
     {
-        String test = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"City\": \"Tampa\", \"temp\": 36.2}]";
-        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":36.2}]}]";        
+        String test = "["
+                + "{\"city\": \"Tampa\", \"temp\": 35.2},"
+                + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
+                + "{\"city\": \"Mexico\", \"temp\": 30.2},"
+                + "{\"City\": \"Tampa\", \"temp\": 32},"
+                + "{\"city\": \"Tampa\", \"temp\": 31},"
+                + "{\"City\": \"Washington\", \"temp\": 32}"
+                + "]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":32}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":31}]},{\"city\":null,\"temps\":[{\"City\":\"Washington\",\"temp\":32}]}]";        
         
         JSONArray objects = new JSONArray(test);
         JSONArray expected = new JSONArray(known);
