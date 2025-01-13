@@ -61,7 +61,7 @@ public class UnsortedGroupByTransformer implements Transformer
     }
      
     /**
-     * Groups unsorted JSONObjects based on a specific matching key value.
+     * Groups unsorted JSONObjects based on the provided fields.
      * Ex Collecting atomized weather data for cities and grouping it together.
      * 
      * @param sourceIterator The iterator of JSONObjects.
