@@ -160,8 +160,14 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformDuplicateFields()
     {       
-        String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"city\": \"Tampa\", \"temps\": [36.2]}]";
-        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temps\":[36.2]}]}]";
+        String testItems = "["
+        + "{\"city\": \"Tampa\", \"temp\": 35.2},"
+        + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
+        + "{\"city\": \"Mexico\", \"temp\": 30.2},"
+        + "{\"city\": \"Tampa\", \"temp\": 32},"
+        + "{\"city\": \"Tampa\", \"temp\": 31}"
+        + "]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":32},{\"temp\":31}]}]";
         
         JSONArray objects = new JSONArray(testItems);
         JSONArray expected = new JSONArray(known);      

@@ -151,28 +151,33 @@ public class UnsortedGroupByTransformerTest
      * Tests that grouping on fields with values that contain the output key
      * preserves the data correctly (nested).
      */
-//    Bad Test
-//    @Test
-//    public void testTransformDuplicateFields()
-//    {       
-//        String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"city\": \"Tampa\", \"temps\": [36.2]}]";
-//        String expectedDuplicate = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temps\":[36.2]}]}]";
-//        
-//        JSONArray objects = new JSONArray(testItems);
-//        JSONArray expected = new JSONArray(expectedDuplicate);
-//        
-//        String[] groupFields = new String[]
-//        {
-//            "city"
-//        };
-//        
-//        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(groupFields, "temps");
-//
-//        transformer.transform(objects).forEach(transformed::add);
-//
-//        // Verify transformation
-//        assertTrue(expected.equals(transformed));
-//    }
+    @Test
+    public void testTransformDuplicateFields()
+    {       
+        String test = "["
+        + "{\"city\": \"Tampa\", \"temp\": 35.2},"
+        + "{\"city\": \"Mexico\", \"temps\": [36.2]},"
+        + "{\"city\": \"Mexico\", \"temp\": 30.2},"
+        + "{\"city\": \"Tampa\", \"temp\": 32},"
+        + "{\"city\": \"Tampa\", \"temp\": 31}"
+        + "]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":32},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]}]";
+        
+        JSONArray objects = new JSONArray(test);
+        JSONArray expected = new JSONArray(known);
+        
+        String[] fields = new String[]
+        {
+            "city"
+        };
+        
+        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
+
+        transformer.transform(objects).forEach(transformed::add);
+
+        // Verify transformation
+        assertEquals(transformed.toString(),expected.toString());
+    }
 //
 //    Bad Test     
 //    /**
