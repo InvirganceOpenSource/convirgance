@@ -33,8 +33,8 @@ import java.util.*;
  */
 public class UnsortedGroupByTransformer implements Transformer 
 {   
-    private final String[] groupByKeys; 
-    private final String outputKey;   
+    private final String[] fields; 
+    private final String output;   
 
     /**
      * Creates a new UnsortedGroupByTransformer to group related data on provided fields. 
@@ -56,8 +56,8 @@ public class UnsortedGroupByTransformer implements Transformer
 
         if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
         
-        this.groupByKeys = fields;
-        this.outputKey = output;
+        this.fields = fields;
+        this.output = output;
     }
      
     /**
@@ -77,7 +77,7 @@ public class UnsortedGroupByTransformer implements Transformer
         
         Map<String, JSONArray> groupArrays = new HashMap();
         List<JSONObject> groups = new ArrayList<>();
-        Set<String> groupKeySet = new HashSet<>(Arrays.asList(groupByKeys));     
+        Set<String> groupKeySet = new HashSet<>(Arrays.asList(fields));     
         
         while (sourceIterator.hasNext())
         {
@@ -92,12 +92,12 @@ public class UnsortedGroupByTransformer implements Transformer
                 groupArray = new JSONArray();
 
                 // Set group keys
-                for (String key : groupByKeys)
+                for (String key : fields)
                 {
                     collected.put(key, record.get(key));
                 }
 
-                collected.put(outputKey, groupArray);
+                collected.put(output, groupArray);
                 groupArrays.put(header, groupArray);
                 groups.add(collected);
             }
@@ -111,11 +111,11 @@ public class UnsortedGroupByTransformer implements Transformer
 
     private String createGroupKey(JSONObject record)
     {
-        Object[] values = new Object[groupByKeys.length];
+        Object[] values = new Object[fields.length];
         
-        for (int i = 0; i < groupByKeys.length; i++)
+        for (int i = 0; i < fields.length; i++)
         {
-            values[i] = record.get(groupByKeys[i]);
+            values[i] = record.get(fields[i]);
         }
         
         return Arrays.toString(values);
