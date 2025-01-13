@@ -67,26 +67,25 @@ public class SortedGroupByTransformer implements Transformer
      * Groups JSONObjects based on a the provided fields, placing similar values under the field provided by output.
      * Ex Collecting atomized weather data for cities and grouping it together.
      * 
-     * @param sourceIterator The iterator of JSONObjects
+     * @param iterator The iterator of JSONObjects
      * @throws ConvirganceException There was no next element.
      * @return A new iterator with the grouped data.
      */
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> sourceIterator) {
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) {
         return new Iterator<JSONObject>() {
-            private JSONObject currentRecord = null;          
+            private JSONObject current = null;          
             private JSONObject group;
             private JSONArray children;
-            private final Iterator<JSONObject> iterator = sourceIterator;
             
             {
-                if (iterator.hasNext()) currentRecord = iterator.next();
+                if (iterator.hasNext()) current = iterator.next();
             }
             
             @Override
             public boolean hasNext() 
             {
-                return currentRecord != null;
+                return current != null;
             }
             
             @Override
@@ -104,17 +103,17 @@ public class SortedGroupByTransformer implements Transformer
                 // Set the group keys from current parent record
                 for (String key : fields) 
                 {
-                    group.put(key, currentRecord.get(key));
+                    group.put(key, current.get(key));
                 }
                 
                 // Children: Process all records for this group
-                while (currentRecord != null && keysMatch(group)) 
+                while (current != null && keysMatch(group)) 
                 {
-                    children.add(addFilteredRecordToGroup(currentRecord));
+                    children.add(addFilteredRecordToGroup(current));
 
-                    currentRecord = null;
+                    current = null;
                     
-                    if(iterator.hasNext()) currentRecord = iterator.next();                 
+                    if(iterator.hasNext()) current = iterator.next();                 
                 }
                 
                 group.put(output, children);
@@ -135,7 +134,7 @@ public class SortedGroupByTransformer implements Transformer
             {
                 for (String key : groupKeys.keySet())
                 {
-                    if (!Objects.equals(currentRecord.get(key), groupKeys.get(key))) return false;
+                    if (!Objects.equals(current.get(key), groupKeys.get(key))) return false;
                 }
                 
                 return true;
