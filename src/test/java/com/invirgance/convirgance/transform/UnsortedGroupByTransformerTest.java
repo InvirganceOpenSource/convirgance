@@ -39,7 +39,7 @@ public class UnsortedGroupByTransformerTest
 {
     private static String testItems;
     private static UnsortedGroupByTransformer transformer;
-    private static String[] groupKeys;
+    private static String[] groupFields;
     private static JSONArray transformed;
     
     public UnsortedGroupByTransformerTest()
@@ -56,13 +56,13 @@ public class UnsortedGroupByTransformerTest
     public static void setUpClass() {
         testItems = "[{\"city\": \"Tampa\", \"temp\": 35, \"weather\": \"rain\"}, {\"city\": \"Milwaukee\", \"temp\": 23, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 36, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 32, \"weather\": \"overcast\"}, {\"city\": \"Tampa\", \"temp\": 22, \"weather\": \"overcast\"}]";
         
-        groupKeys = new String[]
+        groupFields = new String[]
         {
             "city"
         };
        
         transformed = new JSONArray();
-        transformer = new UnsortedGroupByTransformer(groupKeys, "temps");
+        transformer = new UnsortedGroupByTransformer(groupFields, "temps");
     }
     
    /**
@@ -71,10 +71,10 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransform()
     {
-        String equalTest = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
                 
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(equalTest);
+        JSONArray expected = new JSONArray(known);
         
         transformer.transform(objects).forEach(elem -> transformed.add(elem));       
 
@@ -87,7 +87,7 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformNested()
     {
-        String equal = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}},{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]}]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}},{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]}]";
         String nested = "[{\"city\": \"Tampa\", \"details\": {\"temp\": 35.2, \"weather\": \"rain\"}},"
           + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
           + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
@@ -95,7 +95,7 @@ public class UnsortedGroupByTransformerTest
           + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
         
         JSONArray objects = new JSONArray(nested);
-        JSONArray expected = new JSONArray(equal);
+        JSONArray expected = new JSONArray(known);
          
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
 
@@ -108,16 +108,17 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformMultipleFields()
     {
-        String equalTest = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32},{\"temp\":22}]}]";
-        String[] keys = new String[]
+        String known = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32},{\"temp\":22}]}]";
+        
+        String[] fields = new String[]
         {
             "city","weather"
         };
         
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(equalTest);
+        JSONArray expected = new JSONArray(known);
         
-        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(keys, "temps");
+        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
 
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
         
@@ -130,17 +131,17 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformOneMissingField()
     {
-        String equalTest = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
+        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
       
-        String[] keys = new String[]
+        String[] fields = new String[]
         {
             "city","keyboard"
         };
              
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(equalTest);
+        JSONArray expected = new JSONArray(known);
         
-        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(keys, "temps");
+        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
 
         assertEquals(transformed.toString(),expected.toString());
@@ -160,12 +161,12 @@ public class UnsortedGroupByTransformerTest
 //        JSONArray objects = new JSONArray(testItems);
 //        JSONArray expected = new JSONArray(expectedDuplicate);
 //        
-//        String[] groupKeys = new String[]
+//        String[] groupFields = new String[]
 //        {
 //            "city"
 //        };
 //        
-//        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(groupKeys, "temps");
+//        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(groupFields, "temps");
 //
 //        transformer.transform(objects).forEach(transformed::add);
 //
@@ -197,12 +198,12 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformSillyFields()
     {       
-        String[] keys = new String[] {"Fish", ""};       
+        String[] fields = new String[] {"Fish", ""};       
 
         // Verify that creating the transformer with empty keys throws an exception
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
-            new UnsortedGroupByTransformer(keys, "temps");
+            new UnsortedGroupByTransformer(fields, "temps");
         });
 
         // Assert that the exception message matches what is expected
@@ -215,12 +216,12 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformNoOutput()
     {       
-        String[] keys = new String[] {"Fish", "Dog"};       
+        String[] fields = new String[] {"Fish", "Dog"};       
 
         // Verify that creating the transformer with no output throws an exception
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
-            new UnsortedGroupByTransformer(keys, "");
+            new UnsortedGroupByTransformer(fields, "");
         });
 
         // Assert that the exception message matches what is expected

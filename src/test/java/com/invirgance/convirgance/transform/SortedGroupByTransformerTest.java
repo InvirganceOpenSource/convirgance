@@ -40,7 +40,7 @@ public class SortedGroupByTransformerTest
 {
     private static String testItems;
     private static SortedGroupByTransformer transformer;
-    private static String[] groupKeys;
+    private static String[] groupFields;
     private static JSONArray transformed;
     
     public SortedGroupByTransformerTest()
@@ -57,13 +57,13 @@ public class SortedGroupByTransformerTest
                 + "{\"city\": \"Tampa\", \"temp\": 22.1, \"weather\": \"overcast\"}"
                 + "]";
         
-        groupKeys = new String[]
+        groupFields = new String[]
         {
             "city"
         };
        
         transformed = new JSONArray();
-        transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        transformer = new SortedGroupByTransformer(groupFields, "temps");
     }
     
     @BeforeEach
@@ -77,10 +77,10 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransform()
     {
-        String equalTest = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
                 
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(equalTest);
+        JSONArray expected = new JSONArray(known);
          
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
 
@@ -114,16 +114,16 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformMultipleFields()
     {
-        String equalTest = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23.2}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36.2}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32.1},{\"temp\":22.1}]}]";
-        String[] groupKeys = new String[]
+        String known = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35.2}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23.2}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36.2}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32.1},{\"temp\":22.1}]}]";
+        String[] fields = new String[]
         {
             "city","weather"
         };
         
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(equalTest);
+        JSONArray expected = new JSONArray(known);
         
-        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(fields, "temps");
 
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
         
@@ -136,18 +136,18 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformOneMissingField()
     {
-        String equalTest = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
+        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";
       
-        String[] groupKeys = new String[]
+        String[] fields = new String[]
         {
             "city","keyboard"
         };
              
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(equalTest);
+        JSONArray expected = new JSONArray(known);
 
         
-        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        SortedGroupByTransformer transformer = new SortedGroupByTransformer(fields, "temps");
         transformer.transform(objects).forEach(elem -> transformed.add(elem));
 
         assertTrue(transformed.equals(expected));
@@ -161,17 +161,10 @@ public class SortedGroupByTransformerTest
     public void testTransformDuplicateFields()
     {       
         String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"city\": \"Tampa\", \"temps\": [36.2]}]";
-        String expectedDuplicate = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temps\":[36.2]}]}]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temps\":[36.2]}]}]";
         
         JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(expectedDuplicate);
-        
-        String[] groupKeys = new String[]
-        {
-            "city"
-        };
-        
-        SortedGroupByTransformer transformer = new SortedGroupByTransformer(groupKeys, "temps");
+        JSONArray expected = new JSONArray(known);      
 
         transformer.transform(objects).forEach(transformed::add);
 
@@ -185,15 +178,15 @@ public class SortedGroupByTransformerTest
     @Test
     public void testCaseSensitivityInKeys()
     {
-        String testItems = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"City\": \"Tampa\", \"temp\": 36.2}]";
-        String equalObj = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":36.2}]}]";        
+        String test = "[{\"city\": \"Tampa\", \"temp\": 35.2}, {\"City\": \"Tampa\", \"temp\": 36.2}]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":36.2}]}]";        
         
-        JSONArray objects = new JSONArray(testItems);
-        JSONArray objectsEq = new JSONArray(equalObj);
+        JSONArray objects = new JSONArray(test);
+        JSONArray expected = new JSONArray(known);
      
         transformer.transform(objects).forEach(transformed::add);
 
-        assertTrue(objectsEq.equals(transformed));
+        assertTrue(expected.equals(transformed));
     }
     
     /**
@@ -202,12 +195,12 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformSillyFields()
     {       
-        String[] groupKeys = new String[] {"Fish", ""};       
+        String[] fields = new String[] {"Fish", ""};       
 
         // Verify that creating the transformer with empty keys throws an exception
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
-            new SortedGroupByTransformer(groupKeys, "temps");
+            new SortedGroupByTransformer(fields, "temps");
         });
 
         // Assert that the exception message matches what is expected
@@ -220,12 +213,12 @@ public class SortedGroupByTransformerTest
     @Test
     public void testTransformNoOutput()
     {       
-        String[] groupKeys = new String[] {"Fish", "Dog"};       
+        String[] fields = new String[] {"Fish", "Dog"};       
 
         // Verify that creating the transformer with no output throws an exception
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
-            new SortedGroupByTransformer(groupKeys, "");
+            new SortedGroupByTransformer(fields, "");
         });
 
         // Assert that the exception message matches what is expected
