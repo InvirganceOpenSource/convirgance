@@ -21,12 +21,13 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
 
 /**
- * Groups data together from an iterator based on a specified keys.
+ * Groups data together from an iterator based on the specified fields, the resulting data will be sorted. 
  * 
  * @author tadghh
  */
@@ -37,12 +38,25 @@ public class UnsortedGroupByTransformer implements Transformer
 
     /**
      * Creates a new UnsortedGroupByTransformer to group related data on provided fields. 
-     * @param keys The fields we want to group related data on.
-     * @param output The field to output the grouped data to.
+     * @param fields The fields you want to group with.
+     * @param output The new field to assign the grouped data on.
+     * @throws ConvirganceException An exception will be raised when one of the following occurs:
+     *  - One of the provided grouping fields is null or empty.
+     *  - No fields were provided at all.
+     *  - The output field to group data must not be null.
      */
-    public UnsortedGroupByTransformer(String[] keys, String output)
+    public UnsortedGroupByTransformer(String[] fields, String output)
     {
-        this.groupByKeys = keys;
+        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
+
+        for (String key : fields)
+        {
+            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
+        }
+
+        if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
+        
+        this.groupByKeys = fields;
         this.outputKey = output;
     }
      
