@@ -76,7 +76,7 @@ public class UnsortedGroupByTransformer implements Transformer
         JSONObject collected; 
         
         Map<String, JSONArray> related = new HashMap();
-        List<JSONObject> groups = new ArrayList<>();
+        JSONArray groups = new JSONArray();
         
         Set<String> fieldKeys = new HashSet<>(Arrays.asList(fields));     
         
@@ -103,8 +103,15 @@ public class UnsortedGroupByTransformer implements Transformer
                 groups.add(collected);
             }
 
-            record.keySet().removeAll(fieldKeys);
-            group.add(record);
+            JSONObject groupRecord = new JSONObject();
+            for (String key : record.keySet())
+            {
+                if (!fieldKeys.contains(key))
+                {
+                    groupRecord.put(key, record.get(key));
+                }
+            }
+            group.add(groupRecord);
         }
 
         return groups.iterator();
