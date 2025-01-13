@@ -64,32 +64,33 @@ public class UnsortedGroupByTransformer implements Transformer
      * Groups unsorted JSONObjects based on the provided fields.
      * Ex Collecting atomized weather data for cities and grouping it together.
      * 
-     * @param sourceIterator The iterator of JSONObjects.
+     * @param iterator The iterator of JSONObjects.
      * @return A new iterator with the grouped data.
      */
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> sourceIterator)
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
     {
         String header;
-        JSONArray groupArray;
+        JSONArray group;
         JSONObject record;
         JSONObject collected; 
         
-        Map<String, JSONArray> groupArrays = new HashMap();
+        Map<String, JSONArray> related = new HashMap();
         List<JSONObject> groups = new ArrayList<>();
-        Set<String> groupKeySet = new HashSet<>(Arrays.asList(fields));     
         
-        while (sourceIterator.hasNext())
+        Set<String> fieldKeys = new HashSet<>(Arrays.asList(fields));     
+        
+        while (iterator.hasNext())
         {
-            record = sourceIterator.next();
+            record = iterator.next();
             header = createGroupKey(record);
-            groupArray = groupArrays.get(header);
+            group = related.get(header);
             
             // Create new group only when needed
-            if (groupArray == null)
+            if (group == null)
             {
                 collected = new JSONObject();
-                groupArray = new JSONArray();
+                group = new JSONArray();
 
                 // Set group keys
                 for (String key : fields)
@@ -97,13 +98,13 @@ public class UnsortedGroupByTransformer implements Transformer
                     collected.put(key, record.get(key));
                 }
 
-                collected.put(output, groupArray);
-                groupArrays.put(header, groupArray);
+                collected.put(output, group);
+                related.put(header, group);
                 groups.add(collected);
             }
 
-            record.keySet().removeAll(groupKeySet);
-            groupArray.add(record);
+            record.keySet().removeAll(fieldKeys);
+            group.add(record);
         }
 
         return groups.iterator();
