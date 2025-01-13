@@ -33,8 +33,8 @@ import java.util.*;
  */
 public class SortedGroupByTransformer implements Transformer 
 {   
-    private String[] groupByKeys;
-    private String outputKey;
+    private String[] fields;
+    private String output;
     
     /**
      * Creates a new SortedGroupByTransformer to group JSONObjects with related data on provided the fields. 
@@ -59,8 +59,8 @@ public class SortedGroupByTransformer implements Transformer
 
         if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
         
-        this.groupByKeys = fields;
-        this.outputKey = output;
+        this.fields = fields;
+        this.output = output;
     }
     
     /**
@@ -102,7 +102,7 @@ public class SortedGroupByTransformer implements Transformer
                 }
         
                 // Set the group keys from current parent record
-                for (String key : groupByKeys) 
+                for (String key : fields) 
                 {
                     group.put(key, currentRecord.get(key));
                 }
@@ -117,13 +117,13 @@ public class SortedGroupByTransformer implements Transformer
                     if(iterator.hasNext()) currentRecord = iterator.next();                 
                 }
                 
-                group.put(outputKey, children);
+                group.put(output, children);
                 return group;
             }
             
             private JSONObject addFilteredRecordToGroup(JSONObject record)
             {
-                for (String key : groupByKeys)
+                for (String key : fields)
                 {
                     record.remove(key);
                 }
