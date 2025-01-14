@@ -213,8 +213,8 @@ public class UnsortedGroupByTransformerTest
                 + "{\"city\": \"Tampa\", \"temp\": 31},"
                 + "{\"City\": \"Washington\", \"temp\": 32}"
                 + "]";
-        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":null,\"temps\":[{\"temp\":32,\"City\":\"Tampa\"},{\"temp\":32,\"City\":\"Washington\"}]}]";        
-        
+       String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":32},{\"City\":\"Washington\",\"temp\":32}]}]";
+
         JSONArray objects = new JSONArray(test);
         JSONArray expected = new JSONArray(known);
      

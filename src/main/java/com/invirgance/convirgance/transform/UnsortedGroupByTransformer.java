@@ -35,7 +35,7 @@ public class UnsortedGroupByTransformer implements Transformer
 {   
     private final String[] fields; 
     private final String output;   
-
+    private final Set<String> fieldKeys;     
     /**
      * Creates a new UnsortedGroupByTransformer to group related data on provided fields. 
      * @param fields The fields you want to group with.
@@ -57,12 +57,19 @@ public class UnsortedGroupByTransformer implements Transformer
         if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
         
         this.fields = fields;
+        this.fieldKeys = new HashSet<>(Arrays.asList(fields));
         this.output = output;
     }
      
     /**
      * Groups unsorted JSONObjects based on the provided fields.
-     * Ex Collecting atomized weather data for cities and grouping it together.
+     * The resulting iterator will contain entries of field(n).
+
+     * Ex Grouping on city, and weather -> one entry for each occurrence of city + weather,
+     * any new entries have their children added to the output key for field(n).
+     * 
+     * n being how many fields are grouped on.
+     * field(n) ~= {city="Tampa",weather="sunny", output: children...}
      * 
      * @param iterator The iterator of JSONObjects.
      * @return A new iterator with the grouped data.
@@ -74,25 +81,22 @@ public class UnsortedGroupByTransformer implements Transformer
         JSONArray group;
         JSONObject record;
         JSONObject collected; 
+        JSONObject clone;
         
         Map<String, JSONArray> related = new HashMap();
         JSONArray groups = new JSONArray();
-        
-        Set<String> fieldKeys = new HashSet<>(Arrays.asList(fields));     
-        
+              
         while (iterator.hasNext())
         {
             record = iterator.next();
             header = createGroupKey(record);
             group = related.get(header);
             
-            // Create new group only when needed
             if (group == null)
             {
                 collected = new JSONObject();
                 group = new JSONArray();
 
-                // Set group keys
                 for (String key : fields)
                 {
                     collected.put(key, record.get(key));
@@ -103,15 +107,10 @@ public class UnsortedGroupByTransformer implements Transformer
                 groups.add(collected);
             }
 
-            JSONObject groupRecord = new JSONObject();
-            for (String key : record.keySet())
-            {
-                if (!fieldKeys.contains(key))
-                {
-                    groupRecord.put(key, record.get(key));
-                }
-            }
-            group.add(groupRecord);
+            clone = new JSONObject(record);
+            clone.keySet().removeAll(fieldKeys);
+            
+            group.add(clone);
         }
 
         return groups.iterator();
