@@ -88,7 +88,7 @@ public class SortedGroupByTransformerTest
     }
     
     /**
-     * Make sure nested values are grouped correctly
+     * Make sure nested values are grouped correctly.
      */
     @Test
     public void testTransformNested()

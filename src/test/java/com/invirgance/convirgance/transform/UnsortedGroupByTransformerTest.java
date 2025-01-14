@@ -65,24 +65,46 @@ public class UnsortedGroupByTransformerTest
         transformer = new UnsortedGroupByTransformer(groupFields, "temps");
     }
     
-   /**
+    /**
      * Test of transform method, of class UnsortedGroupByTransformer.
      */
     @Test
     public void testTransform()
     {
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
-                
+
         JSONArray objects = new JSONArray(testItems);
         JSONArray expected = new JSONArray(known);
-        
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));       
 
-        assertEquals(transformed.toString(),expected.toString());
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        assertEquals(transformed.toString(), expected.toString());
+    }
+
+    /**
+     * Test of transform method let's make sure out of order items are really sorted.
+     */
+    @Test
+    public void testTransformSorted()
+    {
+        String test = "[{\"city\":\"Tampa\",\"temp\":35,\"weather\":\"rain\"},"
+                + "{\"city\":\"Tampa\",\"temp\":32,\"weather\":\"overcast\"},"
+                + "{\"city\":\"Milwaukee\",\"temp\":23,\"weather\":\"sunny\"},"
+                + "{\"city\":\"Tampa\",\"temp\":22,\"weather\":\"overcast\"},"
+                + "{\"city\":\"Milwaukee\",\"temp\":36,\"weather\":\"sunny\"}]";
+        
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"},{\"temp\":36,\"weather\":\"sunny\"}]}]";
+
+        JSONArray objects = new JSONArray(test);
+        JSONArray expected = new JSONArray(known);
+
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        assertEquals(transformed.toString(), expected.toString());
     }    
     
     /**
-     * Make sure nested values are grouped correctly
+     * Ensure nested objects with nested items are sorted correctly with their children remaining unaffected.
      */
     @Test
     public void testTransformNested()
