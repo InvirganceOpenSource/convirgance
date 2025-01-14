@@ -46,7 +46,6 @@ public class CSVInput implements Input<JSONObject>
      * Used to stream CSV into JSONObjects.
      * @param source A {@link Source} to CSV data.
      * @return A CSVInputCursor with the decoded stream.
-     * @throws scenarios
      */
     @Override
     public InputCursor<JSONObject> read(Source source)
