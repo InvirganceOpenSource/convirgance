@@ -35,6 +35,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+// - EOL/EOF Test
+
 /**
  * Used to stream the contents of a CSV Source into JSONObjects.
  * @author tadghh
@@ -57,7 +59,12 @@ public class CSVInput implements Input<JSONObject>
     {
         private final Source source;
         private List<String> headers;
-
+        private BufferedReader reader;
+        private String nextLine;
+        private String headerLine;
+        private StringBuilder builder;
+        private String append;
+        
         public CSVInputCursor(Source source)
         {
             this.source = source;
@@ -65,14 +72,8 @@ public class CSVInput implements Input<JSONObject>
         
         @Override
         public CloseableIterator<JSONObject> iterator()
-        {
-            return new CloseableIterator<JSONObject>()
-            {
-                private BufferedReader reader;               
-                private String nextLine;
-                private String headerLine;
-                private StringBuilder builder;
-                private String append;
+        {          
+            return new CloseableIterator<JSONObject>(){                          
                 
                 {
                     try
@@ -112,10 +113,7 @@ public class CSVInput implements Input<JSONObject>
                         values = parseCSVLine(nextLine);
                         nextLine = reader.readLine();
 
-                        if (nextLine == null)
-                        {
-                            close();
-                        }
+                        if (nextLine == null) close();                        
 
                         return createJSONObject(values);
                     }
