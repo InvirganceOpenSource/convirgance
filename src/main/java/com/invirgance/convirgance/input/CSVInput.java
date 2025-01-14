@@ -35,16 +35,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-// - Mime type will tell us if the file has a header
-
-//  - 1:1 with values till line break
-
-// - Last field must not have comma, 
-//  - might have a line ending
-
-// - 
 /**
- * Used when streaming CSV values into JSONObjects.
+ * Used to stream the contents of a CSV Source into JSONObjects.
  * @author tadghh
  */
 public class CSVInput implements Input<JSONObject>
@@ -54,6 +46,7 @@ public class CSVInput implements Input<JSONObject>
      * Used to stream CSV into JSONObjects.
      * @param source A {@link Source} to CSV data.
      * @return A CSVInputCursor with the decoded stream.
+     * @throws scenarios
      */
     @Override
     public InputCursor<JSONObject> read(Source source)
@@ -70,16 +63,17 @@ public class CSVInput implements Input<JSONObject>
         {
             this.source = source;
         }
-
+        
         @Override
         public CloseableIterator<JSONObject> iterator()
         {
             return new CloseableIterator<JSONObject>()
             {
-                private BufferedReader reader;
-                private boolean closed = false;
-                private String nextLine = null;
-                String headerLine;
+                private BufferedReader reader;               
+                private String nextLine;
+                private String headerLine;
+                private StringBuilder builder;
+                private String append;
                 
                 {
                     try
@@ -87,11 +81,9 @@ public class CSVInput implements Input<JSONObject>
                         reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
 
                         headerLine = reader.readLine();
-                        if (headerLine != null)
-                        {
-                            headers = parseCSVLine(headerLine);
-                        }
-
+                        
+                        if (headerLine != null) headers = parseCSVLine(headerLine);
+                        
                         nextLine = reader.readLine();
                     }
                     catch (IOException e)
@@ -103,12 +95,14 @@ public class CSVInput implements Input<JSONObject>
                 @Override
                 public boolean hasNext()
                 {
-                    return !closed && nextLine != null;
+                    return nextLine != null;
                 }
 
                 @Override
                 public JSONObject next()
                 {
+                    List<String> values;
+                    
                     if (!hasNext())
                     {
                         throw new ConvirganceException("Attempted to iterate with no next element.");
@@ -116,7 +110,7 @@ public class CSVInput implements Input<JSONObject>
 
                     try
                     {
-                        List<String> values = parseCSVLine(nextLine);
+                        values = parseCSVLine(nextLine);
                         nextLine = reader.readLine();
 
                         if (nextLine == null)
@@ -139,70 +133,62 @@ public class CSVInput implements Input<JSONObject>
                 private List<String> parseCSVLine(String line)
                 {
                     List<String> values = new ArrayList<>();
-                    StringBuilder currentValue = new StringBuilder();
-                    boolean inQuotes = false;
+                    builder = new StringBuilder();
+                    boolean quotes = false;
+                    char character;
 
                     for (int i = 0; i < line.length(); i++)
                     {
-                        char c = line.charAt(i);
+                        character = line.charAt(i);
 
-                        if (c == '"')
+                        if (character == '"')
                         {
-                            if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"')
+                            if (quotes && i + 1 < line.length() && line.charAt(i + 1) == '"')
                             {
-                                // Handle escaped quotes
-                                currentValue.append('"');
+                                builder.append('"');
                                 i++;
                             }
-                            else
-                            {
-                                inQuotes = !inQuotes;
-                            }
+                            else quotes = !quotes;         
+                            
                         }
-                        else if (c == ',' && !inQuotes)
+                        else if (character == ',' && !quotes)
                         {
-                            values.add(currentValue.toString().trim());
-                            currentValue.setLength(0);
+                            values.add(builder.toString().trim());
+                            builder.setLength(0);
                         }
-                        else
-                        {
-                            currentValue.append(c);
-                        }
+                        else builder.append(character);          
+                        
                     }
 
-                    values.add(currentValue.toString().trim());
+                    values.add(builder.toString().trim());
                     return values;
                 }
 
                 private JSONObject createJSONObject(List<String> values)
                 {
-                    StringBuilder json = new StringBuilder("{");
+                    builder = new StringBuilder("{");
 
                     for (int i = 0; i < Math.min(headers.size(), values.size()); i++)
                     {
-                        String value = values.get(i);
-                        if (value != null && !value.isEmpty())
+                        append = values.get(i);
+                        if (append != null && !append.isEmpty())
                         {
                             if (i > 0)
                             {
-                                json.append(",");
+                                builder.append(",");
                             }
-                            json.append("\"").append(headers.get(i)).append("\":\"").append(value).append("\"");
+                            builder.append("\"").append(headers.get(i)).append("\":\"").append(append).append("\"");
                         }
                     }
 
-                    json.append("}");
-                    return new JSONObject(json.toString());
+                    builder.append("}");
+                    return new JSONObject(builder.toString());
                 }
 
                 @Override
                 public void close() throws Exception
                 {
-                    if (!closed)
-                    {
-                        reader.close();
-                        closed = true;
-                    }
+                    reader.close();
                 }
             };
         }
