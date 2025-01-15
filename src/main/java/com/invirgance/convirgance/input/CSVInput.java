@@ -45,10 +45,14 @@ public class CSVInput implements Input<JSONObject>
 {
 
     /**
-     * Used to stream CSV into JSONObjects.
+     * Used to iterate across a source contains CSV values, converting them into JSONObjects.
      *
      * @param source A {@link Source} to CSV data.
      * @return A CSVInputCursor with the decoded stream.
+     * @throws ConvirganceException Exceptions are thrown when:
+     * - An iteration into nothing was attempted.
+     * - An invalid JSONObject is created (CSV -> JSON spec conflicts)
+     * - There is an issue with the CSV file itself.
      */
     @Override
     public InputCursor<JSONObject> read(Source source)
@@ -58,17 +62,14 @@ public class CSVInput implements Input<JSONObject>
 
     private class CSVInputCursor implements InputCursor<JSONObject>
     {
-
         private final Source source;
         private List<String> headers;
         private BufferedReader reader;
         private String nextLine;
         private String headerLine;
-        private StringBuilder builder;
         private String append;
-        private StringBuilder current = new StringBuilder();
-        private int commas;
-        private boolean inQuotes = false;
+        private final StringBuilder builder = new StringBuilder();
+        private final StringBuilder current = new StringBuilder();
 
         public CSVInputCursor(Source source)
         {
@@ -91,6 +92,7 @@ public class CSVInput implements Input<JSONObject>
                         if (headerLine != null)
                         {
                             headers = parseCSVLine(headerLine);
+                            
                         }else throw new ConvirganceException("CSV file is empty - no header row found.");                      
 
                         nextLine = reader.readLine();
@@ -156,7 +158,7 @@ public class CSVInput implements Input<JSONObject>
                 private List<String> parseCSVLine(String line)
                 {
                     List<String> values = new ArrayList<>();
-                    builder = new StringBuilder();
+                    builder.setLength(0);
                     boolean quotes = false;
                     char character;
 
@@ -179,14 +181,14 @@ public class CSVInput implements Input<JSONObject>
                         }
                         else if (character == ',' && !quotes)
                         {
-                            values.add(builder.toString().trim());
+                            values.add(builder.toString());
                             builder.setLength(0);
                         }
                         else builder.append(character);
                        
                     }
 
-                    values.add(builder.toString().trim());
+                    values.add(builder.toString());
                  
                     if (quotes) throw new ConvirganceException("Unclosed quotes in CSV line: " + line);
                     
@@ -195,19 +197,20 @@ public class CSVInput implements Input<JSONObject>
 
                 private JSONObject createJSONObject(List<String> values)
                 {
-                    builder = new StringBuilder("{");
+                    builder.setLength(0);
+                    builder.append("{");
+                    String escapedHeader;
+                    String escapedValue;
+                    
                     for (int i = 0; i < Math.min(headers.size(), values.size()); i++)
                     {
                         append = values.get(i);
                         if (append != null && !append.isEmpty())
                         {
-                            if (i > 0)
-                            {
-                                builder.append(",");
-                            }
+                            if (i > 0) builder.append(",");                           
                             
-                            String escapedHeader = headers.get(i).replace("\"", "\\\"");
-                            String escapedValue = append.replace("\"", "\\\"");
+                            escapedHeader = headers.get(i).replace("\"", "\\\"");
+                            escapedValue = append.replace("\"", "\\\"");
                             builder.append("\"")
                                     .append(escapedHeader)
                                     .append("\":\"")
@@ -215,8 +218,8 @@ public class CSVInput implements Input<JSONObject>
                                     .append("\"");
                         }
                     }
+                    
                     builder.append("}");
-                    System.out.print(builder.toString());
                     return new JSONObject(builder.toString());
                 }
 
