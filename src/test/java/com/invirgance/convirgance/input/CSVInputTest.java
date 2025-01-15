@@ -28,11 +28,9 @@ import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.ByteArraySource;
 import com.invirgance.convirgance.source.InputStreamSource;
-import java.io.StringReader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 /**
  *
@@ -40,12 +38,6 @@ import org.junit.jupiter.api.Test;
  */
 public class CSVInputTest
 {
-    private static CSVInput tester;
-    private static JSONArray output;
-    private static JSONArray expected;
-    private static StringReader reader;
-    private static ByteArraySource inputStream;
-    private static InputStreamSource source;
     
     public CSVInputTest()
     {
@@ -53,36 +45,21 @@ public class CSVInputTest
 
     private void assertCSVEquals(String input, JSONArray expected, String message)
     {
-        processCSV(input);
-        assertEquals(expected.toString(), output.toString(), message);
+        assertTrue(processCSV(input).equals(expected),message);
     }
 
-    private void processCSV(String input)
+    private JSONArray processCSV(String input)
     {
-        reader = new StringReader(input);
-        inputStream = new ByteArraySource(input.getBytes());
-        source = new InputStreamSource(inputStream.getInputStream());
-
+       
+        ByteArraySource inputStream = new ByteArraySource(input.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        CSVInput tester = new CSVInput();
+        JSONArray output = new JSONArray();
         for (JSONObject item : tester.read(source))
         {
             output.add(item);
         }
-    }
-    
-    
-    @BeforeAll
-    public static void setUpClass()
-    {
-        tester = new CSVInput();
-        output = new JSONArray();
-        expected = new JSONArray();
-
-    }
-    
-    @BeforeEach
-    public  void resetTransformed(){
-        output = new JSONArray();      
-        expected = new JSONArray();
+        return output;
     }
     
     /**
@@ -93,7 +70,7 @@ public class CSVInputTest
     {
         String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
 
-        expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New York\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
+        JSONArray expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New York\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
         assertCSVEquals(test, expected, "Test of read method, of class CSVInput.");
     }
     
@@ -105,7 +82,7 @@ public class CSVInputTest
     {
         String test = "Name,Age,City\nJohn,30,\"New\nYork\"\nAlice,25,Paris";
 
-        expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYork\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
+        JSONArray expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYork\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
         assertCSVEquals(test, expected, "Test of read method, of class CSVInput.");
     }
     
@@ -117,7 +94,7 @@ public class CSVInputTest
     {
         String test = "Name,Age,City\nJohn,30,\"New\nYo\nrk\"\nAlice,25,Paris";
 
-        expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYo\\nrk\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
+        JSONArray expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYo\\nrk\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
         assertCSVEquals(test, expected, "Test of read method, of class CSVInput.");
     }
     
@@ -128,7 +105,7 @@ public class CSVInputTest
     public void basicCRLFTest() {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
         
-        expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
+        JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
         assertCSVEquals(test, expected, "Basic CRLF delimited CSV");
     }
 
@@ -139,7 +116,7 @@ public class CSVInputTest
     public void noFinalLineBreakTest() {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
         
-        expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
+        JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
         assertCSVEquals(test, expected, "CSV without final line break");
     }
 
@@ -150,7 +127,7 @@ public class CSVInputTest
     public void headerLineTest() {
         String test = "name,age,city\r\nJohn,30,NewYork\r\nAlice,25,Paris";
         
-        expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"NewYork\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
+        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"NewYork\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
         assertCSVEquals(test, expected, "CSV with header line");
     }
 
@@ -161,7 +138,7 @@ public class CSVInputTest
     public void preserveSpacesTest() {
         String test = "name, age ,city\r\nJohn Doe, 30 ,New York";
         
-        expected = new JSONArray("[{\"name\":\"John Doe\",\" age \":\" 30 \",\"city\":\"New York\"}]");
+        JSONArray expected = new JSONArray("[{\"name\":\"John Doe\",\" age \":\" 30 \",\"city\":\"New York\"}]");
         assertCSVEquals(test, expected, "CSV with preserved spaces");
     }
 
@@ -172,7 +149,7 @@ public class CSVInputTest
     public void optionalQuotesTest() {
         String test = "name,age,city\r\n\"John\",30,\"New York\"\r\nAlice,\"25\",Paris";
         
-        expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"New York\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
+        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"New York\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
         assertCSVEquals(test, expected, "CSV with optional quotes");
     }
 
@@ -183,7 +160,7 @@ public class CSVInputTest
     public void quotesWithSpecialCharsTest() {
         String test = "name,description\r\n\"John\",\"Lives in\r\nNew York\"\r\n\"Alice\",\"Lives,somewhere\"";
         
-        expected = new JSONArray("[{\"name\":\"John\",\"description\":\"Lives in\\nNew York\"},{\"name\":\"Alice\",\"description\":\"Lives,somewhere\"}]");
+        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"description\":\"Lives in\\nNew York\"},{\"name\":\"Alice\",\"description\":\"Lives,somewhere\"}]");
         assertCSVEquals(test, expected, "CSV with quotes containing special characters");
     }
 
@@ -194,7 +171,7 @@ public class CSVInputTest
     public void escapedQuotesTest() {
         String test = "name,quote\r\n\"John\",\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",\"She said \"\"Hi\"\"\"";
         
-        expected = new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]");
+        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]");
         assertCSVEquals(test, expected, "CSV with escaped quotes");
     }
     
@@ -205,7 +182,7 @@ public class CSVInputTest
     public void missingValueTest() {
         String test = "name,age,quote\r\n\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",,\"She said \"\"Hi\"\"\"\r\n\"Bob\",30,\"Welcome!\"";
 
-        expected = new JSONArray("[{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"},{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}]");
+        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"},{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}]");
         assertCSVEquals(test, expected, "CSV with escaped quotes");
     }
 
@@ -218,15 +195,13 @@ public class CSVInputTest
     public void testTransformNoMoreInput()
     {
         String test = "";
-
-        reader = new StringReader(test);
-        inputStream = new ByteArraySource(test.getBytes());
-        source = new InputStreamSource(inputStream.getInputStream());
-        tester.read(source);
+        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        InputCursor<JSONObject> tester = new CSVInput().read(source);
         
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
-            tester.read(source).iterator();
+            tester.iterator();
         });
 
         // Assert that the exception message matches what is expected
