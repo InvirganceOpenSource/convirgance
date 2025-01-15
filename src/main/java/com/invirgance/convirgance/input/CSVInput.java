@@ -91,9 +91,7 @@ public class CSVInput implements Input<JSONObject>
                         if (headerLine != null)
                         {
                             headers = parseCSVLine(headerLine);
-                        }else{
-                            throw new ConvirganceException("CSV file is empty - no header row found.");
-                        }
+                        }else throw new ConvirganceException("CSV file is empty - no header row found.");                      
 
                         nextLine = reader.readLine();
                     }
@@ -112,10 +110,7 @@ public class CSVInput implements Input<JSONObject>
                 @Override
                 public JSONObject next()
                 {
-                    if (!hasNext())
-                    {
-                        throw new ConvirganceException("Attempted to iterate with no next element.");
-                    }
+                    if (!hasNext()) throw new ConvirganceException("Attempted to iterate with no next element.");                    
 
                     try
                     {
@@ -141,10 +136,7 @@ public class CSVInput implements Input<JSONObject>
 
                     for (char c : nextLine.toCharArray())
                     {
-                        if (c == '"')
-                        {
-                            quoteCount++;
-                        }
+                        if (c == '"') quoteCount++;                        
                     }
 
                     while (quoteCount % 2 != 0 && (nextLine = reader.readLine()) != null)
@@ -152,10 +144,7 @@ public class CSVInput implements Input<JSONObject>
                         current.append("\n").append(nextLine);
                         for (char c : nextLine.toCharArray())
                         {
-                            if (c == '"')
-                            {
-                                quoteCount++;
-                            }
+                            if (c == '"') quoteCount++;                     
                         }
                     }
 
@@ -177,37 +166,36 @@ public class CSVInput implements Input<JSONObject>
 
                         if (character == '"')
                         {
+                            // Check if this is an escaped quote
                             if (quotes && i + 1 < line.length() && line.charAt(i + 1) == '"')
-                            {
+                            {                             
                                 builder.append('"');
-                                i++;
+                               
+                                i++; 
+                                continue; 
                             }
-                            else
-                            {
-                                quotes = !quotes;
-                            }
-
+                            
+                            quotes = !quotes;
                         }
                         else if (character == ',' && !quotes)
                         {
                             values.add(builder.toString().trim());
                             builder.setLength(0);
                         }
-                        else
-                        {
-                            builder.append(character);
-                        }
-
+                        else builder.append(character);
+                       
                     }
 
                     values.add(builder.toString().trim());
+                 
+                    if (quotes) throw new ConvirganceException("Unclosed quotes in CSV line: " + line);
+                    
                     return values;
                 }
 
                 private JSONObject createJSONObject(List<String> values)
                 {
                     builder = new StringBuilder("{");
-
                     for (int i = 0; i < Math.min(headers.size(), values.size()); i++)
                     {
                         append = values.get(i);
@@ -217,11 +205,18 @@ public class CSVInput implements Input<JSONObject>
                             {
                                 builder.append(",");
                             }
-                            builder.append("\"").append(headers.get(i)).append("\":\"").append(append).append("\"");
+                            
+                            String escapedHeader = headers.get(i).replace("\"", "\\\"");
+                            String escapedValue = append.replace("\"", "\\\"");
+                            builder.append("\"")
+                                    .append(escapedHeader)
+                                    .append("\":\"")
+                                    .append(escapedValue)
+                                    .append("\"");
                         }
                     }
-
                     builder.append("}");
+                    System.out.print(builder.toString());
                     return new JSONObject(builder.toString());
                 }
 
