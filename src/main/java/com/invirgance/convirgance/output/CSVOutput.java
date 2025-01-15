@@ -23,16 +23,10 @@
  */
 package com.invirgance.convirgance.output;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
-import com.invirgance.convirgance.json.JSONWriter;
 import com.invirgance.convirgance.target.Target;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
+import java.util.Set;
 
 /**
  * Used when writing JSON to CSV that will then be written to some target stream.
@@ -48,7 +42,7 @@ public class CSVOutput implements Output
     @Override
     public OutputCursor write(Target target)
     {
-        return new CSVOutputCursor(target);
+        return new CSVOutputCursorWriter(target);
     }
 
     /**
@@ -62,62 +56,82 @@ public class CSVOutput implements Output
     {
         return "text/csv";
     }
-    
-    private class CSVOutputCursor implements OutputCursor
+     
+    private class CSVOutputCursorWriter implements OutputCursor
     {
-        private final Target target;
-        private final Writer writer;
-        private final JSONWriter json;
-        private int count;
-        private List<String> headers;
-        
-        public CSVOutputCursor(Target target)
-        {
-            try
-            {
-                this.target = target;
-                this.writer = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(), "UTF-8"), 16 * 1024);
-                this.json = new JSONWriter(this.writer);
-                
-                this.writer.write("[\n");
-                
-            }
-            catch(IOException e)
-            {
-                throw new ConvirganceException(e);
-            }
-        }
+        private Target target;
+        private PrintWriter out;
+        private String[] headers;
 
+        public CSVOutputCursorWriter(Target target, String[] headers)
+        {
+            this.target = target;
+            this.headers = headers;
+        }
+        public CSVOutputCursorWriter(Target target)
+        {
+            this.target = target;
+//            this.headers = headers;
+        }
+    
+        private String[] detectColumns(JSONObject record)
+        {
+            Set<String> keys = record.keySet();
+
+            return keys.toArray(String[]::new);
+        }
+    
+        private String stringify(String[] columns)
+        {
+            StringBuffer buffer = new StringBuffer();
+
+            for(int i=0; i<headers.length; i++)
+            {
+                if(i > 0) buffer.append(',');
+
+                buffer.append(columns[i]);
+            }
+
+            return buffer.toString();
+        }
+    
+        private String stringify(JSONObject record)
+        {
+            StringBuffer buffer = new StringBuffer();
+            Object value;
+
+            for(int i=0; i<headers.length; i++)
+            {
+                if(i > 0) buffer.append(',');
+
+                value = record.get(headers[i]);
+
+                if(value != null) buffer.append(value.toString());
+            }
+
+            return buffer.toString();
+        }
+        
         @Override
         public void write(JSONObject record)
-        {
-            try
-            {   
-                // Grab headers
-                if(count == 0){                
-                    headers = new ArrayList<>(record.keySet());
-                }else
-                if(count > 0) 
-                {
-                    this.writer.write(",\n");
-                }
-                
-                this.json.write(record);
+        {   
+            if(headers == null) headers = detectColumns(record);
 
-                count++;
-            }
-            catch(IOException e)
+            if(out == null) 
             {
-                throw new ConvirganceException(e);
-            }
-        }
+                out = new PrintWriter(target.getOutputStream(), false);
 
-        @Override
-        public void close() throws Exception
-        {
-            this.writer.write("\n]\n");
-            this.json.close();
+                out.println(stringify(headers));
+                out.flush();
+            }
+
+            out.println(stringify(record));
         }
         
+        @Override
+        public void close()
+        {
+            if(out != null) out.close();
+        }
     }
 }
