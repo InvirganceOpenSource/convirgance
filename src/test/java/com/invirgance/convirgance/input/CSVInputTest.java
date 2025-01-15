@@ -115,6 +115,26 @@ public class CSVInputTest
 
         assertTrue(expectedJson.equals(output));
     }
+    /**
+     * Test of read method, of class CSVInput.
+     */
+    @Test
+    public void normalInput()
+    {
+        String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
+        reader = new StringReader(test);
+        inputStream = new ByteArraySource(test.getBytes());
+        source = new InputStreamSource(inputStream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+
+        JSONArray expectedJson = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New York\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
+
+        assertTrue(expectedJson.equals(output));
+    }
 
 //    /**
 //     * Test of read method, of class CSVInput.
