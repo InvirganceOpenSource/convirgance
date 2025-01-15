@@ -27,8 +27,6 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,33 +35,40 @@ import org.junit.jupiter.api.Test;
  */
 public class UnsortedGroupByTransformerTest
 {
-    private static String testItems;
-    private static UnsortedGroupByTransformer transformer;
-    private static String[] groupFields;
-    private static JSONArray transformed;
     
     public UnsortedGroupByTransformerTest()
     {
     }
 
-    
-    @BeforeEach
-    public  void resetTransformed(){
-        transformed = new JSONArray();
-    }
-        
-    @BeforeAll
-    public static void setUpClass() {
-        testItems = "[{\"city\": \"Tampa\", \"temp\": 35, \"weather\": \"rain\"}, {\"city\": \"Milwaukee\", \"temp\": 23, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 36, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 32, \"weather\": \"overcast\"}, {\"city\": \"Tampa\", \"temp\": 22, \"weather\": \"overcast\"}]";
-        
-        groupFields = new String[]
+    private void assertTransformEquals(String input, String known, String message)
+    {
+        String[] fields = new String[]
         {
             "city"
         };
        
-        transformed = new JSONArray();
-        transformer = new UnsortedGroupByTransformer(groupFields, "temps");
+        assertTransformEquals(input,known,message,fields);
     }
+    
+    private void assertTransformEquals(String input, String known, String message, String[] fields){
+        JSONArray expected = new JSONArray(known);
+        
+        JSONArray processed = processTransform(input,fields);
+        assertEquals(processed.toString(),expected.toString());
+    }
+    
+    private JSONArray processTransform(String input, String[] fields)
+    {
+        JSONArray objects = new JSONArray(input);
+
+        JSONArray transformed = new JSONArray();
+        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
+
+        transformer.transform(objects).forEach(elem -> transformed.add(elem));
+
+        return transformed;
+    }
+  
     
     /**
      * Test of transform method, of class UnsortedGroupByTransformer.
@@ -71,14 +76,10 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransform()
     {
+        String test = "[{\"city\": \"Tampa\", \"temp\": 35, \"weather\": \"rain\"}, {\"city\": \"Milwaukee\", \"temp\": 23, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 36, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 32, \"weather\": \"overcast\"}, {\"city\": \"Tampa\", \"temp\": 22, \"weather\": \"overcast\"}]";
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";
 
-        JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(known);
-
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));
-
-        assertEquals(transformed.toString(), expected.toString());
+        assertTransformEquals(test,known,"Testing basic transform");
     }
 
     /**
@@ -94,13 +95,8 @@ public class UnsortedGroupByTransformerTest
                 + "{\"city\":\"Milwaukee\",\"temp\":36,\"weather\":\"sunny\"}]";
         
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"},{\"temp\":36,\"weather\":\"sunny\"}]}]";
-
-        JSONArray objects = new JSONArray(test);
-        JSONArray expected = new JSONArray(known);
-
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));
-
-        assertEquals(transformed.toString(), expected.toString());
+        
+        assertTransformEquals(test,known,"Sorted after transform?");
     }    
     
     /**
@@ -109,19 +105,14 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformNested()
     {
-        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}},{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]}]";
-        String nested = "[{\"city\": \"Tampa\", \"details\": {\"temp\": 35.2, \"weather\": \"rain\"}},"
+        String test = "[{\"city\": \"Tampa\", \"details\": {\"temp\": 35.2, \"weather\": \"rain\"}},"
                 + "{\"city\": \"Milwaukee\", \"details\": {\"temp\": 23.2, \"weather\": \"sunny\"}},"
                 + "{\"city\": \"Tampa\", \"details\": {\"temp\": 36.2, \"weather\": \"sunny\"}},"
                 + "{\"city\": \"Tampa\", \"details\": {\"temp\": 32.1, \"weather\": \"overcast\"}},"
                 + "{\"city\": \"Tampa\", \"details\": {\"temp\": 22.1, \"weather\": \"overcast\"}}]";
-        
-        JSONArray objects = new JSONArray(nested);
-        JSONArray expected = new JSONArray(known);
-         
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));
-
-        assertEquals(transformed.toString(),expected.toString());
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"details\":{\"temp\":35.2,\"weather\":\"rain\"}},{\"details\":{\"temp\":36.2,\"weather\":\"sunny\"}},{\"details\":{\"temp\":32.1,\"weather\":\"overcast\"}},{\"details\":{\"temp\":22.1,\"weather\":\"overcast\"}}]},{\"city\":\"Milwaukee\",\"temps\":[{\"details\":{\"temp\":23.2,\"weather\":\"sunny\"}}]}]";
+               
+        assertTransformEquals(test,known,"Nested transform test.");
     }    
 
     /**
@@ -130,20 +121,14 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformMultipleFields()
     {
+        String test = "[{\"city\": \"Tampa\", \"temp\": 35, \"weather\": \"rain\"}, {\"city\": \"Milwaukee\", \"temp\": 23, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 36, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 32, \"weather\": \"overcast\"}, {\"city\": \"Tampa\", \"temp\": 22, \"weather\": \"overcast\"}]";
         String known = "[{\"city\":\"Tampa\",\"weather\":\"rain\",\"temps\":[{\"temp\":35}]},{\"city\":\"Milwaukee\",\"weather\":\"sunny\",\"temps\":[{\"temp\":23}]},{\"city\":\"Tampa\",\"weather\":\"sunny\",\"temps\":[{\"temp\":36}]},{\"city\":\"Tampa\",\"weather\":\"overcast\",\"temps\":[{\"temp\":32},{\"temp\":22}]}]";      
         String[] fields = new String[]
         {
             "city","weather"
         };
         
-        JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(known);
-        
-        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
-
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));
-        
-        assertEquals(transformed.toString(),expected.toString());
+        assertTransformEquals(test,known,"Nested transform test.",fields);
     }
 
     /**
@@ -152,19 +137,14 @@ public class UnsortedGroupByTransformerTest
     @Test
     public void testTransformOneMissingField()
     {
+        String test = "[{\"city\": \"Tampa\", \"temp\": 35, \"weather\": \"rain\"}, {\"city\": \"Milwaukee\", \"temp\": 23, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 36, \"weather\": \"sunny\"}, {\"city\": \"Tampa\", \"temp\": 32, \"weather\": \"overcast\"}, {\"city\": \"Tampa\", \"temp\": 22, \"weather\": \"overcast\"}]";
         String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35,\"weather\":\"rain\"},{\"temp\":36,\"weather\":\"sunny\"},{\"temp\":32,\"weather\":\"overcast\"},{\"temp\":22,\"weather\":\"overcast\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23,\"weather\":\"sunny\"}]}]";   
         String[] fields = new String[]
         {
             "city","keyboard"
         };
              
-        JSONArray objects = new JSONArray(testItems);
-        JSONArray expected = new JSONArray(known);
-        
-        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
-        transformer.transform(objects).forEach(elem -> transformed.add(elem));
-
-        assertEquals(transformed.toString(),expected.toString());
+        assertTransformEquals(test,known,"Nested transform test.",fields);
     }
 
     /**
@@ -183,20 +163,7 @@ public class UnsortedGroupByTransformerTest
                 + "]";
         String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":32},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]}]";
         
-        JSONArray objects = new JSONArray(test);
-        JSONArray expected = new JSONArray(known);
-        
-        String[] fields = new String[]
-        {
-            "city"
-        };
-        
-        UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(fields, "temps");
-
-        transformer.transform(objects).forEach(transformed::add);
-
-        // Verify transformation
-        assertEquals(transformed.toString(),expected.toString());
+        assertTransformEquals(test,known,"Nested transform test.");
     }
  
     /**
@@ -213,14 +180,9 @@ public class UnsortedGroupByTransformerTest
                 + "{\"city\": \"Tampa\", \"temp\": 31},"
                 + "{\"City\": \"Washington\", \"temp\": 32}"
                 + "]";
-       String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":32},{\"City\":\"Washington\",\"temp\":32}]}]";
+        String known = "[{\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2},{\"temp\":31}]},{\"city\":\"Mexico\",\"temps\":[{\"temps\":[36.2]},{\"temp\":30.2}]},{\"city\":null,\"temps\":[{\"City\":\"Tampa\",\"temp\":32},{\"City\":\"Washington\",\"temp\":32}]}]";
 
-        JSONArray objects = new JSONArray(test);
-        JSONArray expected = new JSONArray(known);
-     
-        transformer.transform(objects).forEach(transformed::add);
-
-        assertEquals(transformed.toString(),expected.toString());
+        assertTransformEquals(test,known,"Nested transform test.");
     }
     
     /**
