@@ -64,7 +64,6 @@ public class CSVInput implements Input<JSONObject>
         private String headerLine;
         private String append;
         private final StringBuilder builder = new StringBuilder();
-        private final StringBuilder current = new StringBuilder();
 
         public CSVInputCursor(Source source)
         {
@@ -74,8 +73,7 @@ public class CSVInput implements Input<JSONObject>
         @Override
         public CloseableIterator<JSONObject> iterator()
         {
-            return new CloseableIterator<JSONObject>()
-            {
+            return new CloseableIterator<JSONObject>(){
 
                 {
                     try
@@ -84,12 +82,9 @@ public class CSVInput implements Input<JSONObject>
 
                         headerLine = reader.readLine();
 
-                        if (headerLine != null)
-                        {
-                            headers = parseCSVLine(headerLine);
-                            
-                        }else throw new ConvirganceException("CSV file is empty - no header row found.");                      
-
+                        if (headerLine != null) headers = parseCSVLine(headerLine);                            
+                        else throw new ConvirganceException("CSV file is empty - no header row found.");
+                                          
                         nextLine = reader.readLine();
                     }
                     catch (IOException e)
@@ -110,9 +105,8 @@ public class CSVInput implements Input<JSONObject>
                     if (!hasNext()) throw new ConvirganceException("Attempted to iterate with no next element.");                    
 
                     try
-                    {
-                        List<String> values = parseCompleteRecord();
-                        return createJSONObject(values);
+                    {                   
+                        return createJSONObject(parseCompleteRecord());
                     }
                     catch (IOException e)
                     {
@@ -126,10 +120,10 @@ public class CSVInput implements Input<JSONObject>
 
                 private List<String> parseCompleteRecord() throws IOException
                 {
-                    current.setLength(0);
-                    current.append(nextLine);
-
                     int quoteCount = 0;
+                    
+                    builder.setLength(0);
+                    builder.append(nextLine);
 
                     for (char c : nextLine.toCharArray())
                     {
@@ -138,7 +132,8 @@ public class CSVInput implements Input<JSONObject>
 
                     while (quoteCount % 2 != 0 && (nextLine = reader.readLine()) != null)
                     {
-                        current.append("\n").append(nextLine);
+                        builder.append("\n").append(nextLine);
+                        
                         for (char c : nextLine.toCharArray())
                         {
                             if (c == '"') quoteCount++;                     
@@ -147,15 +142,17 @@ public class CSVInput implements Input<JSONObject>
 
                     nextLine = reader.readLine();
 
-                    return parseCSVLine(current.toString());
+                    return parseCSVLine(builder.toString());
                 }
 
                 private List<String> parseCSVLine(String line)
                 {
-                    List<String> values = new ArrayList<>();
-                    builder.setLength(0);
                     boolean quotes = false;
                     char character;
+                    
+                    List<String> values = new ArrayList<>();
+               
+                    builder.setLength(0);
 
                     for (int i = 0; i < line.length(); i++)
                     {
@@ -179,8 +176,10 @@ public class CSVInput implements Input<JSONObject>
                             values.add(builder.toString());
                             builder.setLength(0);
                         }
-                        else builder.append(character);
-                       
+                        else 
+                        {
+                            builder.append(character);
+                        }
                     }
 
                     values.add(builder.toString());
@@ -197,6 +196,7 @@ public class CSVInput implements Input<JSONObject>
                     for (int i = 0; i < Math.min(headers.size(), values.size()); i++)
                     {
                         append = values.get(i);
+                        
                         record.put(headers.get(i), append.isEmpty() ? null : append);
                     }
                     
