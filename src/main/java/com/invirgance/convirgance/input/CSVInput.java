@@ -57,6 +57,7 @@ public class CSVInput implements Input<JSONObject>
 
     private class CSVInputCursor implements InputCursor<JSONObject>
     {
+        // TODO make reader final, simply move reader assignment into constructor.
         private final Source source;
         private List<String> headers;
         private BufferedReader reader;
