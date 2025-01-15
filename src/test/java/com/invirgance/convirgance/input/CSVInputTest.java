@@ -199,7 +199,7 @@ public class CSVInputTest
     }
     
     /**
-     * .
+     * Missing values should be assumed as null, a missing value is not technically an empty string.
      */
     @Test
     public void missingValueTest() {
