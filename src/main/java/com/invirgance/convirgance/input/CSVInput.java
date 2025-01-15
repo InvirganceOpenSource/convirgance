@@ -57,18 +57,18 @@ public class CSVInput implements Input<JSONObject>
 
     private class CSVInputCursor implements InputCursor<JSONObject>
     {
-        // TODO make reader final, simply move reader assignment into constructor.
-        private final Source source;
+        
+        private final BufferedReader reader;
+        private final StringBuilder builder = new StringBuilder();
+        
         private List<String> headers;
-        private BufferedReader reader;
         private String nextLine;
         private String headerLine;
-        private String append;
-        private final StringBuilder builder = new StringBuilder();
+        private String append;        
 
         public CSVInputCursor(Source source)
         {
-            this.source = source;
+            reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
         }
 
         @Override
@@ -78,9 +78,7 @@ public class CSVInput implements Input<JSONObject>
 
                 {
                     try
-                    {
-                        reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
-
+                    {                   
                         headerLine = reader.readLine();
 
                         if (headerLine != null) headers = parseCSVLine(headerLine);                            
