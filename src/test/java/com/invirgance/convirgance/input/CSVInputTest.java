@@ -138,6 +138,7 @@ public class CSVInputTest
     @Test
     public void noFinalLineBreakTest() {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
+        
         expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
         assertCSVEquals(test, expected, "CSV without final line break");
     }
@@ -148,6 +149,7 @@ public class CSVInputTest
     @Test
     public void headerLineTest() {
         String test = "name,age,city\r\nJohn,30,NewYork\r\nAlice,25,Paris";
+        
         expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"NewYork\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
         assertCSVEquals(test, expected, "CSV with header line");
     }
@@ -158,6 +160,7 @@ public class CSVInputTest
     @Test
     public void preserveSpacesTest() {
         String test = "name, age ,city\r\nJohn Doe, 30 ,New York";
+        
         expected = new JSONArray("[{\"name\":\"John Doe\",\" age \":\" 30 \",\"city\":\"New York\"}]");
         assertCSVEquals(test, expected, "CSV with preserved spaces");
     }
@@ -168,6 +171,7 @@ public class CSVInputTest
     @Test
     public void optionalQuotesTest() {
         String test = "name,age,city\r\n\"John\",30,\"New York\"\r\nAlice,\"25\",Paris";
+        
         expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"New York\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
         assertCSVEquals(test, expected, "CSV with optional quotes");
     }
@@ -178,6 +182,7 @@ public class CSVInputTest
     @Test
     public void quotesWithSpecialCharsTest() {
         String test = "name,description\r\n\"John\",\"Lives in\r\nNew York\"\r\n\"Alice\",\"Lives,somewhere\"";
+        
         expected = new JSONArray("[{\"name\":\"John\",\"description\":\"Lives in\\nNew York\"},{\"name\":\"Alice\",\"description\":\"Lives,somewhere\"}]");
         assertCSVEquals(test, expected, "CSV with quotes containing special characters");
     }
@@ -188,6 +193,7 @@ public class CSVInputTest
     @Test
     public void escapedQuotesTest() {
         String test = "name,quote\r\n\"John\",\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",\"She said \"\"Hi\"\"\"";
+        
         expected = new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]");
         assertCSVEquals(test, expected, "CSV with escaped quotes");
     }
@@ -197,16 +203,9 @@ public class CSVInputTest
      */
     @Test
     public void missingValueTest() {
-       String test = "name,age,quote\r\n" +
-                     "\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n" +
-                     "\"Alice\",,\"She said \"\"Hi\"\"\"\r\n" +
-                     "\"Bob\",30,\"Welcome!\"";
-        
-        expected = new JSONArray("[" +
-            "{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"}, " +
-            "{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"}, " +
-            "{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}" +
-        "]");
+        String test = "name,age,quote\r\n\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",,\"She said \"\"Hi\"\"\"\r\n\"Bob\",30,\"Welcome!\"";
+
+        expected = new JSONArray("[{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"},{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}]");
         assertCSVEquals(test, expected, "CSV with escaped quotes");
     }
 
