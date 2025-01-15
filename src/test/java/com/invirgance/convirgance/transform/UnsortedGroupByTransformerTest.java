@@ -69,7 +69,6 @@ public class UnsortedGroupByTransformerTest
         return transformed;
     }
   
-    
     /**
      * Test of transform method, of class UnsortedGroupByTransformer.
      */
@@ -220,5 +219,4 @@ public class UnsortedGroupByTransformerTest
         // Assert that the exception message matches what is expected
         assertEquals("Output key must not be null or empty.", exception.getMessage());
     }
- 
 }
