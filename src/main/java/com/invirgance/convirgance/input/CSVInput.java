@@ -192,30 +192,15 @@ public class CSVInput implements Input<JSONObject>
 
                 private JSONObject createJSONObject(List<String> values)
                 {
-                    builder.setLength(0);
-                    builder.append("{");
-                    String escapedHeader;
-                    String escapedValue;
+                    JSONObject record = new JSONObject(true);
                     
                     for (int i = 0; i < Math.min(headers.size(), values.size()); i++)
                     {
                         append = values.get(i);
-                        if (append != null && !append.isEmpty())
-                        {
-                            if (i > 0) builder.append(",");                           
-                            
-                            escapedHeader = headers.get(i).replace("\"", "\\\"");
-                            escapedValue = append.replace("\"", "\\\"");
-                            builder.append("\"")
-                                    .append(escapedHeader)
-                                    .append("\":\"")
-                                    .append(escapedValue)
-                                    .append("\"");
-                        }
+                        record.put(headers.get(i), append.isEmpty() ? null : append);
                     }
                     
-                    builder.append("}");
-                    return new JSONObject(builder.toString());
+                    return record;
                 }
 
                 @Override

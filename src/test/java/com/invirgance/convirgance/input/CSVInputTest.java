@@ -191,6 +191,24 @@ public class CSVInputTest
         expected = new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]");
         assertCSVEquals(test, expected, "CSV with escaped quotes");
     }
+    
+    /**
+     * .
+     */
+    @Test
+    public void missingValueTest() {
+       String test = "name,age,quote\r\n" +
+                     "\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n" +
+                     "\"Alice\",,\"She said \"\"Hi\"\"\"\r\n" +
+                     "\"Bob\",30,\"Welcome!\"";
+        
+        expected = new JSONArray("[" +
+            "{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"}, " +
+            "{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"}, " +
+            "{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}" +
+        "]");
+        assertCSVEquals(test, expected, "CSV with escaped quotes");
+    }
 
     /**
      * Test that an exception will be raised if the header is missing. 
