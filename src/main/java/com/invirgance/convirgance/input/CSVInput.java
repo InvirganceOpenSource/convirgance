@@ -43,9 +43,10 @@ import java.util.List;
  */
 public class CSVInput implements Input<JSONObject>
 {
-   
+
     /**
      * Used to stream CSV into JSONObjects.
+     *
      * @param source A {@link Source} to CSV data.
      * @return A CSVInputCursor with the decoded stream.
      */
@@ -57,6 +58,7 @@ public class CSVInput implements Input<JSONObject>
 
     private class CSVInputCursor implements InputCursor<JSONObject>
     {
+
         private final Source source;
         private List<String> headers;
         private BufferedReader reader;
@@ -64,26 +66,35 @@ public class CSVInput implements Input<JSONObject>
         private String headerLine;
         private StringBuilder builder;
         private String append;
-        
+        private StringBuilder current = new StringBuilder();
+        private int commas;
+        private boolean inQuotes = false;
+
         public CSVInputCursor(Source source)
         {
             this.source = source;
         }
-        
+
         @Override
         public CloseableIterator<JSONObject> iterator()
-        {          
-            return new CloseableIterator<JSONObject>(){                          
-                
+        {
+            return new CloseableIterator<JSONObject>()
+            {
+
                 {
                     try
                     {
                         reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
 
                         headerLine = reader.readLine();
-                        
-                        if (headerLine != null) headers = parseCSVLine(headerLine);
-                        
+
+                        if (headerLine != null)
+                        {
+                            headers = parseCSVLine(headerLine);
+                        }else{
+                            throw new ConvirganceException("CSV file is empty - no header row found.");
+                        }
+
                         nextLine = reader.readLine();
                     }
                     catch (IOException e)
@@ -101,8 +112,6 @@ public class CSVInput implements Input<JSONObject>
                 @Override
                 public JSONObject next()
                 {
-                    List<String> values;
-                    
                     if (!hasNext())
                     {
                         throw new ConvirganceException("Attempted to iterate with no next element.");
@@ -110,11 +119,7 @@ public class CSVInput implements Input<JSONObject>
 
                     try
                     {
-                        values = parseCSVLine(nextLine);
-                        nextLine = reader.readLine();
-
-                        if (nextLine == null) close();                        
-
+                        List<String> values = parseCompleteRecord();
                         return createJSONObject(values);
                     }
                     catch (IOException e)
@@ -125,6 +130,38 @@ public class CSVInput implements Input<JSONObject>
                     {
                         throw new ConvirganceException("Error processing CSV line", e);
                     }
+                }
+
+                private List<String> parseCompleteRecord() throws IOException
+                {
+                    current.setLength(0);
+                    current.append(nextLine);
+
+                    int quoteCount = 0;
+
+                    for (char c : nextLine.toCharArray())
+                    {
+                        if (c == '"')
+                        {
+                            quoteCount++;
+                        }
+                    }
+
+                    while (quoteCount % 2 != 0 && (nextLine = reader.readLine()) != null)
+                    {
+                        current.append("\n").append(nextLine);
+                        for (char c : nextLine.toCharArray())
+                        {
+                            if (c == '"')
+                            {
+                                quoteCount++;
+                            }
+                        }
+                    }
+
+                    nextLine = reader.readLine();
+
+                    return parseCSVLine(current.toString());
                 }
 
                 private List<String> parseCSVLine(String line)
@@ -145,16 +182,22 @@ public class CSVInput implements Input<JSONObject>
                                 builder.append('"');
                                 i++;
                             }
-                            else quotes = !quotes;         
-                            
+                            else
+                            {
+                                quotes = !quotes;
+                            }
+
                         }
                         else if (character == ',' && !quotes)
                         {
                             values.add(builder.toString().trim());
                             builder.setLength(0);
                         }
-                        else builder.append(character);          
-                        
+                        else
+                        {
+                            builder.append(character);
+                        }
+
                     }
 
                     values.add(builder.toString().trim());
