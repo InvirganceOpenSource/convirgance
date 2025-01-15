@@ -22,9 +22,6 @@
  * THE SOFTWARE.
  */
 package com.invirgance.convirgance.input;
-
-
-
 import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
@@ -34,8 +31,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-// - EOL/EOF Test
 
 /**
  * Used to stream the contents of a CSV Source into JSONObjects.
