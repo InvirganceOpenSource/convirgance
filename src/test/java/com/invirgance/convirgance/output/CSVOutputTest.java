@@ -23,18 +23,17 @@
  */
 package com.invirgance.convirgance.output;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.input.CSVInput;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.ByteArraySource;
 import com.invirgance.convirgance.source.InputStreamSource;
 import com.invirgance.convirgance.target.ByteArrayTarget;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.invirgance.convirgance.target.OutputStreamTarget;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-
 /**
  * Tests to ensure the JSON content is output to CSV properly following specifications.
  * 
@@ -47,37 +46,20 @@ public class CSVOutputTest
     {
     }
 
-    private void assertCSVEquals(String known, String message) throws Exception
-    {
-        CSVInput tester = new CSVInput();
-        JSONArray output = new JSONArray();
-        JSONArray expected = new JSONArray(known);
-
-        ByteArraySource inputStream = new ByteArraySource(outputCSV(known).getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
-        
-        for (JSONObject item : tester.read(source))
-        {
-            output.add(item);
-        }
-        
-        assertTrue(expected.equals(output), message);
-    }
-
-    private String outputCSV(String input) throws Exception
+    private byte[] outputCSV(String input) throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();   
         CSVOutput output = new CSVOutput();
-        byte[] bytes;
+     
 
         try(OutputCursor cursor = output.write(target))
         {
             cursor.write(new JSONArray(input));
         } 
         
-        bytes = target.getBytes();
+        target.getBytes();
    
-        return new String(bytes);
+        return target.getBytes();
     }
     
     /**
@@ -102,7 +84,19 @@ public class CSVOutputTest
                 + "{\"name\":\"Bob\", \"age\":\"30\",  \"city\": null, \"quote\":\"Welcome!\"}"             
                 + "]";
         
-        assertCSVEquals(test, "CSV output test for most edge cases.");
+        CSVInput tester = new CSVInput();
+        JSONArray output = new JSONArray();
+        JSONArray expected = new JSONArray(test);
+
+        ByteArraySource inputStream = new ByteArraySource(outputCSV(test));
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+        
+        assertTrue(expected.equals(output), "CSV output test for most edge cases.");
     }
     
     /**
@@ -128,7 +122,7 @@ public class CSVOutputTest
         CSVInput tester = new CSVInput();
         JSONObject jsonOutput;
         
-        ByteArraySource inputStream = new ByteArraySource(outputCSV(test).getBytes());
+        ByteArraySource inputStream = new ByteArraySource(outputCSV(test));
         InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
 
         for (JSONObject item : tester.read(source))
@@ -141,24 +135,58 @@ public class CSVOutputTest
     }
     
     /**
-     * Should throw if no records are found.
+     * Write an empty 'file'.
      */
     @Test
     public void noRecordsTest() throws Exception
     {
-        String test = "[{}]";
-
-        ByteArrayTarget target = new ByteArrayTarget();
-        CSVOutput output2 = new CSVOutput();
-
-        Exception exception = assertThrows(ConvirganceException.class, () ->
+        String test = "[]";
+        String result;
+        CSVOutput output = new CSVOutput();
+        
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);     
+        OutputStreamTarget target = new OutputStreamTarget(printStream);
+            
+        try (OutputCursor cursor = output.write(target))
         {
-            try (OutputCursor cursor = output2.write(target))
-            {
-                cursor.write(new JSONArray(test));
-            }
-        });
+            cursor.write(new JSONArray(test));
+        }
+        
+        result = byteArrayOutputStream.toString();
 
-        assertEquals("Input data did not contain any records.", exception.getMessage());
+        assertTrue(result.length() == 0);
+    }
+    
+    /**
+     * Extra values should be removed.
+     */
+    @Test
+    public void extraValueTest() throws Exception
+    {
+         /*
+            The following cases are tested:
+            - Extra values
+        */
+        
+        String test = "["
+                + "{\"name\":\"John\", \"age\":\"30\"},"
+                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
+                + "]";
+
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+        JSONObject jsonOutput;
+        
+        ByteArraySource inputStream = new ByteArraySource(outputCSV(test));
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+        
+        jsonOutput = (JSONObject) output.get(1);
+        assertTrue(!jsonOutput.containsKey("quote"));
     }
 }
