@@ -21,106 +21,124 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.invirgance.convirgance.input;
+package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.input.CSVInput;
+import com.invirgance.convirgance.input.InputCursor;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.ByteArraySource;
 import com.invirgance.convirgance.source.InputStreamSource;
+import com.invirgance.convirgance.target.ByteArrayTarget;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests to insure CSVs are properly parsed to JSON.
+ * Tests to ensure the JSON content is output to CSV properly following specifications.
  * 
  * @author tadghh
  */
-public class CSVInputTest
+public class CSVOutputTest
 {
     
-    public CSVInputTest()
+    public CSVOutputTest()
     {
     }
 
-    private void assertCSVEquals(String input, JSONArray expected, String message)
+    private void assertCSVEquals(String input, String known, String message) throws Exception
     {
-        assertTrue(processCSV(input).equals(expected),message);
-    }
-
-    private JSONArray processCSV(String input)
-    {     
         CSVInput tester = new CSVInput();
         JSONArray output = new JSONArray();
-        
-        ByteArraySource inputStream = new ByteArraySource(input.getBytes());
+        JSONArray expected = new JSONArray(known);
+
+        ByteArraySource inputStream = new ByteArraySource(processCSV(known).getBytes());
         InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
         
         for (JSONObject item : tester.read(source))
         {
             output.add(item);
         }
+
+        assertTrue(output.equals(expected), message);
+    }
+
+    private String processCSV(String input) throws Exception
+    {
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput output = new CSVOutput();
+        byte[] bytes;
+
+        try(OutputCursor cursor = output.write(target))
+        {
+            cursor.write(new JSONArray(input));
+        } 
         
-        return output;
+        bytes = target.getBytes();
+   
+        return new String(bytes);
     }
     
     /**
-     * Simple read test.
+     * Generic read test.
      */
     @Test
-    public void normalInput()
+    public void normalInput() throws Exception
     {
         String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
 
-        JSONArray expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New York\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
-        assertCSVEquals(test, expected, "Simple read test.");
-    }
-    
+        String expected ="[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New York\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]";
+        assertCSVEquals(test, expected, "Test of read method, of class CSVInput.");
+    }   
+        
     /**
      * Make sure new lines within quotes are parsed correctly.
      */
     @Test
-    public void newLineInQuotes()
+    public void newLineInQuotes() throws Exception
     {
         String test = "Name,Age,City\nJohn,30,\"New\nYork\"\nAlice,25,Paris";
 
-        JSONArray expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYork\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
-        assertCSVEquals(test, expected, "Make sure quotes in new lines are preserved.");
+        String expected = "[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYo\\nrk\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]";
+        assertCSVEquals(test, expected, "Test of read method, of class CSVInput.");
     }
-    
+       
     /**
-     *  Make sure multiple + quoted new lines are parsed correctly.
+     * Make sure multiple + quoted new lines are parsed correctly.
      */
     @Test
-    public void multiplenewLineInQuotes()
+    public void multiplenewLineInQuotes() throws Exception
     {
         String test = "Name,Age,City\nJohn,30,\"New\nYo\nrk\"\nAlice,25,Paris";
 
-        JSONArray expected = new JSONArray("[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYo\\nrk\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]");
-        assertCSVEquals(test, expected, "Make sure multiple new lines are preserved.");
+        String expected = "[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New\\nYo\\nrk\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]";
+        assertCSVEquals(test, expected, "Multi new line parse.");
     }
     
     /**
      * Basic read to end CRLF test.
+     * @throws Exception .
      */
     @Test
-    public void basicCRLFTest() {
-        String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy\\r\\n";
+    public void basicCRLFTest() throws Exception
+    {
+        String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
         
-        JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
-        assertCSVEquals(test, expected, "Read to end with ending crlf.");
+        String expected = "[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]";
+        assertCSVEquals(test, expected, "Basic CRLF delimited CSV.");
     }
 
     /**
      * Can still read records that don't end with CRLF.
      */
     @Test
-    public void noFinalLineBreakTest() {
+    public void noFinalLineBreakTest()  throws Exception
+    {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
         
-        JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
+        String expected = "[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]";
         assertCSVEquals(test, expected, "CSV without final line break.");
     }
 
@@ -128,10 +146,10 @@ public class CSVInputTest
      * Header test.
      */
     @Test
-    public void headerLineTest() {
+    public void headerLineTest()  throws Exception {
         String test = "name,age,city\r\nJohn,30,NewYork\r\nAlice,25,Paris";
         
-        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"NewYork\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
+        String expected = "[{\"name\":\"John\",\"age\":\"30\",\"city\":\"NewYork\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]";
         assertCSVEquals(test, expected, "CSV with header line.");
     }
 
@@ -139,10 +157,10 @@ public class CSVInputTest
      * Spaces are preserved in fields and values.
      */
     @Test
-    public void preserveSpacesTest() {
+    public void preserveSpacesTest()  throws Exception {
         String test = "name, age ,city\r\nJohn Doe, 30 ,New York";
         
-        JSONArray expected = new JSONArray("[{\"name\":\"John Doe\",\" age \":\" 30 \",\"city\":\"New York\"}]");
+        String expected = "[{\"name\":\"John Doe\",\" age \":\" 30 \",\"city\":\"New York\"}]";
         assertCSVEquals(test, expected, "CSV with preserved spaces.");
     }
 
@@ -150,10 +168,10 @@ public class CSVInputTest
      * Values with optional/not required quotes.
      */
     @Test
-    public void optionalQuotesTest() {
+    public void optionalQuotesTest()  throws Exception {
         String test = "name,age,city\r\n\"John\",30,\"New York\"\r\nAlice,\"25\",Paris";
         
-        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"New York\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
+        String expected = "[{\"name\":\"John\",\"age\":\"30\",\"city\":\"New York\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]";
         assertCSVEquals(test, expected, "CSV with optional quotes.");
     }
 
@@ -161,10 +179,10 @@ public class CSVInputTest
      * Commas inside values don't interfere.
      */
     @Test
-    public void quotesWithSpecialCharsTest() {
+    public void quotesWithSpecialCharsTest()  throws Exception {
         String test = "name,description\r\n\"John\",\"Lives in\r\nNew York\"\r\n\"Alice\",\"Lives,somewhere\"";
         
-        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"description\":\"Lives in\\nNew York\"},{\"name\":\"Alice\",\"description\":\"Lives,somewhere\"}]");
+        String expected = "[{\"name\":\"John\",\"description\":\"Lives in\\nNew York\"},{\"name\":\"Alice\",\"description\":\"Lives,somewhere\"}]";
         assertCSVEquals(test, expected, "CSV with quotes containing special characters.");
     }
 
@@ -172,10 +190,11 @@ public class CSVInputTest
      * Escaped CSV quotes are handled properly.
      */
     @Test
-    public void escapedQuotesTest() {
+    public void escapedQuotesTest()  throws Exception 
+    {
         String test = "name,quote\r\n\"John\",\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",\"She said \"\"Hi\"\"\"";
         
-        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]");
+        String expected = "[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]";
         assertCSVEquals(test, expected, "CSV with escaped quotes.");
     }
     
@@ -183,10 +202,11 @@ public class CSVInputTest
      * Missing values should be assumed as null, a missing value is not technically an empty string.
      */
     @Test
-    public void missingValueTest() {
+    public void missingValueTest()  throws Exception
+    {
         String test = "name,age,quote\r\n\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",,\"She said \"\"Hi\"\"\"\r\n\"Bob\",30,\"Welcome!\"";
 
-        JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"},{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}]");
+        String expected = "[{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"},{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}]";
         assertCSVEquals(test, expected, "CSV with escaped quotes.");
     }
 

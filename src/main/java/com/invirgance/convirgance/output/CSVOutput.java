@@ -26,6 +26,10 @@ package com.invirgance.convirgance.output;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -68,48 +72,69 @@ public class CSVOutput implements Output
             this.target = target;
             this.headers = headers;
         }
+        
         public CSVOutputCursorWriter(Target target)
         {
             this.target = target;
-//            this.headers = headers;
         }
-    
+        
+        private String escapeAndQuoteValue(Object value)
+        {
+            boolean needsQuoting;
+            String evaluate;
+            
+            if (value == null) return "";
+            
+            evaluate = value.toString();
+            needsQuoting = evaluate.contains(",")
+                    || evaluate.contains("\"")
+                    || evaluate.contains("\n")
+                    || evaluate.contains("\r");
+
+            if (needsQuoting) return "\"" + evaluate.replace("\"", "\"\"") + "\"";        
+
+            return evaluate;
+        }
+        
         private String[] detectColumns(JSONObject record)
         {
             Set<String> keys = record.keySet();
 
             return keys.toArray(String[]::new);
         }
-    
-        private String stringify(String[] columns)
+ 
+        // Complaining that string is not an object
+        private String buildCSVLine(Iterator<? extends Object> valueIterator)
         {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
+            boolean first = true;
 
-            for(int i=0; i<headers.length; i++)
+            while (valueIterator.hasNext())
             {
-                if(i > 0) buffer.append(',');
-
-                buffer.append(columns[i]);
+                if (!first) buffer.append(',');
+                
+                first = false;
+                buffer.append(escapeAndQuoteValue(valueIterator.next()));
             }
 
             return buffer.toString();
         }
-    
+
         private String stringify(JSONObject record)
         {
-            StringBuffer buffer = new StringBuffer();
-            Object value;
-
-            for(int i=0; i<headers.length; i++)
+            List<Object> values = new ArrayList<>();
+            
+            for (String header : headers)
             {
-                if(i > 0) buffer.append(',');
-
-                value = record.get(headers[i]);
-
-                if(value != null) buffer.append(value.toString());
+                values.add(record.get(header));
             }
+            
+            return buildCSVLine(values.iterator());
+        }
 
-            return buffer.toString();
+        private String stringify(String[] columns)
+        {
+            return buildCSVLine(Arrays.stream(columns).iterator());
         }
         
         @Override
