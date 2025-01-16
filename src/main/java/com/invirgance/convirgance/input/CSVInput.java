@@ -81,9 +81,15 @@ public class CSVInput implements Input<JSONObject>
                     {                   
                         headerLine = reader.readLine();
 
-                        if (headerLine != null) headers = parseCSVLine(headerLine);                            
-                        else throw new ConvirganceException("CSV file is empty - no header row found.");
-                                          
+                        if (headerLine != null)
+                        {
+                            headers = parseCSVLine(headerLine);
+                        }
+                        else
+                        {
+                            throw new ConvirganceException("CSV file is empty - no header row found.");
+                        }        
+                        
                         nextLine = reader.readLine();
                     }
                     catch (IOException e)
@@ -101,7 +107,10 @@ public class CSVInput implements Input<JSONObject>
                 @Override
                 public JSONObject next()
                 {
-                    if (!hasNext()) throw new ConvirganceException("Attempted to iterate with no next element.");                    
+                    if (!hasNext())
+                    {
+                        throw new ConvirganceException("Attempted to iterate with no next element.");
+                    }               
 
                     try
                     {                   
@@ -183,7 +192,10 @@ public class CSVInput implements Input<JSONObject>
 
                     values.add(builder.toString());
                  
-                    if (quotes) throw new ConvirganceException("Unclosed quotes in CSV line: " + line);
+                    if (quotes)
+                    {
+                        throw new ConvirganceException("Unclosed quotes in CSV line: " + line);
+                    }
                     
                     return values;
                 }
