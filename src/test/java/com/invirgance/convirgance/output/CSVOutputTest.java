@@ -124,7 +124,7 @@ public class CSVOutputTest
     @Test
     public void basicCRLFTest() throws Exception
     {
-        String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
+        String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy\r\n";
         
         String expected = "[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]";
         assertCSVEquals(test, expected, "Basic CRLF delimited CSV.");
