@@ -27,7 +27,6 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -103,8 +102,8 @@ public class CSVOutput implements Output
             return keys.toArray(String[]::new);
         }
  
-        // Complaining that string is not an object
-        private String buildCSVLine(Iterator<? extends Object> valueIterator)
+        
+        private String buildCSVLine(Iterator<Object> valueIterator)
         {
             StringBuilder buffer = new StringBuilder();
             boolean first = true;
@@ -134,7 +133,18 @@ public class CSVOutput implements Output
 
         private String stringify(String[] columns)
         {
-            return buildCSVLine(Arrays.stream(columns).iterator());
+            StringBuilder buffer = new StringBuilder();
+            boolean first = true;
+
+            for (String header : columns)
+            {
+                if (!first) buffer.append(',');
+                
+                first = false;
+                buffer.append(escapeAndQuoteValue(header));
+            }
+
+            return buffer.toString();
         }
         
         @Override
