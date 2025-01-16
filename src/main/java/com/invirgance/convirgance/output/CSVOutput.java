@@ -23,6 +23,7 @@
  */
 package com.invirgance.convirgance.output;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
@@ -93,8 +94,14 @@ public class CSVOutput implements Output
         }
         
         private String[] detectColumns(JSONObject record)
-        {
-            return record.keySet().toArray(String[]::new);
+        {   
+            String[] columns = record.keySet().toArray(String[]::new);
+
+            if(columns.length == 0){
+                throw new ConvirganceException("Input data did not contain any records.");
+            }
+            
+            return columns;
         }
 
         private void stringify(JSONObject record)
@@ -127,7 +134,7 @@ public class CSVOutput implements Output
         public void write(JSONObject record)
         {   
             if(headers == null) headers = detectColumns(record);
-
+            
             if(out == null) 
             {
                 out = new PrintWriter(target.getOutputStream(), false);
