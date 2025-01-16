@@ -107,7 +107,7 @@ public class CSVInputTest
      */
     @Test
     public void basicCRLFTest() {
-        String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy\\r\\n";
+        String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy\r\n";
         
         JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
         assertCSVEquals(test, expected, "Read to end with ending crlf.");
