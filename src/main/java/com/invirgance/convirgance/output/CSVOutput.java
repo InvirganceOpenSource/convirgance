@@ -57,8 +57,7 @@ public class CSVOutput implements Output
     }
      
     private class CSVOutputCursorWriter implements OutputCursor
-    {
-        private final StringBuilder parser = new StringBuilder();         
+    {     
         private final Target target;
        
         private PrintWriter out;
@@ -98,38 +97,30 @@ public class CSVOutput implements Output
             return record.keySet().toArray(String[]::new);
         }
 
-        private String stringify(JSONObject record)
+        private void stringify(JSONObject record)
         {
             boolean first = true;
             
-            parser.setLength(0);
-           
             for (String header : headers)
             {
-                if (!first) parser.append(',');
+                if (!first) out.append(',');
                 
                 first = false;
-                parser.append(escapeAndQuoteValue(record.get(header)));
+                out.append(escapeAndQuoteValue(record.get(header)));
             }
-            
-            return parser.toString();
         }
 
-        private String stringify(String[] columns)
+        private void stringify(String[] columns)
         {
             boolean first = true;
             
-            parser.setLength(0);
-
             for (String header : columns)
             {
-                if (!first) parser.append(',');
+                if (!first) out.append(',');
                 
                 first = false;
-                parser.append(escapeAndQuoteValue(header));
+                out.append(escapeAndQuoteValue(header));
             }
-
-            return parser.toString();
         }
         
         @Override
@@ -140,19 +131,18 @@ public class CSVOutput implements Output
             if(out == null) 
             {
                 out = new PrintWriter(target.getOutputStream(), false);
-
-                out.println(stringify(headers));
-                out.flush();
+                
+                stringify(headers);
+                out.println();                
             }
 
-            out.println(stringify(record));
+            stringify(record);
+            out.println();
         }
         
         @Override
         public void close()
         {
-            parser.setLength(0);
-            
             if(out != null) out.close();
         }
     }

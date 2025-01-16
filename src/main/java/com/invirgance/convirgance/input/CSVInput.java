@@ -68,7 +68,7 @@ public class CSVInput implements Input<JSONObject>
 
         public CSVInputCursor(Source source)
         {
-            reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
+            this.reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
         }
 
         @Override
