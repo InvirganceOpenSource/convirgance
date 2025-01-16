@@ -133,11 +133,11 @@ public class CSVOutput implements Output
                 out = new PrintWriter(target.getOutputStream(), false);
                 
                 stringify(headers);
-                out.println();                
+                out.print("\r\n");                
             }
 
             stringify(record);
-            out.println();
+            out.print("\r\n");
         }
         
         @Override
