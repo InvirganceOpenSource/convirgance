@@ -106,7 +106,8 @@ public class CSVInputTest
      * Basic read to end CRLF test.
      */
     @Test
-    public void basicCRLFTest() {
+    public void basicCRLFTest() 
+    {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy\r\n";
         
         JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
@@ -117,7 +118,8 @@ public class CSVInputTest
      * Can still read records that don't end with CRLF.
      */
     @Test
-    public void noFinalLineBreakTest() {
+    public void noFinalLineBreakTest() 
+    {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
         
         JSONArray expected = new JSONArray("[{\"field1\":\"aaa\",\"field2\":\"bbb\"},{\"field1\":\"zzz\",\"field2\":\"yyy\"}]");
@@ -128,7 +130,8 @@ public class CSVInputTest
      * Header test.
      */
     @Test
-    public void headerLineTest() {
+    public void headerLineTest() 
+    {
         String test = "name,age,city\r\nJohn,30,NewYork\r\nAlice,25,Paris";
         
         JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"NewYork\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
@@ -139,7 +142,8 @@ public class CSVInputTest
      * Spaces are preserved in fields and values.
      */
     @Test
-    public void preserveSpacesTest() {
+    public void preserveSpacesTest() 
+    {
         String test = "name, age ,city\r\nJohn Doe, 30 ,New York";
         
         JSONArray expected = new JSONArray("[{\"name\":\"John Doe\",\" age \":\" 30 \",\"city\":\"New York\"}]");
@@ -150,7 +154,8 @@ public class CSVInputTest
      * Values with optional/not required quotes.
      */
     @Test
-    public void optionalQuotesTest() {
+    public void optionalQuotesTest() 
+    {
         String test = "name,age,city\r\n\"John\",30,\"New York\"\r\nAlice,\"25\",Paris";
         
         JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"30\",\"city\":\"New York\"},{\"name\":\"Alice\",\"age\":\"25\",\"city\":\"Paris\"}]");
@@ -161,7 +166,8 @@ public class CSVInputTest
      * Commas inside values don't interfere.
      */
     @Test
-    public void quotesWithSpecialCharsTest() {
+    public void quotesWithSpecialCharsTest() 
+    {
         String test = "name,description\r\n\"John\",\"Lives in\r\nNew York\"\r\n\"Alice\",\"Lives,somewhere\"";
         
         JSONArray expected = new JSONArray("[{\"name\":\"John\",\"description\":\"Lives in\\nNew York\"},{\"name\":\"Alice\",\"description\":\"Lives,somewhere\"}]");
@@ -172,7 +178,8 @@ public class CSVInputTest
      * Escaped CSV quotes are handled properly.
      */
     @Test
-    public void escapedQuotesTest() {
+    public void escapedQuotesTest() 
+    {
         String test = "name,quote\r\n\"John\",\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",\"She said \"\"Hi\"\"\"";
         
         JSONArray expected = new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]");
@@ -183,7 +190,8 @@ public class CSVInputTest
      * Missing values should be assumed as null, a missing value is not technically an empty string.
      */
     @Test
-    public void missingValueTest() {
+    public void missingValueTest() 
+    {
         String test = "name,age,quote\r\n\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",,\"She said \"\"Hi\"\"\"\r\n\"Bob\",30,\"Welcome!\"";
 
         JSONArray expected = new JSONArray("[{\"name\":\"John\",\"age\":\"25\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"age\":null,\"quote\":\"She said \\\"Hi\\\"\"},{\"name\":\"Bob\",\"age\":\"30\",\"quote\":\"Welcome!\"}]");
