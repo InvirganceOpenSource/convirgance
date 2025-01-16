@@ -26,10 +26,6 @@ package com.invirgance.convirgance.output;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Used when writing JSON to CSV that will then be written to some target stream.
@@ -62,7 +58,9 @@ public class CSVOutput implements Output
      
     private class CSVOutputCursorWriter implements OutputCursor
     {
-        private Target target;
+        private final StringBuilder parser = new StringBuilder();         
+        private final Target target;
+       
         private PrintWriter out;
         private String[] headers;
 
@@ -74,7 +72,7 @@ public class CSVOutput implements Output
         
         public CSVOutputCursorWriter(Target target)
         {
-            this.target = target;
+            this(target, null);
         }
         
         private String escapeAndQuoteValue(Object value)
@@ -97,54 +95,41 @@ public class CSVOutput implements Output
         
         private String[] detectColumns(JSONObject record)
         {
-            Set<String> keys = record.keySet();
-
-            return keys.toArray(String[]::new);
-        }
- 
-        
-        private String buildCSVLine(Iterator<Object> valueIterator)
-        {
-            StringBuilder buffer = new StringBuilder();
-            boolean first = true;
-
-            while (valueIterator.hasNext())
-            {
-                if (!first) buffer.append(',');
-                
-                first = false;
-                buffer.append(escapeAndQuoteValue(valueIterator.next()));
-            }
-
-            return buffer.toString();
+            return record.keySet().toArray(String[]::new);
         }
 
         private String stringify(JSONObject record)
         {
-            List<Object> values = new ArrayList<>();
+            boolean first = true;
             
+            parser.setLength(0);
+           
             for (String header : headers)
             {
-                values.add(record.get(header));
+                if (!first) parser.append(',');
+                
+                first = false;
+                parser.append(escapeAndQuoteValue(record.get(header)));
             }
             
-            return buildCSVLine(values.iterator());
+            return parser.toString();
         }
 
         private String stringify(String[] columns)
         {
-            StringBuilder buffer = new StringBuilder();
             boolean first = true;
+            
+            parser.setLength(0);
 
             for (String header : columns)
             {
-                if (!first) buffer.append(',');
+                if (!first) parser.append(',');
                 
                 first = false;
-                buffer.append(escapeAndQuoteValue(header));
+                parser.append(escapeAndQuoteValue(header));
             }
 
-            return buffer.toString();
+            return parser.toString();
         }
         
         @Override
@@ -166,6 +151,8 @@ public class CSVOutput implements Output
         @Override
         public void close()
         {
+            parser.setLength(0);
+            
             if(out != null) out.close();
         }
     }
