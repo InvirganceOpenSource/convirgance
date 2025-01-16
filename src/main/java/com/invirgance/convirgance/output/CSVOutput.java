@@ -33,6 +33,35 @@ import java.io.PrintWriter;
  */
 public class CSVOutput implements Output
 {
+    private String[] headers;
+    
+    /**
+     * Creates a new CSVOutput.
+     */
+    public CSVOutput()
+    {
+        this(null);
+    }
+    
+    /**
+     * Creates a new CSVOutput only writing the provided columns.
+     * @param headers The columns to include or add while writing.
+     */
+    public CSVOutput(String[] headers)
+    {
+        this.headers = headers;
+    }
+    
+    /**
+     * Returns the current columns to be used while writing.
+     * @return The columns used while writing.
+     * @throws NullPointerException If no headers are set.
+     */
+    public String[] getColumns()
+    {
+        return this.headers;
+    }
+    
     /**
      * Used to reliably write out data to the provided {@link Target}.
      * @param target A place to write data, ex File, Network.
@@ -41,6 +70,8 @@ public class CSVOutput implements Output
     @Override
     public OutputCursor write(Target target)
     {
+        if(headers != null) return new CSVOutputCursorWriter(target, headers);
+              
         return new CSVOutputCursorWriter(target);
     }
 

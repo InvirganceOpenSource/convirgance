@@ -189,4 +189,87 @@ public class CSVOutputTest
         jsonOutput = (JSONObject) output.get(1);
         assertTrue(!jsonOutput.containsKey("quote"));
     }
+    
+    /**
+     * Output only contains the provided header.
+     */
+    @Test
+    public void customHeaderTest() throws Exception
+    {
+
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput outputCSV = new CSVOutput(new String[]{"name"});
+     
+        String test = "["
+                + "{\"name\":\"John\", \"age\":\"30\"},"
+                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
+                + "]";
+
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+        JSONObject jsonOutput;
+        
+        try(OutputCursor cursor = outputCSV.write(target))
+        {
+            cursor.write(new JSONArray(test));
+        } 
+            
+        ByteArraySource inputStream = new ByteArraySource(target.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+
+        jsonOutput = (JSONObject) output.get(1);
+        
+        assertTrue(
+                !jsonOutput.containsKey("quote") 
+                && !jsonOutput.containsKey("age") 
+                && jsonOutput.containsKey("name")
+        );
+    }
+    
+    /**
+     * Output contains the provided headers including ones that have no value.
+     */
+    @Test
+    public void customHeaderExtraTest() throws Exception
+    {
+
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput outputCSV = new CSVOutput(new String[]{"name","accident"});
+     
+        String test = "["
+                + "{\"name\":\"John\", \"age\":\"30\"},"
+                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
+                + "]";
+
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+        JSONObject jsonOutput;
+        
+        try(OutputCursor cursor = outputCSV.write(target))
+        {
+            cursor.write(new JSONArray(test));
+        } 
+            
+        ByteArraySource inputStream = new ByteArraySource(target.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+
+        jsonOutput = (JSONObject) output.get(1);
+        
+        assertTrue(
+                !jsonOutput.containsKey("quote") 
+                && !jsonOutput.containsKey("age") 
+                && jsonOutput.containsKey("name")
+                && jsonOutput.containsKey("accident")
+        );
+    }
 }
