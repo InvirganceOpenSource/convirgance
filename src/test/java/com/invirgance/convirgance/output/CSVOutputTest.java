@@ -32,6 +32,7 @@ import com.invirgance.convirgance.target.ByteArrayTarget;
 import com.invirgance.convirgance.target.OutputStreamTarget;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 /**
@@ -196,14 +197,16 @@ public class CSVOutputTest
     @Test
     public void customHeaderTest() throws Exception
     {
-
-        ByteArrayTarget target = new ByteArrayTarget();   
-        CSVOutput outputCSV = new CSVOutput(new String[]{"name"});
-     
+  
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
                 + "]";
+        
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput outputCSV = new CSVOutput(new String[]{"name"});
+        ByteArraySource stream;
+        InputStreamSource source;    
 
         JSONArray output = new JSONArray();
         CSVInput tester = new CSVInput();
@@ -214,8 +217,8 @@ public class CSVOutputTest
             cursor.write(new JSONArray(test));
         } 
             
-        ByteArraySource inputStream = new ByteArraySource(target.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        stream = new ByteArraySource(target.getBytes());
+        source = new InputStreamSource(stream.getInputStream());
 
         for (JSONObject item : tester.read(source))
         {
@@ -238,32 +241,35 @@ public class CSVOutputTest
     public void customHeaderExtraTest() throws Exception
     {
 
-        ByteArrayTarget target = new ByteArrayTarget();   
-        CSVOutput outputCSV = new CSVOutput(new String[]{"name","accident"});
-     
+        String[] headers = new String[]{"name","accident"};
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
                 + "]";
 
-        JSONArray output = new JSONArray();
+        InputStreamSource source;
+        ByteArraySource stream;
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput output = new CSVOutput(new String[]{"name","accident"});
+        
+        JSONArray verify = new JSONArray();
         CSVInput tester = new CSVInput();
         JSONObject jsonOutput;
         
-        try(OutputCursor cursor = outputCSV.write(target))
+        try(OutputCursor cursor = output.write(target))
         {
             cursor.write(new JSONArray(test));
         } 
             
-        ByteArraySource inputStream = new ByteArraySource(target.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        stream = new ByteArraySource(target.getBytes());
+        source = new InputStreamSource(stream.getInputStream());
 
         for (JSONObject item : tester.read(source))
         {
-            output.add(item);
+            verify.add(item);
         }
 
-        jsonOutput = (JSONObject) output.get(1);
+        jsonOutput = (JSONObject) verify.get(1);
         
         assertTrue(
                 !jsonOutput.containsKey("quote") 
@@ -271,5 +277,8 @@ public class CSVOutputTest
                 && jsonOutput.containsKey("name")
                 && jsonOutput.containsKey("accident")
         );
+      
+        assertTrue(Arrays.equals(output.getHeaders(),headers));
+                    
     }
 }

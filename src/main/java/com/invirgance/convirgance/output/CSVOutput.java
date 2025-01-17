@@ -53,11 +53,13 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Returns the current columns to be used while writing.
-     * @return The columns used while writing.
-     * @throws NullPointerException If no headers are set.
+     * Returns the current headers that will be used when writing.
+     * If columns aren't provided, they will be created based on the fields of the first record.
+     * 
+     * @return The headers used while writing.
+     * @throws NullPointerException If no headers are set or found.
      */
-    public String[] getColumns()
+    public String[] getHeaders()
     {
         return this.headers;
     }
@@ -123,11 +125,9 @@ public class CSVOutput implements Output
             return evaluate;
         }
         
-        private String[] detectColumns(JSONObject record)
-        {   
-            String[] columns = record.keySet().toArray(String[]::new);
-            
-            return columns;
+        private String[] detectHeaders(JSONObject record)
+        {               
+            return record.keySet().toArray(String[]::new);
         }
 
         private void stringify(JSONObject record)
@@ -159,7 +159,10 @@ public class CSVOutput implements Output
         @Override
         public void write(JSONObject record)
         {   
-            if(headers == null) headers = detectColumns(record);
+            if(headers == null) {
+                headers = detectHeaders(record);
+                CSVOutput.this.headers = headers;
+            }
             
             if(out == null) 
             {
