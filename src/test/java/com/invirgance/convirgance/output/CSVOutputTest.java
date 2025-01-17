@@ -241,7 +241,6 @@ public class CSVOutputTest
     public void customHeaderExtraTest() throws Exception
     {
 
-        String[] headers = new String[]{"name","accident"};
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
@@ -277,6 +276,42 @@ public class CSVOutputTest
                 && jsonOutput.containsKey("name")
                 && jsonOutput.containsKey("accident")
         );
+    
+    }
+    
+    /**
+     * Make sure CSVOutput headers are updated (if needed) when the cursor is run.
+     */
+    @Test
+    public void headerSyncTest() throws Exception
+    {
+
+        String[] headers = new String[]{"name","age"};
+        String test = "["
+                + "{\"name\":\"John\", \"age\":\"30\"},"
+                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
+                + "]";
+
+        InputStreamSource source;
+        ByteArraySource stream;
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput output = new CSVOutput();
+        
+        JSONArray verify = new JSONArray();
+        CSVInput tester = new CSVInput();
+            
+        try(OutputCursor cursor = output.write(target))
+        {
+            cursor.write(new JSONArray(test));
+        } 
+            
+        stream = new ByteArraySource(target.getBytes());
+        source = new InputStreamSource(stream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            verify.add(item);
+        }
       
         assertTrue(Arrays.equals(output.getHeaders(),headers));
                     
