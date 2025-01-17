@@ -296,7 +296,7 @@ public class JSONArray<T> implements List<T>
      * @return null if the index value is null, otherwise the values toString()
      * representation.
      */
-    public Object getString(int index)
+    public String getString(int index)
     {
         Object value = this.list.get(index);
         
@@ -313,7 +313,7 @@ public class JSONArray<T> implements List<T>
      * @return The value's string representation, or defaultValue if the value
      * is null.
      */
-    public Object getString(int index, String defaultValue)
+    public String getString(int index, String defaultValue)
     {
         Object value = this.list.get(index);
         
