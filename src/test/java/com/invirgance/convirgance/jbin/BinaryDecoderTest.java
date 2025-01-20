@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.
  */
-package com.invirgance.convirgance.bson;
+package com.invirgance.convirgance.jbin;
 
 import com.invirgance.convirgance.jbin.BinaryDecoder;
 import com.invirgance.convirgance.jbin.KeyTableEncoder;
