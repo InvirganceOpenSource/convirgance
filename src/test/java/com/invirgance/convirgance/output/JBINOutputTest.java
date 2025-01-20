@@ -33,13 +33,13 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author jbanes
  */
-public class BSONOutputTest
+public class JBINOutputTest
 {
     @Test
     public void testEmpty() throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();
-        BSONOutput output = new BSONOutput(false);
+        JBINOutput output = new JBINOutput(false);
         byte[] data;
         
         try(OutputCursor cursor = output.write(target))
@@ -65,7 +65,7 @@ public class BSONOutputTest
     public void testOne() throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();
-        BSONOutput output = new BSONOutput(false);
+        JBINOutput output = new JBINOutput(false);
         byte[] data;
         
         DataInputStream in;
@@ -98,7 +98,7 @@ public class BSONOutputTest
     public void testMultiple() throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();
-        BSONOutput output = new BSONOutput(false);
+        JBINOutput output = new JBINOutput(false);
         byte[] data;
         
         DataInputStream in;

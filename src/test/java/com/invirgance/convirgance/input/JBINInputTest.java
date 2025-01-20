@@ -22,7 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.json.JSONObject;
-import com.invirgance.convirgance.output.BSONOutput;
+import com.invirgance.convirgance.output.JBINOutput;
 import com.invirgance.convirgance.output.OutputCursor;
 import com.invirgance.convirgance.source.ByteArraySource;
 import com.invirgance.convirgance.target.ByteArrayTarget;
@@ -35,14 +35,14 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author jbanes
  */
-public class BSONInputTest
+public class JBINInputTest
 {
     @Test
     public void testOne() throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();
         BSONInput input = new BSONInput();
-        BSONOutput output = new BSONOutput();
+        JBINOutput output = new JBINOutput();
         
         try(OutputCursor cursor = output.write(target))
         {
@@ -60,7 +60,7 @@ public class BSONInputTest
     {
         ByteArrayTarget target = new ByteArrayTarget();
         BSONInput input = new BSONInput();
-        BSONOutput output = new BSONOutput();
+        JBINOutput output = new JBINOutput();
         
         String[] keys = new String[]{"x", "y", "z"};
         int index = 0;
