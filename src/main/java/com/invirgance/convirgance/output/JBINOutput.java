@@ -31,34 +31,35 @@ import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Support for writing BSON encoded content.
+ * Encodes data into JBIN and writes it to a target, with optional compression.
+ * 
  * @author jbanes
  */
-public class BSONOutput implements Output
+public class JBINOutput implements Output
 {
 
     private boolean compressed;
 
     /**
-     * Creates a new BSONOutput with compression set to false.
+     * Creates a new JBINOutput with compression set to false.
      */
-    public BSONOutput()
+    public JBINOutput()
     {
         this(false); // TODO: Need a multithreaded GZipping to speed up compressed data. Then we can make compressed the default.
     }
 
     /**
-     * Creates a new BSONOutput with optional compression support.
+     * Creates a new JBINOutput, that will use compression depending on the provided value.
      *
-     * @param compressed If compression is enabled.
+     * @param compressed If compression should be used.
      */
-    public BSONOutput(boolean compressed)
+    public JBINOutput(boolean compressed)
     {
         this.compressed = compressed;
     }
 
     /**
-     * Returns whether BSON compression is enabled.
+     * Returns if compression is used when writing.
      *
      * @return True if compression is enabled, false otherwise
      */
@@ -68,7 +69,7 @@ public class BSONOutput implements Output
     }
 
     /**
-     * Enables or disables BSON compression.
+     * Enable or disable the usage of compression when writing to a target.
      *
      * @param compressed True to enable compression, false to disable it.
      */
@@ -83,9 +84,6 @@ public class BSONOutput implements Output
         return new BSONOutputCursor(target, compressed);
     }
 
-    /**
-     *
-     */
     private class BSONOutputCursor implements OutputCursor
     {
 
