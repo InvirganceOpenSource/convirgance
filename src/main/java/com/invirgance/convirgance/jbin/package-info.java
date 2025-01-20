@@ -23,7 +23,7 @@
  */
 
 /**
- * Provides ways to serialize/deserialize JBIN data. 
+ * Provides ways to serialize/deserialize data into the JBIN format. 
  * Includes the {@link KeyEncoder} interface for use with custom encoder/decoder implementations.
  */
 package com.invirgance.convirgance.jbin;
