@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Used for reliably working with JBIN encoded data.
+ * An {@link Input} for reading JBIN encoded data.
  * @author jbanes
  */
 public class JBINInput implements Input<JSONObject>
