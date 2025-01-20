@@ -31,7 +31,7 @@ import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Encodes data into JBIN and writes it to a target, with optional compression.
+ * Encodes JSON into JBIN and writes it to a target, with optional compression.
  * 
  * @author jbanes
  */

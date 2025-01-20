@@ -23,7 +23,9 @@
  */
 
 /**
- * Provides ways to serialize/deserialize data into the JBIN format. 
+ * Provides JBIN, a fast and compact binary encoding of JSON for databases, temporary files, and high-throughput scenarios.  
+ * Supports additional types like Dates and maintains consistent data formats (e.g., short, int, long) between read/write operations. 
+ * 
  * Includes the {@link KeyEncoder} interface for use with custom encoder/decoder implementations.
  */
 package com.invirgance.convirgance.jbin;
