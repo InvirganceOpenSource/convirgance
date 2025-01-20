@@ -35,6 +35,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+
 /**
  * Tests to ensure the JSON content is output to CSV properly following specifications.
  * 
@@ -42,16 +43,11 @@ import org.junit.jupiter.api.Test;
  */
 public class CSVOutputTest
 {
-    
-    public CSVOutputTest()
-    {
-    }
 
     private byte[] outputCSV(String input) throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();   
-        CSVOutput output = new CSVOutput();
-     
+        CSVOutput output = new CSVOutput();  
 
         try(OutputCursor cursor = output.write(target))
         {
@@ -67,7 +63,7 @@ public class CSVOutputTest
      * Covers most edge cases related to CSV spec.
      */
     @Test
-    public void generalOutputTest() throws Exception
+    public void testGeneralOutput() throws Exception
     {
         /*
             The following cases are tested:
@@ -104,7 +100,7 @@ public class CSVOutputTest
      * Make sure missing values are output as null.
      */
     @Test
-    public void missingValueTest() throws Exception
+    public void testMissingValue() throws Exception
     {
         /*
             The following cases are tested:
@@ -139,7 +135,7 @@ public class CSVOutputTest
      * Write an empty 'file'.
      */
     @Test
-    public void noRecordsTest() throws Exception
+    public void testNoRecords() throws Exception
     {
         String test = "[]";
         String result;
@@ -163,9 +159,9 @@ public class CSVOutputTest
      * Extra values should be removed.
      */
     @Test
-    public void extraValueTest() throws Exception
+    public void testExtraValue() throws Exception
     {
-         /*
+        /*
             The following cases are tested:
             - Extra values
         */
@@ -195,9 +191,8 @@ public class CSVOutputTest
      * Output only contains the provided header.
      */
     @Test
-    public void customHeaderTest() throws Exception
+    public void testCustomHeader() throws Exception
     {
-  
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
@@ -238,9 +233,8 @@ public class CSVOutputTest
      * Output contains the provided headers including ones that have no value.
      */
     @Test
-    public void customHeaderExtraTest() throws Exception
+    public void testCustomHeaderExtra() throws Exception
     {
-
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
@@ -276,16 +270,14 @@ public class CSVOutputTest
                 && jsonOutput.containsKey("name")
                 && jsonOutput.containsKey("accident")
         );
-    
     }
     
     /**
      * Make sure CSVOutput headers are updated (if needed) when the cursor is run.
      */
     @Test
-    public void headerSyncTest() throws Exception
+    public void testHeaderSync() throws Exception
     {
-
         String[] headers = new String[]{"name","age"};
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
@@ -313,7 +305,6 @@ public class CSVOutputTest
             verify.add(item);
         }
       
-        assertTrue(Arrays.equals(output.getHeaders(),headers));
-                    
+        assertTrue(Arrays.equals(output.getHeaders(),headers));                 
     }
 }
