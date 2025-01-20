@@ -51,7 +51,7 @@ public class JBINInput implements Input<JSONObject>
     private class JBINInputCursor implements InputCursor<JSONObject>
     {
         private static final byte[] header = new byte[] {
-            (byte)0xFF, (byte)0xFF, 'B', 'S', 'O', 'N'
+            (byte)0xFF, (byte)0xFF, 'J', 'B', 'I', 'N'
         };
         
         private Source source;
