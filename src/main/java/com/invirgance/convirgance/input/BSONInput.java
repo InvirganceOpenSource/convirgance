@@ -23,7 +23,7 @@ package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.ConvirganceException;
-import com.invirgance.convirgance.bson.BinaryDecoder;
+import com.invirgance.convirgance.jbin.BinaryDecoder;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.Source;
 import java.io.BufferedInputStream;

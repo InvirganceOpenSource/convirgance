@@ -21,6 +21,9 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.bson;
 
+import com.invirgance.convirgance.jbin.StringEncoder;
+import com.invirgance.convirgance.jbin.KeyTableEncoder;
+import com.invirgance.convirgance.jbin.BinaryEncoder;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.io.ByteArrayInputStream;

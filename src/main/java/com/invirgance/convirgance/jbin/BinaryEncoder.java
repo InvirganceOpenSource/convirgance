@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.
  */
-package com.invirgance.convirgance.bson;
+package com.invirgance.convirgance.jbin;
 
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Used for encoding BSON.
+ * Used for serializing data into JBIN.
  * It supports encoding of keys, strings, and various primitive types (e.g., integers, booleans, dates) with efficient serialization.
  * @author jbanes
  */

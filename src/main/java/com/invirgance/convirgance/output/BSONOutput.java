@@ -22,9 +22,9 @@ SOFTWARE.
 package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.ConvirganceException;
-import com.invirgance.convirgance.bson.BinaryEncoder;
-import com.invirgance.convirgance.bson.KeyEncoder;
-import com.invirgance.convirgance.bson.KeyStreamEncoder;
+import com.invirgance.convirgance.jbin.BinaryEncoder;
+import com.invirgance.convirgance.jbin.KeyEncoder;
+import com.invirgance.convirgance.jbin.KeyStreamEncoder;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.*;

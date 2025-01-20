@@ -19,12 +19,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.
  */
-package com.invirgance.convirgance.bson;
+package com.invirgance.convirgance.jbin;
 
 
-import static com.invirgance.convirgance.bson.BinaryEncoder.*;
-import static com.invirgance.convirgance.bson.KeyEncoder.*;
-import static com.invirgance.convirgance.bson.StringEncoder.*;
+import static com.invirgance.convirgance.jbin.BinaryEncoder.*;
+import static com.invirgance.convirgance.jbin.KeyEncoder.*;
+import static com.invirgance.convirgance.jbin.StringEncoder.*;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.io.DataInput;
@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Deserializes BSON data back into its actual type.
+ * Deserializes JBIN data back into its actual type.
  * @author jbanes
  */
 public class BinaryDecoder

@@ -21,6 +21,10 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.bson;
 
+import com.invirgance.convirgance.jbin.BinaryDecoder;
+import com.invirgance.convirgance.jbin.KeyEncoder;
+import com.invirgance.convirgance.jbin.KeyStreamEncoder;
+import com.invirgance.convirgance.jbin.BinaryEncoder;
 import com.invirgance.convirgance.json.JSONObject;
 import java.io.*;
 import org.junit.jupiter.api.Test;

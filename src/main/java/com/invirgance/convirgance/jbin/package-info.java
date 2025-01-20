@@ -23,6 +23,7 @@
  */
 
 /**
- * Provides ways to serialize/deserialize BSON data. Includes the {@link KeyEncoder} interface to use for custom implementations.
+ * Provides ways to serialize/deserialize JBIN data. 
+ * Includes the {@link KeyEncoder} interface for use with custom encoder/decoder implementations.
  */
-package com.invirgance.convirgance.bson;
+package com.invirgance.convirgance.jbin;

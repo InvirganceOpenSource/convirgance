@@ -21,7 +21,7 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.output;
 
-import com.invirgance.convirgance.bson.BinaryDecoder;
+import com.invirgance.convirgance.jbin.BinaryDecoder;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.ByteArrayTarget;
 import java.io.ByteArrayInputStream;
