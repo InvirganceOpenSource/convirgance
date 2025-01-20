@@ -40,10 +40,6 @@ import org.junit.jupiter.api.Test;
  */
 public class CSVInputTest
 {
-    
-    public CSVInputTest()
-    {
-    }
 
     private void assertCSVEquals(String input, JSONArray expected, String message)
     {
@@ -70,7 +66,7 @@ public class CSVInputTest
      * Simple read test.
      */
     @Test
-    public void normalInput()
+    public void testNormalInput()
     {
         String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
 
@@ -82,7 +78,7 @@ public class CSVInputTest
      * Make sure new lines within quotes are parsed correctly.
      */
     @Test
-    public void newLineInQuotes()
+    public void testNewLineInQuotes()
     {
         String test = "Name,Age,City\nJohn,30,\"New\nYork\"\nAlice,25,Paris";
 
@@ -94,7 +90,7 @@ public class CSVInputTest
      *  Make sure multiple + quoted new lines are parsed correctly.
      */
     @Test
-    public void multiplenewLineInQuotes()
+    public void testMultiplenewLineInQuotes()
     {
         String test = "Name,Age,City\nJohn,30,\"New\nYo\nrk\"\nAlice,25,Paris";
 
@@ -106,7 +102,7 @@ public class CSVInputTest
      * Basic read to end CRLF test.
      */
     @Test
-    public void basicCRLFTest() 
+    public void testBasicCRLF() 
     {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy\r\n";
         
@@ -118,7 +114,7 @@ public class CSVInputTest
      * Can still read records that don't end with CRLF.
      */
     @Test
-    public void noFinalLineBreakTest() 
+    public void testNoFinalLineBreak() 
     {
         String test = "field1,field2\r\naaa,bbb\r\nzzz,yyy";
         
@@ -130,7 +126,7 @@ public class CSVInputTest
      * Header test.
      */
     @Test
-    public void headerLineTest() 
+    public void testHeaderLine() 
     {
         String test = "name,age,city\r\nJohn,30,NewYork\r\nAlice,25,Paris";
         
@@ -142,7 +138,7 @@ public class CSVInputTest
      * Spaces are preserved in fields and values.
      */
     @Test
-    public void preserveSpacesTest() 
+    public void testPreserveSpaces() 
     {
         String test = "name, age ,city\r\nJohn Doe, 30 ,New York";
         
@@ -154,7 +150,7 @@ public class CSVInputTest
      * Values with optional/not required quotes.
      */
     @Test
-    public void optionalQuotesTest() 
+    public void testOptionalQuotes() 
     {
         String test = "name,age,city\r\n\"John\",30,\"New York\"\r\nAlice,\"25\",Paris";
         
@@ -166,7 +162,7 @@ public class CSVInputTest
      * Commas inside values don't interfere.
      */
     @Test
-    public void quotesWithSpecialCharsTest() 
+    public void testQuotesWithSpecialChars() 
     {
         String test = "name,description\r\n\"John\",\"Lives in\r\nNew York\"\r\n\"Alice\",\"Lives,somewhere\"";
         
@@ -178,7 +174,7 @@ public class CSVInputTest
      * Escaped CSV quotes are handled properly.
      */
     @Test
-    public void escapedQuotesTest() 
+    public void testEscapedQuotes() 
     {
         String test = "name,quote\r\n\"John\",\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",\"She said \"\"Hi\"\"\"";
         
@@ -190,7 +186,7 @@ public class CSVInputTest
      * Missing values should be assumed as null, a missing value is not technically an empty string.
      */
     @Test
-    public void missingValueTest() 
+    public void testMissingValue() 
     {
         String test = "name,age,quote\r\n\"John\",25,\"His favorite quote is \"\"Hello World\"\"\"\r\n\"Alice\",,\"She said \"\"Hi\"\"\"\r\n\"Bob\",30,\"Welcome!\"";
 
