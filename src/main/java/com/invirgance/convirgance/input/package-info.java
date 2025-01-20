@@ -22,6 +22,6 @@
  * THE SOFTWARE.
  */
 /**
- * Handles reading from data sources (URLSource, ClasspathSource, FileSource) and formats (CSV, JSON, BSON, or any delimited data) with stream processing and automatic resource cleanup.
+ * Handles reading from data sources (URLSource, ClasspathSource, FileSource) and formats (CSV, JSON, JBIN, or any delimited data) with stream processing and automatic resource cleanup.
  */
 package com.invirgance.convirgance.input;

@@ -32,23 +32,23 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Used for reliably working with BSON input, binary representation of JSON.
+ * Used for reliably working with JBIN encoded data.
  * @author jbanes
  */
-public class BSONInput implements Input<JSONObject>
+public class JBINInput implements Input<JSONObject>
 {
     /**
-     * Creates a new InputCursor for JSONObjects encoded with BSON.
-     * @param source A {@link Source} to BSON encoded data.
-     * @return A BSONInputCursor with the decoded stream.
+     * Creates a new InputCursor for JSONObjects encoded with JBIN.
+     * @param source A {@link Source} to JBIN encoded data.
+     * @return A JBINInputCursor with the decoded stream.
      */
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
-        return new BSONInputCursor(source);
+        return new JBINInputCursor(source);
     }
 
-    private class BSONInputCursor implements InputCursor<JSONObject>
+    private class JBINInputCursor implements InputCursor<JSONObject>
     {
         private static final byte[] header = new byte[] {
             (byte)0xFF, (byte)0xFF, 'B', 'S', 'O', 'N'
@@ -56,7 +56,7 @@ public class BSONInput implements Input<JSONObject>
         
         private Source source;
 
-        public BSONInputCursor(Source source)
+        public JBINInputCursor(Source source)
         {
             this.source = source;
         }
@@ -77,14 +77,14 @@ public class BSONInput implements Input<JSONObject>
                 {
                     if(buffer.read() != (header[i] & 0xFF))
                     {
-                        throw new ConvirganceException("File is not in Convirgance BSON format");
+                        throw new ConvirganceException("File is not in Convirgance JBIN format");
                     }
                 }
             
                 version = buffer.read();
                 flags = buffer.read();
                 
-                if(version > 0x01) throw new ConvirganceException("Version " + version + " of the Convirgance BSON format is not supported");
+                if(version > 0x01) throw new ConvirganceException("Version " + version + " of the Convirgance JBIN format is not supported");
 
                 if((flags & 0x01) > 0) in = new DataInputStream(new GZIPInputStream(buffer));
                 else in = new DataInputStream(buffer);

@@ -81,10 +81,10 @@ public class JBINOutput implements Output
     @Override
     public OutputCursor write(Target target)
     {
-        return new BSONOutputCursor(target, compressed);
+        return new JBINOutputCursor(target, compressed);
     }
 
-    private class BSONOutputCursor implements OutputCursor
+    private class JBINOutputCursor implements OutputCursor
     {
 
         private final DataOutputStream out;
@@ -93,7 +93,7 @@ public class JBINOutput implements Output
 
         private int count;
 
-        public BSONOutputCursor(Target target, boolean compressed)
+        public JBINOutputCursor(Target target, boolean compressed)
         {
             OutputStream out;
 

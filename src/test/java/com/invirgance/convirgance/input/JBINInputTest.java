@@ -41,7 +41,7 @@ public class JBINInputTest
     public void testOne() throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();
-        BSONInput input = new BSONInput();
+        JBINInput input = new JBINInput();
         JBINOutput output = new JBINOutput();
         
         try(OutputCursor cursor = output.write(target))
@@ -59,7 +59,7 @@ public class JBINInputTest
     public void testMultiple() throws Exception
     {
         ByteArrayTarget target = new ByteArrayTarget();
-        BSONInput input = new BSONInput();
+        JBINInput input = new JBINInput();
         JBINOutput output = new JBINOutput();
         
         String[] keys = new String[]{"x", "y", "z"};
