@@ -103,9 +103,9 @@ public class JBINOutput implements Output
 
                 out.write(0xFF);
                 out.write(0xFF);
+                out.write('J');
                 out.write('B');
-                out.write('S');
-                out.write('O');
+                out.write('I');
                 out.write('N');
                 out.write(0x01); // Version 1
                 out.write(getFlags(compressed)); // Flags

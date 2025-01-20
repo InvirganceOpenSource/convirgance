@@ -26,8 +26,8 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.ByteArrayTarget;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -52,9 +52,9 @@ public class JBINOutputTest
         assertEquals(9, data.length);
         assertEquals(0xFF, data[0] & 0xFF);
         assertEquals(0xFF, data[1] & 0xFF);
-        assertEquals('B',  data[2] & 0xFF);
-        assertEquals('S',  data[3] & 0xFF);
-        assertEquals('O',  data[4] & 0xFF);
+        assertEquals('J',  data[2] & 0xFF);
+        assertEquals('B',  data[3] & 0xFF);
+        assertEquals('I',  data[4] & 0xFF);
         assertEquals('N',  data[5] & 0xFF);
         assertEquals(0x01, data[6] & 0xFF);
         assertEquals(0x00, data[7] & 0xFF);
@@ -82,9 +82,9 @@ public class JBINOutputTest
         assertTrue(data.length > 8);
         assertEquals(0xFF, in.read() & 0xFF);
         assertEquals(0xFF, in.read() & 0xFF);
+        assertEquals('J',  in.read() & 0xFF);
         assertEquals('B',  in.read() & 0xFF);
-        assertEquals('S',  in.read() & 0xFF);
-        assertEquals('O',  in.read() & 0xFF);
+        assertEquals('I',  in.read() & 0xFF);
         assertEquals('N',  in.read() & 0xFF);
         assertEquals(0x01, in.read() & 0xFF);
         assertEquals(0x00, in.read() & 0xFF);
@@ -119,9 +119,9 @@ public class JBINOutputTest
         assertTrue(data.length > 8);
         assertEquals(0xFF, in.read() & 0xFF);
         assertEquals(0xFF, in.read() & 0xFF);
+        assertEquals('J',  in.read() & 0xFF);
         assertEquals('B',  in.read() & 0xFF);
-        assertEquals('S',  in.read() & 0xFF);
-        assertEquals('O',  in.read() & 0xFF);
+        assertEquals('I',  in.read() & 0xFF);
         assertEquals('N',  in.read() & 0xFF);
         assertEquals(0x01, in.read() & 0xFF);
         assertEquals(0x00, in.read() & 0xFF);
