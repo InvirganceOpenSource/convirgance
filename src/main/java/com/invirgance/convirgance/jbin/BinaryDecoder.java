@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Deserializes JBIN data back into its actual type.
+ * Decodes JBIN encoded streams into JSON.
  * @author jbanes
  */
 public class BinaryDecoder
@@ -137,11 +137,11 @@ public class BinaryDecoder
     }
     
     /**
-     * Deserializes data from an input stream.
+     * Decodes data from an input stream that uses JBIN encoding.
      * @param in The input stream.
      * @return The decoded Object.
-     * @throws IOException If an error occurs during deserialization.
-     * @throws IllegalStateException If an incorrectly/unknown byte is read.
+     * @throws IOException If an error occurs while decoding.
+     * @throws IllegalStateException If an incorrect/unknown byte is read.
      */
     public Object read(DataInput in) throws IOException
     {

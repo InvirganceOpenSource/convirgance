@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Used for serializing data into JBIN.
+ * Used for encoding data into the JBIN format.
  * It supports encoding of keys, strings, and various primitive types (e.g., integers, booleans, dates) with efficient serialization.
  * @author jbanes
  */
