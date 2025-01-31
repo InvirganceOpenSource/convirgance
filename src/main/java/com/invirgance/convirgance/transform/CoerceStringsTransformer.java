@@ -91,9 +91,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
         this.booleans = booleans;
         this.doubles = doubles;
         this.integers = integers;
-        //TODO: set included and excluded, add tests
-        //this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
-        //this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
+        this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
+        this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
     }
 
     /**
