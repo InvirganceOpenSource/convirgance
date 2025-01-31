@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2025 INVIRGANCE LLC.
+ * Copyright 2025 Invirgance LLC.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,58 +27,55 @@ import com.invirgance.convirgance.ConvirganceException;
 
 
 /**
- * A class used when working with tab delimited input
+ * A class used when working with pipe delimited input
  * @author timur
  */
-public class TabDelimitedInput extends DelimitedInput
+public class PipeDelimitedInput extends DelimitedInput
 {   
     /**
-     * Creates a new TabDelimitedInput.
+     * Creates a new PipeDelimitedInput.
      */
-    public TabDelimitedInput()
+    public PipeDelimitedInput()
     {
         this(null, "UTF-8");
     }
     
     /**
-     * Creates a new TabDelimitedInput with the provided column headers
+     * Creates a new PipeDelimitedInput with the provided column headers
      * @param columns The column headers.
      */
-    public TabDelimitedInput(String[] columns)
+    public PipeDelimitedInput(String[] columns)
     {
         this(columns, "UTF-8");
     }
     
     /**
-     * Creates a new TabDelimitedInput with custom text encoding.
+     * Creates a new PipeDelimitedInput with custom text encoding.
      * @param encoding The text encoding of the input content.
      */
-    public TabDelimitedInput(String encoding)
+    public PipeDelimitedInput(String encoding)
     {
         this(null, encoding);
     }
     
     /**
-     * Creates a new TabDelimitedInput with the provided column headers and custom text encoding.
+     * Creates a new PipeDelimitedInput with the provided column headers and custom text encoding.
      * @param columns The column headers.
      * @param encoding The text encoding of the input content.
      */
-    public TabDelimitedInput(String[] columns, String encoding)
+    public PipeDelimitedInput(String[] columns, String encoding)
     {
-        super(columns, encoding, '\t');
+        super(columns, encoding, '|');
     }
     
     /**
      * Overriding the SetDelimiter method to throw an exception when usage is attempted.
      * @param delimiter The delimiter being set.
-     * @throws ConvirganceException always as usage not allowed
-     * 
-     * Q: Does this still allow the usage of the super method by calling 
-     *  ((DelimitedInput) tabDelimitedInput).SetDelimiter('|')
+     * @throws ConvirganceException thrown always as usage not allowed
      */
     @Override
     public void setDelimiter(char delimiter)
     {
-        throw new ConvirganceException("Cannot set delimiter for TabDelimitedInput class");
-    }  
+        throw new ConvirganceException("Cannot set delimiter for PipeDelimitedInput class");
+    }   
 }

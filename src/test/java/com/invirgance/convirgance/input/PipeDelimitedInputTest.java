@@ -30,35 +30,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 
-
 /**
  *
  * @author timur
  */
-public class TabDelimitedInputTest
+public class PipeDelimitedInputTest
 {
-    
     @Test
     public void testEmpty()
     {
-        TabDelimitedInput empty = new TabDelimitedInput(new String[] {"Column 1"});
-        TabDelimitedInput header = new TabDelimitedInput();
+        PipeDelimitedInput empty = new PipeDelimitedInput(new String[] {"Column 1"});
+        PipeDelimitedInput header = new PipeDelimitedInput();
         
-        assertFalse(empty.read(new InputStreamSource(getClass().getResourceAsStream("/input/tabdelimited/empty.txt"))).iterator().hasNext());
-        assertFalse(header.read(new InputStreamSource(getClass().getResourceAsStream("/input/tabdelimited/header.txt"))).iterator().hasNext());
+        assertFalse(empty.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/empty.txt"))).iterator().hasNext());
+        assertFalse(header.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/header.txt"))).iterator().hasNext());
     }
     
     @Test
     public void testExample1()
     {
-        TabDelimitedInput example1 = new TabDelimitedInput();
+        PipeDelimitedInput example1 = new PipeDelimitedInput();
         
         int size;
         int total = 0;
         int count = 3;
         boolean empty = false;
         
-        for(JSONObject record : example1.read(new InputStreamSource(getClass().getResourceAsStream("/input/tabdelimited/example1.txt"))))
+        for(JSONObject record : example1.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/example1.txt"))))
         {
             System.out.println(total);
             assertEquals(count, record.size());
@@ -87,12 +85,12 @@ public class TabDelimitedInputTest
     @Test
     public void testParseLine()
     {
-        String[] none = TabDelimitedInput.parseLine("", '\t');
-        String[] one = TabDelimitedInput.parseLine("Column 1", '\t');
-        String[] two = TabDelimitedInput.parseLine("Column 1\tColumn 2", '\t');
-        String[] three = TabDelimitedInput.parseLine("Column 1\tColumn 2\tColumn 3", '\t');
-        String[] trailing = TabDelimitedInput.parseLine("Column 1\tColumn 2\tColumn 3\t", '\t');
-        String[] empty = TabDelimitedInput.parseLine("\t\t\t", '\t');
+        String[] none = PipeDelimitedInput.parseLine("", '|');
+        String[] one = PipeDelimitedInput.parseLine("Column 1", '|');
+        String[] two = PipeDelimitedInput.parseLine("Column 1|Column 2", '|');
+        String[] three = PipeDelimitedInput.parseLine("Column 1|Column 2|Column 3", '|');
+        String[] trailing = PipeDelimitedInput.parseLine("Column 1|Column 2|Column 3|", '|');
+        String[] empty = PipeDelimitedInput.parseLine("|||", '|');
        
         assertEquals(0, none.length);
         assertEquals(1, one.length);
@@ -120,7 +118,7 @@ public class TabDelimitedInputTest
     @Test
     public void testChangingDelimiter()
     {
-        TabDelimitedInput input = new TabDelimitedInput();
+        PipeDelimitedInput input = new PipeDelimitedInput();
         boolean thrown = false;
         
         try 
@@ -129,11 +127,12 @@ public class TabDelimitedInputTest
         }
         catch (ConvirganceException e)
         {
-            if (e.getMessage().equals("Cannot set delimiter for TabDelimitedInput class"))
+            if (e.getMessage().equals("Cannot set delimiter for PipeDelimitedInput class"))
             {
                 thrown = true;
             }
         }
         assert thrown;    
     }
+    
 }
