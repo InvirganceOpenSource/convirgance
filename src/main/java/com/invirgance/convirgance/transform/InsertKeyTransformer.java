@@ -25,8 +25,10 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 
 /**
- * Modifies the JSONObject with the provided key and value. 
- * Replacing the keys value if present.
+ * A transformer that inserts or updates a key-value pair in a JSON object.
+ * If the key already exists, its value will be replaced. If the key doesn't exist,
+ * a new key-value pair will be added.
+ * 
  * @author jbanes
  */
 public class InsertKeyTransformer implements IdentityTransformer
@@ -34,18 +36,23 @@ public class InsertKeyTransformer implements IdentityTransformer
     private String key;
     private Object value;
 
-    
     /**
-     * Creates a new Transformer.
-     */
-    public InsertKeyTransformer()
-    {
-    }
-
-    /**
-     * Creates a new InsertKeyTransformer to modify JSONObjects, the provided key will either be modified or inserted.
-     * @param key The key to insert/modify.
-     * @param value The value to insert or replace.
+     * Creates a new InsertKeyTransformer with the specified key-value pair.
+     * 
+     * <p>Example usage:</p>
+     * <pre>
+     * // Create transformer to add/update a "status" field
+     * InsertKeyTransformer transformer = new InsertKeyTransformer("status", "active");
+     * 
+     * // Input:  {"id": 123, "name": "John"}
+     * // Output: {"id": 123, "name": "John", "status": "active"}
+     * 
+     * // Input:  {"id": 456, "status": "inactive", "name": "Jane"}
+     * // Output: {"id": 456, "status": "active", "name": "Jane"}
+     * </pre>
+     *
+     * @param key The key to insert or update.
+     * @param value The value to associate with the key.
      */
     public InsertKeyTransformer(String key, Object value)
     {
@@ -54,8 +61,10 @@ public class InsertKeyTransformer implements IdentityTransformer
     }
 
     /**
-     * Gets the key that will either be inserted or modified.
-     * @return The name of the key.
+     * Gets the key that will be inserted or updated.
+     * 
+     * @return The key name.
+     * @throws NullPointerException if the key has not been set.
      */
     public String getKey()
     {
@@ -63,8 +72,9 @@ public class InsertKeyTransformer implements IdentityTransformer
     }
 
     /**
-     * Sets the name of the key to be inserted or modified.
-     * @param key The name of the key.
+     * Sets the key that will be inserted or updated.
+     * 
+     * @param key The key name.
      */
     public void setKey(String key)
     {
@@ -72,9 +82,10 @@ public class InsertKeyTransformer implements IdentityTransformer
     }
 
     /**
-     * Gets the value to be used with the new or modified key.
+     * Gets the value that will be associated with the key.
      *
-     * @return The value to be inserted.
+     * @return The value to be inserted or used for update.
+     * @throws NullPointerException if the value has not been set.
      */
     public Object getValue()
     {
@@ -82,8 +93,9 @@ public class InsertKeyTransformer implements IdentityTransformer
     }
 
     /**
-     * Sets the value to be used for the key.
-     * @param value The key's value.
+     * Sets the value that will be associated with the key.
+     * 
+     * @param value The value to be inserted or used for update.
      */
     public void setValue(Object value)
     {
@@ -91,11 +103,16 @@ public class InsertKeyTransformer implements IdentityTransformer
     }
 
     /**
-     * Transforms the JSONObject either replacing or inserting the key.
+     * Transforms a JSON object by inserting or updating the specified key-value pair.
+     * This operation modifies the input object directly.
      * 
-     * @param record The JSONObject to modify.
-     * @return The modified record.
-     * @throws ConvirganceException If an issue occurs when inserting/modifying the key. 
+     * <p>If the key already exists in the input object, its value will be replaced.
+     * If the key doesn't exist, a new key-value pair will be added to the object.</p>
+     * 
+     * @param record The JSON object to modify.
+     * @return The modified JSON object (same instance as input).
+     * @throws ConvirganceException if the key is null, or if there's an error
+     *         during the modification operation.
      */
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException
