@@ -26,18 +26,46 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.Iterator;
 
 /**
- * This interface provides a way to apply on the fly data transformations to JSONObjects. 
- * Use to clean, filter, or enrich data lazily during iteration.
+ * An interface for applying lazy transformations to JSON objects during iteration.
+ * This enables efficient streaming transformations of data without loading entire
+ * collections into memory.
+ * 
+ * <p>Transformations can include data cleaning, filtering, enrichment, or any other
+ * modifications to JSON objects. The transformations are applied on-the-fly as
+ * elements are accessed through the iterator.</p>
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+* // Create a transformer that adds a timestamp to each record
+ * Transformer timestampTransformer = new Transformer() {
+ *     public Iterator&lt;JSONObject&gt; transform(Iterator&lt;JSONObject&gt; iterator) {
+ *         return new Iterator&lt;JSONObject&gt;() {
+ *             public JSONObject next() {
+ *                 JSONObject obj = iterator.next();
+ *                 obj.put("timestamp", System.currentTimeMillis());
+ *                 return obj;
+ *             }
+ *             // ... implement other Iterator methods
+ *         };
+ *     }
+ * };
+ * </pre>
+ * 
  * @author jbanes
  */
 public interface Transformer
 {
     /**
-     * Lazily transforms a collection of JSON objects.
+     * Provides a lazy transformation mechanism for an {@link Iterable} of JSON objects.
+     * The transformation is applied to each element only when it is accessed through
+     * the iterator.
+     * 
+     * <p>This default implementation wraps the iterator-based transformation,
+     * preserving the lazy evaluation semantics.</p>
      *
-     * @param iterable The source data.
-     * @return A lazily-transformed iterable.
-     * @throws ConvirganceException If a transformation error occurs.
+     * @param iterable The source collection of JSON objects to transform.
+     * @return An {@link Iterable} that will apply transformations to elements when iterated.
+     * @throws ConvirganceException If an error occurs during transformation.
      */
     public default Iterable<JSONObject> transform(final Iterable<JSONObject> iterable) throws ConvirganceException
     {
@@ -52,10 +80,19 @@ public interface Transformer
     }
     
     /**
-     * Returns an iterator that applies transformations to each element.
+     * Creates an iterator that transforms JSON objects as they are accessed.
+     * Implementations should maintain lazy evaluation by only transforming
+     * elements when they are requested through the iterator.
+     * 
+     * <p>The returned iterator should follow standard Iterator contract:</p>
+     * <ul>
+     * <li>Only transform elements when next() is called</li>
+     * <li>Throw NoSuchElementException if next() is called when hasNext() is false</li>
+     * <li>Maintain consistent state between hasNext() and next() calls</li>
+     * </ul>
      *
-     * @param iterator The source data iterator.
-     * @return A transformed iterator.
+     * @param iterator The source iterator providing JSON objects to transform.
+     * @return An iterator that applies transformations to elements as they are accessed.
      */
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator);
 }

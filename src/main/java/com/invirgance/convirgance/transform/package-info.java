@@ -23,6 +23,25 @@
  */
 
 /**
- * A library of common transformations for working with streams of JSONObjects.
+ * A library of transformers for processing streams of JSON objects efficiently.
+ * Provides a collection of reusable components for common data transformation tasks.
+ * 
+ * <p>Key features of this package:</p>
+ * <ul>
+ * <li>Lazy evaluation - transformations are only applied when data is accessed.</li>
+ * <li>Memory efficient - processes data as streams without loading entire collections.</li>
+ * <li>Composable - transformers can be chained together for complex operations.</li>
+ * </ul>
+ * 
+ * <p>Common transformers include:</p>
+ * <ul>
+ * <li>{@link com.invirgance.convirgance.transform.CoerceStringsTransformer} - Converts string values to appropriate data types.</li>
+ * <li>{@link com.invirgance.convirgance.transform.InsertKeyTransformer} - Adds or updates fields in JSON objects.</li>
+ * <li>{@link com.invirgance.convirgance.transform.SortedGroupByTransformer} - Groups pre-sorted data by common fields.</li>
+ * <li>{@link com.invirgance.convirgance.transform.UnsortedGroupByTransformer} - Groups unsorted data by common fields.</li>
+ * </ul>
+ * 
+ * @see com.invirgance.convirgance.transform.Transformer
+ * @since 1.0.0
  */
 package com.invirgance.convirgance.transform;

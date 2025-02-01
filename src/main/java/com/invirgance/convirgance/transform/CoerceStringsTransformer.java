@@ -26,10 +26,12 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
 
 /**
- * Coerces string values into other types like Integer, Double, and Boolean.
- * For example, 'true' and '1234' will be coerced into Boolean and Integer, 
- * respectively. The types to be coerced and the columns can be customized as
- * needed.
+ * A transformer that converts string values in JSON objects to their appropriate data types.
+ * Supports automatic conversion to Boolean, Double/Decimal, and Integer types based on string patterns.
+ * Field selection can be customized through inclusion and exclusion lists.
+ * 
+ * <p>For example, string values like "true", "123.45", and "42" can be automatically
+ * converted to their corresponding Boolean, Double, and Integer types.</p>
  * 
  * @author jbanes
  */
@@ -43,7 +45,8 @@ public class CoerceStringsTransformer implements IdentityTransformer
     private Set<String> excluded;
 
     /**
-     * Creates a new Transformer with support enabled for parsing booleans, doubles, and integers to their string equivalent. 
+     * Creates a new transformer with all type conversions enabled by default.
+     * Automatically converts strings to booleans, doubles, and integers where possible.
      */
     public CoerceStringsTransformer()
     {
@@ -51,11 +54,11 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * Creates a new Transformer that parses string values into specified types.
+     * Creates a new transformer with selective type conversion support.
      *
-     * @param booleans If true, parse boolean strings ("true"/"false")
-     * @param doubles If true, parse decimal numbers
-     * @param integers If true, parse whole numbers
+     * @param booleans Set to true to enable conversion of "true"/"false" strings to Boolean values.
+     * @param doubles Set to true to enable conversion of decimal strings to Double values.
+     * @param integers Set to true to enable conversion of whole number strings to Integer values.
      */
     public CoerceStringsTransformer(boolean booleans, boolean doubles, boolean integers)
     {
@@ -63,27 +66,39 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * Creates a Transformer with specified type parsing and field filters.
+     * Creates a transformer with selective type conversion and field filtering.
      *
-     * @param booleans If true, parse boolean strings
-     * @param doubles If true, parse decimal numbers
-     * @param integers If true, parse whole numbers
-     * @param included Only parse fields matching these names (null for all)
-     * @param excluded Skip parsing for fields matching these names (e.g. "ZIP")
+     * <p>Example usage:</p>
+     * <pre>
+     * // Create transformer that only converts numeric fields except ZIP codes
+     * boolean[] flags = {false, true, true}; // booleans, doubles, integers
+     * String[] included = {"price", "quantity", "zipCode"};
+     * String[] excluded = {"zipCode"}; // prevent ZIP code conversion
+     * CoerceStringsTransformer transformer = new CoerceStringsTransformer(flags[0], flags[1], flags[2], included, excluded);
+     * 
+     * // Input:  {"price": "19.99", "quantity": "5", "zipCode": "12345"}
+     * // Output: {"price": 19.99, "quantity": 5, "zipCode": "12345"}
+     * </pre>
+     *
+     * @param booleans Set to true to enable conversion of "true"/"false" strings to Boolean values.
+     * @param doubles Set to true to enable conversion of decimal strings to Double values.
+     * @param integers Set to true to enable conversion of whole number strings to Integer values.
+     * @param included Array of field names to process. Set to null to process all fields.
+     * @param excluded Array of field names to skip. Set to null to exclude no fields.
      */
     public CoerceStringsTransformer(boolean booleans, boolean doubles, boolean integers, String[] included, String[] excluded)
     {
         this.booleans = booleans;
         this.doubles = doubles;
         this.integers = integers;
-        //TODO: set included and excluded, add tests
-        //this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
-        //this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
+        this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
+        this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
     }
 
     /**
-     * If Boolean string coercion is enabled.
-     * @return True if enabled.
+     * Checks if boolean string conversion is enabled.
+     * 
+     * @return True if boolean conversion is enabled, false otherwise.
      */
     public boolean isBooleans()
     {
@@ -91,8 +106,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * If Double/Decimal/Scientific string coercion is enabled.
-     * @return True if enabled.
+     * Checks if double/decimal string conversion is enabled.
+     * 
+     * @return True if double conversion is enabled, false otherwise.
      */
     public boolean isDoubles()
     {
@@ -100,8 +116,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * If integer string coercion is enabled.
-     * @return True if enabled.
+     * Checks if integer string conversion is enabled.
+     * 
+     * @return True if integer conversion is enabled, false otherwise.
      */
     public boolean isIntegers()
     {
@@ -109,8 +126,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * Used to enable coercion of strings to Booleans.
-     * @param booleans If coercion should be done.
+     * Enables or disables boolean string conversion.
+     * 
+     * @param booleans Set to true to enable boolean conversion, false to disable it.
      */
     public void setBooleans(boolean booleans)
     {
@@ -118,8 +136,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * Used to enable coercion of strings to Double/Decimal/Scientific.
-     * @param doubles If coercion should be done.
+     * Enables or disables double/decimal string conversion.
+     * 
+     * @param doubles Set to true to enable double conversion, false to disable it.
      */
     public void setDoubles(boolean doubles)
     {
@@ -127,8 +146,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * Used to enable coercion of strings to Integers.
-     * @param integers If coercion should be done.
+     * Enables or disables integer string conversion.
+     * 
+     * @param integers Set to true to enable integer conversion, false to disable it.
      */
     public void setIntegers(boolean integers)
     {
@@ -136,9 +156,10 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * The array of field names to include when parsing.
-     * @return The included field names.
-     * @throws NullPointerException If included has not been initialized.
+     * Gets the array of field names that are included in conversion.
+     * 
+     * @return Array of included field names.
+     * @throws NullPointerException If the included set has not been initialized.
      */
     public String[] getIncluded()
     {
@@ -146,9 +167,10 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * The array of field names to exclude when parsing.
-     * @return The excluded field names.
-     * @throws NullPointerException If excluded has not been initialized.
+     * Gets the array of field names that are excluded from conversion.
+     * 
+     * @return Array of excluded field names.
+     * @throws NullPointerException If the excluded set has not been initialized.
      */
     public String[] getExcluded()
     {
@@ -156,8 +178,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
     
     /**
-     * Set field names to include when evaluating types during parsing.
-     * @param included Array of field/header names to include.
+     * Sets the field names to include in type conversion.
+     * 
+     * @param included Array of field names to include in conversion. Set to null to include all fields.
      */
     public void setIncluded(String[] included)
     {
@@ -166,8 +189,9 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
     
     /**
-     * Set field names to exclude when evaluating types.
-     * @param excluded Array of fields/headers to exclude.
+     * Sets the field names to exclude from type conversion.
+     * 
+     * @param excluded Array of field names to exclude from conversion. Set to null to exclude no fields.
      */
     public void setExcluded(String[] excluded)
     {
@@ -176,10 +200,18 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
     
     /**
-     * Attempts to coerce a string into its 'real' datatype.
-     * @param value The string to coerce.
-     * @return The value of the string, as the coerced datatype.
-     * @throws NumberFormatException If parsing the string to a double or integer fails.
+     * Attempts to convert a string value to its appropriate data type.
+     * 
+     * <p>Conversion rules:</p>
+     * <ul>
+     * <li>Strings "true" or "false" (case insensitive) are converted to Boolean if boolean conversion is enabled.</li>
+     * <li>Strings containing a decimal point are converted to Double if double conversion is enabled.</li>
+     * <li>Strings containing only digits (with optional leading minus) are converted to Integer or Long if integer conversion is enabled.</li>
+     * </ul>
+     *
+     * @param value The string value to convert.
+     * @return The converted value, or the original string if conversion is not possible.
+     * @throws NumberFormatException If numeric conversion fails for a string that appears to be a number.
      */
     public Object coerce(String value)
     {
@@ -225,13 +257,15 @@ public class CoerceStringsTransformer implements IdentityTransformer
     }
 
     /**
-     * Transforms the given JSONObject by coercing the values of specified keys,
-     * including those in the 'included' set and excluding those in the
-     * 'excluded' set.
+     * Transforms a JSON object by converting string values to appropriate data types.
+     * Only processes fields based on inclusion/exclusion settings and enabled type conversions.
      *
-     * @param record The record to modify.
-     * @return The modified JSONObject with values transformed as per the inclusion and exclusion criteria.
-     * @throws ConvirganceException If an error occurs during coercion.
+     * <p>The transformation modifies the input object directly, converting string values
+     * to their corresponding data types where possible.</p>
+     *
+     * @param record The JSON object to transform.
+     * @return The modified JSON object (same instance as input).
+     * @throws ConvirganceException If an error occurs during type conversion.
      */
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException

@@ -27,7 +27,11 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
 
 /**
- * Groups data together from an iterator based on the specified fields, the resulting data will be sorted. 
+ * Transforms unsorted JSON data by grouping records that share common field values.
+ * Unlike {@link SortedGroupByTransformer}, this transformer can handle input data in any order.
+ * 
+ * <p>For example, given weather data with records in any order, this transformer can
+ * group all weather readings for each unique city-weather combination under a single record.</p>
  * 
  * @author tadghh
  */
@@ -36,17 +40,54 @@ public class UnsortedGroupByTransformer implements Transformer
     private final String[] fields; 
     private final String output;   
     private final Set<String> fieldKeys;     
+    
     /**
-     * Creates a new UnsortedGroupByTransformer to group related data on provided fields. 
-     * @param fields The fields you want to group with.
-     * @param output The new field to assign the grouped data on.
-     * @throws ConvirganceException An exception will be raised when one of the following occurs:
-     *  - One of the provided grouping fields is null or empty.
-     *  - No fields were provided at all.
-     *  - The output field to group data must not be null.
+     * Creates a new transformer that groups JSON objects based on common field values,
+     * regardless of the records order in the iterator.
+     * 
+     * <p>Example usage:</p>
+     * <pre>
+     * // Group weather readings by city and weather condition
+     * String[] groupFields = {"city", "weather"};
+     * String outputField = "readings";
+     * UnsortedGroupByTransformer transformer = new UnsortedGroupByTransformer(groupFields, outputField);
+     * 
+     * // Input records (in any order):
+     * // {"city": "Tampa", "weather": "sunny", "temp": 85, "humidity": 70}
+     * // {"city": "Miami", "weather": "rainy", "temp": 78, "humidity": 85}
+     * // {"city": "Tampa", "weather": "sunny", "temp": 87, "humidity": 68}
+     * 
+     * // Output records:
+     * // {
+     * //   "city": "Tampa",
+     * //   "weather": "sunny",
+     * //   "readings": [
+     * //     {"temp": 85, "humidity": 70},
+     * //     {"temp": 87, "humidity": 68}
+     * //   ]
+     * // },
+     * // {
+     * //   "city": "Miami",
+     * //   "weather": "rainy",
+     * //   "readings": [
+     * //     {"temp": 78, "humidity": 85}
+     * //   ]
+     * // }
+     * </pre>
+     * 
+     * @param fields The fields to group by. All records sharing the same values for these fields
+     *               will be grouped together.
+     * @param output The field name under which the grouped records will be stored as an array.
+     * @throws ConvirganceException if:
+     *         <ul>
+     *         <li>The fields array is null or empty</li>
+     *         <li>If a field name in the array is null or empty</li>
+     *         <li>The output field name is null or empty</li>
+     *         </ul>
      */
     public UnsortedGroupByTransformer(String[] fields, String output)
     {
+        // Test dependent exception messages.
         if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
 
         for (String key : fields)
@@ -62,17 +103,21 @@ public class UnsortedGroupByTransformer implements Transformer
     }
      
     /**
-     * Groups unsorted JSONObjects based on the provided fields.
-     * The resulting iterator will contain entries of field(n).
-
-     * Ex Grouping on city, and weather -> one entry for each occurrence of city + weather,
-     * any new entries have their children added to the output key for field(n).
+     * Transforms an iterator of JSON objects by grouping records with matching field values.
      * 
-     * n being how many fields are grouped on.
-     * field(n) ~= {city="Tampa",weather="sunny", output: children...}
+     * <p>The transformer processes records in memory to group them by the specified fields.
+     * For each unique combination of the grouping field values, it creates a new JSON object containing:</p>
+     * <ul>
+     * <li>The common field values from the grouped records</li>
+     * <li>An array of the grouped records (excluding the common fields) under the specified output field</li>
+     * </ul>
      * 
-     * @param iterator The iterator of JSONObjects.
-     * @return A new iterator with the grouped data.
+     * <p>Note: This transformer maintains all records in memory until iteration is complete,
+     * which may impact performance with very large datasets. For pre-sorted data,
+     * consider using {@link SortedGroupByTransformer} instead.</p>
+     *
+     * @param iterator An iterator of JSONObjects to be grouped.
+     * @return A new iterator that provides the grouped JSON objects.
      */
     @Override
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
