@@ -6,6 +6,13 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Convirgance</name>
+    <description>
+        Convirgance is a modern, streamlined approach to database 
+        access. Unlike traditional ORM frameworks that map your data into Java 
+        objects, Convirgance provides direct SQL access as a high-performance 
+        stream of Map objects which can be transformed, filtered, and 
+        converted to numerous data formats.
+    </description>
     <licenses>
         <license>
           <name>MIT License</name>
@@ -26,6 +33,16 @@
         <url>https://github.com/InvirganceOpenSource/convirgance/tree/${project.scm.tag}</url>
         <tag>main</tag>
     </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
@@ -58,6 +75,21 @@
                         <version>34.55-SNAPSHOT</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.simplify4u.plugins</groupId>
+                <artifactId>sign-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <serverId>sign-key-id</serverId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
