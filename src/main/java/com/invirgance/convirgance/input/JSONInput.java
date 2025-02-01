@@ -31,19 +31,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Creates a cursor for traversing JSON data while maintaining proper resource handling.
+ * Provides support for reading JSON formatted objects as a stream of data. This
+ * Input will look for JSON objects and return each one found. Objects may be
+ * simply provided one after another or may optionally be encoded as a JSON array
+ * with square brackets at the start/end of the file and commas after each object.
+ * 
  * @author jbanes
  */
 public class JSONInput implements Input<JSONObject>
 {
     
     /**
-     * Creates a new {@link JSONInputCursor} to use for reading from some data
-     * source/stream.
+     * Returns a stream of data representing the underlying JSON data.
      *
-     * @param source The stream.
-     * @return A new {@link InputCursor} that can be used to iterate over
-     * {@link JSONObject} records from the provided source.
+     * @param source where to read the data from
+     * @return a stream of data
      */
     @Override
     public InputCursor<JSONObject> read(Source source)

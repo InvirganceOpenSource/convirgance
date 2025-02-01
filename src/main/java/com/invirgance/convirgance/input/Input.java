@@ -22,21 +22,22 @@ SOFTWARE.
 package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.source.Source;
+import com.invirgance.convirgance.json.JSONObject;
 
 /**
- * Interface for reading and processing data from a Source into a specified type.
- * The implementing class determines the type T, providing type safety and flexibility.
+ * Interface for reading file formats as an Iterable stream of data
  * 
  * @author jbanes
- * @param <T> The type of data being read.
+ * @param <T> the record type being read. This will be {@link JSONObject} in most cases.
  */
 public interface Input<T>
 {
     /**
      * Reads data from the specified source and returns an {@link InputCursor} 
      * for iterating over the data.
-     * @param source An input stream to read from.
-     * @return An {@link InputCursor} to iterate over some type.
+     * 
+     * @param source an input stream to read from.
+     * @return an {@link InputCursor} to iterate over the stream
      */
     public InputCursor<T> read(Source source);
  

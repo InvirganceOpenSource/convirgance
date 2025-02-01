@@ -33,7 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to stream the contents of a CSV Source into JSONObjects.
+ * Provides support for reading comma separated (CSV) files as a stream of data.
+ * Compliant with RFC 4180.
+ * 
  * @author tadghh
  */
 public class CSVInput implements Input<JSONObject>

@@ -27,13 +27,17 @@ import com.invirgance.convirgance.ConvirganceException;
 
 
 /**
- * A class used when working with pipe delimited input
+ * Provides support for reading pipe-delimited files as a stream of data.  
+ * Convenience object for working with pipe-delimited files. Extends 
+ * {@link DelimitedInput} and sets the delimiter character to the '|' character.
+ * 
  * @author timur
+ * @see DelimitedInput
  */
 public class PipeDelimitedInput extends DelimitedInput
 {   
     /**
-     * Creates a new PipeDelimitedInput.
+     * Creates a new PipeDelimitedInput defaulting to UTF-8 text encoding
      */
     public PipeDelimitedInput()
     {
@@ -42,6 +46,7 @@ public class PipeDelimitedInput extends DelimitedInput
     
     /**
      * Creates a new PipeDelimitedInput with the provided column headers
+     * 
      * @param columns The column headers.
      */
     public PipeDelimitedInput(String[] columns)
@@ -50,7 +55,8 @@ public class PipeDelimitedInput extends DelimitedInput
     }
     
     /**
-     * Creates a new PipeDelimitedInput with custom text encoding.
+     * Creates a new PipeDelimitedInput with custom text encoding
+     * 
      * @param encoding The text encoding of the input content.
      */
     public PipeDelimitedInput(String encoding)
@@ -59,9 +65,10 @@ public class PipeDelimitedInput extends DelimitedInput
     }
     
     /**
-     * Creates a new PipeDelimitedInput with the provided column headers and custom text encoding.
-     * @param columns The column headers.
-     * @param encoding The text encoding of the input content.
+     * Creates a new PipeDelimitedInput with the provided column headers and custom text encoding
+     * 
+     * @param columns the column headers
+     * @param encoding the text encoding of the input content
      */
     public PipeDelimitedInput(String[] columns, String encoding)
     {
@@ -69,13 +76,15 @@ public class PipeDelimitedInput extends DelimitedInput
     }
     
     /**
-     * Overriding the setDelimiter method to throw an exception when usage is attempted.
-     * @param delimiter The delimiter being set.
-     * @throws ConvirganceException thrown always as usage not allowed
+     * Throws an exception when called to prevent the delimiter being
+     * changed from '|'.
+     * 
+     * @param delimiter the new delimiter to set
+     * @throws ConvirganceException thrown always to prevent the delimiter from being changed
      */
     @Override
     public void setDelimiter(char delimiter)
     {
-        throw new ConvirganceException("Cannot set delimiter for PipeDelimitedInput class");
+        throw new ConvirganceException("Cannot set delimiter for PipeDelimitedInput class. Use DelimitedInput instead.");
     }   
 }

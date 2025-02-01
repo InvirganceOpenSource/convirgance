@@ -22,14 +22,14 @@ SOFTWARE.
 package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.CloseableIterator;
+import com.invirgance.convirgance.json.JSONObject;
 
 /**
- * A cursor interface for iterating over data read by an Input
- * implementation. Extends Iterable to provide type-safe iteration while ensuring
- * resources are properly closed via CloseableIterator.
+ * Extends Iterable to provide a CloseableIterator that can be terminated before
+ * all data is read without leaking resources.
  *
  * @author jbanes
- * @param <T> The type of data for the input cursor.
+ * @param <T> the type of data for the input cursor. This will be {@link JSONObject} in most cases.
  */
 public interface InputCursor<T> extends Iterable<T>
 {

@@ -29,8 +29,15 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * A class used when working with delimited input.  
+ * Provides support for reading character delimited files as a stream of data.
+ * Care must be taken to ensure that the chosen delimiter never appears in the
+ * data as no facilities are provided for escaping the delimiter character. This
+ * is fine for formats like pipe-delimited or tab-delimited (tsv) where the 
+ * delimiter is highly unlikely to be in the data. If you are attempting to 
+ * read CSV data, use the {@link CSVInput} class instead.
+ * 
  * @author jbanes
+ * @see CSVInput
  */
 public class DelimitedInput implements Input<JSONObject>
 {

@@ -32,15 +32,18 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 /**
- * An {@link Input} for reading JBIN encoded data.
+ * Provides support for reading binary encoded JSON data in the JBIN format. Provides
+ * a smaller encoding than JSON along with significantly higher parsing performance.
+ * 
  * @author jbanes
  */
 public class JBINInput implements Input<JSONObject>
 {
     /**
-     * Creates a new InputCursor for JSONObjects encoded with JBIN.
-     * @param source A {@link Source} to JBIN encoded data.
-     * @return A JBINInputCursor with the decoded stream.
+     * Returns a stream of data over the underlying JBIN encoding
+     * 
+     * @param source where to read the data from
+     * @return a stream of data
      */
     @Override
     public InputCursor<JSONObject> read(Source source)

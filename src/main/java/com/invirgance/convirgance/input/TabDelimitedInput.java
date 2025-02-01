@@ -27,8 +27,12 @@ import com.invirgance.convirgance.ConvirganceException;
 
 
 /**
- * A class used when working with tab delimited input
+ * Provides support for reading tab-delimited (tsv) files as a stream of data.  
+ * Convenience object for working with tab-delimited files. Extends 
+ * {@link DelimitedInput} and sets the delimiter character to the '\t' character.
+ * 
  * @author timur
+ * @see DelimitedInput
  */
 public class TabDelimitedInput extends DelimitedInput
 {   
@@ -69,12 +73,11 @@ public class TabDelimitedInput extends DelimitedInput
     }
     
     /**
-     * Overriding the SetDelimiter method to throw an exception when usage is attempted.
-     * @param delimiter The delimiter being set.
-     * @throws ConvirganceException always as usage not allowed
+     * Throws an exception when called to prevent the delimiter being
+     * changed from '\t'.
      * 
-     * Q: Does this still allow the usage of the super method by calling 
-     *  ((DelimitedInput) tabDelimitedInput).SetDelimiter('|')
+     * @param delimiter the new delimiter to set
+     * @throws ConvirganceException thrown always to prevent the delimiter from being changed
      */
     @Override
     public void setDelimiter(char delimiter)
