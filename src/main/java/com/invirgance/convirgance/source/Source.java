@@ -24,22 +24,26 @@ package com.invirgance.convirgance.source;
 import java.io.InputStream;
 
 /**
- * Used to provide a reliable way to receive content from a InputStream.
+ * Abstracts away access to an on-demand InputStream over a given resource. Most 
+ * implementations are able to provide repeated access to the underlying resource.
+ * However, not all resources can be reused and multiple calls to 
+ * {@link #getInputStream()} will fail if {@link #isReusable()} returns false.
  * 
- * Used when needing safe, managed access to a input stream for file processing or
- * network reads.
  * @author jbanes
  */
 public interface Source
 {
     /**
-     * Returns the {@link InputStream} for reading from this source.
-     * @return The InputStream
+     * Returns an {@link InputStream} over the underlying resource
+     * 
+     * @return an InputStream
      */
     public InputStream getInputStream();
     
     /**
-     * If the source is reusable, default true.
+     * Returns true if the source is reusable. The default implementation returns
+     * true, so this must be overridden if your implementation is not reusable.
+     * 
      * @return true. 
      */
     default public boolean isReusable()
@@ -48,7 +52,9 @@ public interface Source
     }
     
     /**
-     * If the sources InputStream has been used already, default false.
+     * Returns true if the InputStream has already been accessed and another attempt
+     * to access {@link #getInputStream()} will fail. The default implementation returns
+     * false, so this must be overridden if your implementation is not reusable.
      * @return false.
      */
     default public boolean isUsed()

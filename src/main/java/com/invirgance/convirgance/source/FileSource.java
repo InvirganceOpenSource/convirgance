@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Provides a reliable, controlled way to get the InputStream of a File.
+ * Provides access to an underlying file resource
+ * 
  * @author jbanes
  */
 public class FileSource implements Source
@@ -37,7 +38,8 @@ public class FileSource implements Source
 
     /**
      * Creates a new FileSource based on the provided File.
-     * @param file The file.
+     * 
+     * @param file the underlying file resource
      */
     public FileSource(File file)
     {
@@ -45,8 +47,9 @@ public class FileSource implements Source
     }
 
     /**
-     * Returns the current file.
-     * @return The file in use by this object.
+     * Returns the current file
+     * 
+     * @return the file resource managed by this source
      */
     public File getFile()
     {
@@ -54,9 +57,9 @@ public class FileSource implements Source
     }
     
     /**
-     * Returns a new {@link FileInputStream} using the current file as a source.
-     * @return An InputStream.
-     * @throws ConvirganceException If an I/O exception occurs while using this Object's file to create a new {@link FileInputStream}.
+     * Returns an InputStream to access the underlying file resource
+     * @return an input stream for the file resource
+     * @throws ConvirganceException if the file does not exist or the file is inaccessible
      */
     @Override
     public InputStream getInputStream()

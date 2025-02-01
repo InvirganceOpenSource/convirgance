@@ -29,7 +29,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * Allows streaming in data from a URL.
+ * Retrieve data from a resource identified by a URL. Uses URLConnection to obtain an input stream.
  *
  * @author tadghh
  */

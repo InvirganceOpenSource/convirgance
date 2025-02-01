@@ -43,8 +43,8 @@ public class InputStreamSource implements Source
     }
 
     /**
-     * Gets the InputStream.
-     * @return The stream.
+     * Gets the underlying InputStream
+     * @return the stream
      * @throws ConvirganceException If attempting to reuse the stream.
      */
     @Override
@@ -58,8 +58,9 @@ public class InputStreamSource implements Source
     }
     
     /**
-     * Streams from sources of this type are not reusable.
-     * @return false.
+     * Streams from sources of this type are not reusable
+     * 
+     * @return false
      */
     @Override
     public boolean isReusable()
@@ -68,8 +69,9 @@ public class InputStreamSource implements Source
     }
     
     /**
-     * If this InputStream has been used.
-     * @return A Boolean.
+     * If this InputStream has been used
+     * 
+     * @return true if the underlying InputStream has already been used, false otherwise
      */
     @Override
     public boolean isUsed()

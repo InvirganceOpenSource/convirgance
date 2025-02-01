@@ -34,8 +34,11 @@ public class ClasspathSource implements Source
     private String path;
 
     /**
-     * Creates a ClasspathSource with the provided path.
-     * @param path A path to a file.
+     * Creates a ClasspathSource with the provided path. See {@link Class#getResourceAsStream(String)}
+     * for details on the path format.
+     * 
+     * @param path a path to the desired file relative to the project
+     * @see Class#getResourceAsStream(String)
      */
     public ClasspathSource(String path)
     {
@@ -43,9 +46,12 @@ public class ClasspathSource implements Source
     }
 
     /**
-     * Creates a ClasspathSource with the provided Class, along with the provided file.
-     * @param clazz The reference class for loading resources, if the class is null ClasspathSource will be used.
-     * @param path A path to a file.
+     * Creates a ClasspathSource with the provided path relative to the specified Class
+     * 
+     * @param clazz the reference class for loading resources
+     * @param path a path to the desired file relative to the project
+     * @see Class#getResourceAsStream(String)
+     * 
      */
     public ClasspathSource(Class clazz, String path)
     {
@@ -55,7 +61,7 @@ public class ClasspathSource implements Source
     
     /**
      * Returns a InputStream using the current path as the stream resource.
-     * @return An InputStream.
+     * @return an InputStream.
      */
     @Override
     public InputStream getInputStream()

@@ -23,8 +23,11 @@
  */
 
 /**
- * Provides classes with controlled access for reliably reading data from various input sources (URLs, files, byte arrays).
- * Used in conjunction with Input implementations to read and process source data.
+ * Provides abstraction for reading raw data from a variety of input sources such
+ * as URLs, files, classpaths, and byte arrays
  *
+ * @see Input
  */
 package com.invirgance.convirgance.source;
+
+import com.invirgance.convirgance.input.Input;
