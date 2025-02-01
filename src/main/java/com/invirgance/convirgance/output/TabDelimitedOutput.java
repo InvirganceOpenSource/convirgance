@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2025 Invirgance LLC.
+ * Copyright 2025 INVIRGANCE LLC.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,61 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.invirgance.convirgance.input;
+package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.ConvirganceException;
 
-
 /**
- * A class used when working with pipe delimited input
+ * Support for writing tab delimited file format
  * @author timur
  */
-public class PipeDelimitedInput extends DelimitedInput
-{   
+public class TabDelimitedOutput extends DelimitedOutput
+{
     /**
-     * Creates a new PipeDelimitedInput.
+     * Creates a new TabeDelimitedOutput.
      */
-    public PipeDelimitedInput()
+    public TabDelimitedOutput()
     {
-        this(null, "UTF-8");
+        super(null, '\t');
     }
     
     /**
-     * Creates a new PipeDelimitedInput with the provided column headers
-     * @param columns The column headers.
+     * Creates a TabDelimitedOuput with specified columns.
+     * @param columns A String array of column names.
      */
-    public PipeDelimitedInput(String[] columns)
+    public TabDelimitedOutput(String[] columns)
     {
-        this(columns, "UTF-8");
-    }
-    
-    /**
-     * Creates a new PipeDelimitedInput with custom text encoding.
-     * @param encoding The text encoding of the input content.
-     */
-    public PipeDelimitedInput(String encoding)
-    {
-        this(null, encoding);
-    }
-    
-    /**
-     * Creates a new PipeDelimitedInput with the provided column headers and custom text encoding.
-     * @param columns The column headers.
-     * @param encoding The text encoding of the input content.
-     */
-    public PipeDelimitedInput(String[] columns, String encoding)
-    {
-        super(columns, encoding, '|');
+        super(columns, '\t');
     }
     
     /**
      * Overriding the setDelimiter method to throw an exception when usage is attempted.
      * @param delimiter The delimiter being set.
-     * @throws ConvirganceException thrown always as usage not allowed
+     * @throws ConvirganceException always as usage not allowed
      */
     @Override
     public void setDelimiter(char delimiter)
     {
-        throw new ConvirganceException("Cannot set delimiter for PipeDelimitedInput class");
+        throw new ConvirganceException("Cannot set delimiter for TabDelimitedOutput class");
     }   
+    
 }
