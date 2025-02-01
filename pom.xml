@@ -13,6 +13,7 @@
         stream of Map objects which can be transformed, filtered, and 
         converted to numerous data formats.
     </description>
+    <url>https://convirgance.invirgance.com</url>
     <licenses>
         <license>
           <name>MIT License</name>
