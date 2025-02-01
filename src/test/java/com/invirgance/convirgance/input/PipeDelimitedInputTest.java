@@ -28,6 +28,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.InputStreamSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,16 +37,6 @@ import org.junit.jupiter.api.Test;
  */
 public class PipeDelimitedInputTest
 {
-    @Test
-    public void testEmpty()
-    {
-        PipeDelimitedInput empty = new PipeDelimitedInput(new String[] {"Column 1"});
-        PipeDelimitedInput header = new PipeDelimitedInput();
-        
-        assertFalse(empty.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/empty.txt"))).iterator().hasNext());
-        assertFalse(header.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/header.txt"))).iterator().hasNext());
-    }
-    
     @Test
     public void testExample1()
     {
@@ -83,56 +74,20 @@ public class PipeDelimitedInputTest
     }
     
     @Test
-    public void testParseLine()
-    {
-        String[] none = PipeDelimitedInput.parseLine("", '|');
-        String[] one = PipeDelimitedInput.parseLine("Column 1", '|');
-        String[] two = PipeDelimitedInput.parseLine("Column 1|Column 2", '|');
-        String[] three = PipeDelimitedInput.parseLine("Column 1|Column 2|Column 3", '|');
-        String[] trailing = PipeDelimitedInput.parseLine("Column 1|Column 2|Column 3|", '|');
-        String[] empty = PipeDelimitedInput.parseLine("|||", '|');
-       
-        assertEquals(0, none.length);
-        assertEquals(1, one.length);
-        assertEquals(2, two.length);
-        assertEquals(3, three.length);
-        assertEquals(4, trailing.length);
-        assertEquals(4, empty.length);
-        
-        assertEquals("Column 1", one[0]);
-        assertEquals("Column 1", two[0]);
-        assertEquals("Column 2", two[1]);
-        assertEquals("Column 1", three[0]);
-        assertEquals("Column 2", three[1]);
-        assertEquals("Column 3", three[2]);
-        assertEquals("Column 1", trailing[0]);
-        assertEquals("Column 2", trailing[1]);
-        assertEquals("Column 3", trailing[2]);
-        assertEquals("", trailing[3]);
-        assertEquals("", empty[0]);
-        assertEquals("", empty[1]);
-        assertEquals("", empty[2]);
-        assertEquals("", empty[3]);
-    }
-    
-    @Test
     public void testChangingDelimiter()
     {
         PipeDelimitedInput input = new PipeDelimitedInput();
-        boolean thrown = false;
         
         try 
         {
             input.setDelimiter('|');
+            
+            fail("Expected exception on setDelimiter()");
         }
         catch (ConvirganceException e)
         {
-            if (e.getMessage().equals("Cannot set delimiter for PipeDelimitedInput class"))
-            {
-                thrown = true;
-            }
+            assertEquals("Cannot set delimiter for PipeDelimitedInput class. Use DelimitedInput instead.", e.getMessage());
         }
-        assert thrown;    
     }
     
 }

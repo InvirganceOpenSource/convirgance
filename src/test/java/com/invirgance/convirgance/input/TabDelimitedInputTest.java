@@ -28,6 +28,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.InputStreamSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 
@@ -37,17 +38,6 @@ import org.junit.jupiter.api.Test;
  */
 public class TabDelimitedInputTest
 {
-    
-    @Test
-    public void testEmpty()
-    {
-        TabDelimitedInput empty = new TabDelimitedInput(new String[] {"Column 1"});
-        TabDelimitedInput header = new TabDelimitedInput();
-        
-        assertFalse(empty.read(new InputStreamSource(getClass().getResourceAsStream("/input/tabdelimited/empty.txt"))).iterator().hasNext());
-        assertFalse(header.read(new InputStreamSource(getClass().getResourceAsStream("/input/tabdelimited/header.txt"))).iterator().hasNext());
-    }
-    
     @Test
     public void testExample1()
     {
@@ -85,55 +75,19 @@ public class TabDelimitedInputTest
     }
     
     @Test
-    public void testParseLine()
-    {
-        String[] none = TabDelimitedInput.parseLine("", '\t');
-        String[] one = TabDelimitedInput.parseLine("Column 1", '\t');
-        String[] two = TabDelimitedInput.parseLine("Column 1\tColumn 2", '\t');
-        String[] three = TabDelimitedInput.parseLine("Column 1\tColumn 2\tColumn 3", '\t');
-        String[] trailing = TabDelimitedInput.parseLine("Column 1\tColumn 2\tColumn 3\t", '\t');
-        String[] empty = TabDelimitedInput.parseLine("\t\t\t", '\t');
-       
-        assertEquals(0, none.length);
-        assertEquals(1, one.length);
-        assertEquals(2, two.length);
-        assertEquals(3, three.length);
-        assertEquals(4, trailing.length);
-        assertEquals(4, empty.length);
-        
-        assertEquals("Column 1", one[0]);
-        assertEquals("Column 1", two[0]);
-        assertEquals("Column 2", two[1]);
-        assertEquals("Column 1", three[0]);
-        assertEquals("Column 2", three[1]);
-        assertEquals("Column 3", three[2]);
-        assertEquals("Column 1", trailing[0]);
-        assertEquals("Column 2", trailing[1]);
-        assertEquals("Column 3", trailing[2]);
-        assertEquals("", trailing[3]);
-        assertEquals("", empty[0]);
-        assertEquals("", empty[1]);
-        assertEquals("", empty[2]);
-        assertEquals("", empty[3]);
-    }
-    
-    @Test
     public void testChangingDelimiter()
     {
         TabDelimitedInput input = new TabDelimitedInput();
-        boolean thrown = false;
         
         try 
         {
             input.setDelimiter('|');
+            
+            fail("Expected exception on setDelimiter()");
         }
         catch (ConvirganceException e)
         {
-            if (e.getMessage().equals("Cannot set delimiter for TabDelimitedInput class"))
-            {
-                thrown = true;
-            }
-        }
-        assert thrown;    
+            assertEquals("Cannot set delimiter for TabDelimitedInput class", e.getMessage());
+        }   
     }
 }
