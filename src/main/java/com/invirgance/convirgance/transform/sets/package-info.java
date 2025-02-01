@@ -23,7 +23,6 @@
  */
 
 /**
- * Contains the UnionIterable class for working with JSONObjects from multiple data sources as one Iterable.
- * The combined streams can be useful during large transformations or when filtering/comparing data.
+ * Tools for performing set logic on multiple streams of data 
  */
 package com.invirgance.convirgance.transform.sets;

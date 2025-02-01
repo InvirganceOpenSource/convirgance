@@ -27,9 +27,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Combines multiple JSONObject sources (iterables) into a single iterable stream. Useful
- * for cases where cross-comparison, filtering, or transformation across
- * multiple data sources is required.
+ * Combines multiple streams of data into a single stream. Can be used to merge
+ * disparate sources such as files and database queries into a single resulting
+ * stream.
+ * <br><br>
+ * Does not attempt to de-duplicate data.
  *
  * @author jbanes
  */
@@ -38,8 +40,8 @@ public class UnionIterable implements Iterable<JSONObject>
     private List<Iterable<JSONObject>> streams;
 
     /**
-     * Creates the UnionIterable with the provided streams.
-     * @param streams The streams to merge into one.
+     * Creates a UnionIterable to merge the provided streams
+     * @param streams the streams to merge into one
      */
     public UnionIterable(Iterable<JSONObject>... streams)
     {
@@ -47,9 +49,9 @@ public class UnionIterable implements Iterable<JSONObject>
     }
 
     /**
-     * Returns an iterator that iterates through all provided sources sequentially.
+     * Returns an iterator that streams through each source sequentially
      * 
-     * @return An iterator that contains the supplied streams.
+     * @return An iterator that contains the supplied streams
      */
     @Override
     public Iterator<JSONObject> iterator()
