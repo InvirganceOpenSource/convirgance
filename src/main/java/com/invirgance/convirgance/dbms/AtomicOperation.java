@@ -25,17 +25,23 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Encapsulates a single database operation within a managed transaction. 
- * Implementations define logic using the provided Connection. 
- * Connection lifecycle and transaction handling are managed externally.
+ * Encapsulates a database operation such as an insert or update within a 
+ * managed transaction. Implementations are not meant to be called directly,
+ * but rather passed to {@link DBMS#update(AtomicOperation)} for execution. 
+ * 
  * @author jbanes
  */
 public interface AtomicOperation
 {
     /**
-     * Executes the implemented function.
-     * @param connection A connection to some source.
-     * @throws SQLException If an error occurs during execution.
+     * This is called by {@link DBMS#update(AtomicOperation)} to execute the
+     * logic. The JDBC connection is provided to you by DBMS. You can cancel
+     * the transaction at any time by throwing a SQLException to let DBMS know
+     * that a failure has occurred.
+     * 
+     * @param connection a JDBC connection
+     * @throws SQLException to stop the transaction and rollback the changes
+     * @see DBMS#update(AtomicOperation)
      */
     public void execute(Connection connection) throws SQLException;
 }

@@ -37,7 +37,9 @@ public class QueryOperation implements AtomicOperation
     private Query query;
 
     /**
-     * Creates a new QueryOperation.
+     * Creates a new QueryOperation without a query. This constructor exists 
+     * for tools like IoC containers that will call {@link #setQuery(Query)} 
+     * to set the query independent of the constructor.
      */
     public QueryOperation()
     {
@@ -45,7 +47,8 @@ public class QueryOperation implements AtomicOperation
     
     /**
      * Creates a new QueryOperation wrapping the provided query.
-     * @param query The query to wrap.
+     * 
+     * @param query the query to wrap
      */
     public QueryOperation(Query query)
     {
@@ -53,8 +56,9 @@ public class QueryOperation implements AtomicOperation
     }
 
     /**
-     * Get the current wrapped query.
-     * @return The query.
+     * Get the wrapped query.
+     * 
+     * @return the query or null if no query has been set
      */
     public Query getQuery()
     {
@@ -62,8 +66,9 @@ public class QueryOperation implements AtomicOperation
     }
 
     /**
-     * Set the query to be wrapped to ensure values are properly bound.
-     * @param query The query.
+     * Set the query to be wrapped in a transaction
+     * 
+     * @param query the SQL query
      */
     public void setQuery(Query query)
     {
@@ -71,11 +76,13 @@ public class QueryOperation implements AtomicOperation
     }
     
     /**
-     * Executes the transaction, binding values at the driver level if needed.
+     * DO NOT CALL DIRECTLY. This is called by {@link DBMS} to execute the 
+     * query as part of a transaction.
      *
-     * @param connection The DB connection.
-     * @throws SQLException If an issue occurs while preparing the statement or while
-     * binding values.
+     * @param connection an active JDBC connection
+     * @throws SQLException if an error occurs will executing the query
+     * @throws NullPointerException if the query has not been set
+     * @see DBMS#update(AtomicOperation)
      */
     @Override
     public void execute(Connection connection) throws SQLException

@@ -27,9 +27,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Provides a way to execute a query using a batch of JSON objects. 
- * Batching operations together is more efficient than executing separate queries for each operation.
- * This class facilitates executing bulk operations in a single query, improving performance.
+ * Bulk insert or update a stream of records in a single transaction. This uses the JDBC
+ * batching APIs for maximum performance.
+ * <br><br>
+ * Note that transaction atomicity may be violated in the case of large loads. By
+ * default a commit is triggered every 1,000 records to prevent an overflow of
+ * the transaction buffer. A failure after 1,000 records have been inserted may
+ * leave the database in an inconsistent state and thus should be planned for.
+ * 
  * @author jbanes
  */
 public class BatchOperation implements AtomicOperation
@@ -62,8 +67,7 @@ public class BatchOperation implements AtomicOperation
      * records to be processed with the query.
      *
      * @param query The query to be executed in batch operations.
-     * @param records The records (as an Iterable of JSONObjects) to be
-     * processed in the batch.
+     * @param records The records to be processed in the batch.
      */
     public BatchOperation(Query query, Iterable<JSONObject> records)
     {
@@ -73,8 +77,8 @@ public class BatchOperation implements AtomicOperation
 
     /**
      * Gets the query to be executed across the records.
-     * @return The query.
-     * @throws NullPointerException If the query has not been initialized.
+     * 
+     * @return The batch SQL query. Null if the query has not yet been set.
      */
     public Query getQuery()
     {
@@ -82,7 +86,8 @@ public class BatchOperation implements AtomicOperation
     }
     
     /**
-     * Sets the query that each record will use when the operation is executed.
+     * Sets the batch SQL query that will be used by the operation
+     * 
      * @param query The query.
      */
     public void setQuery(Query query)
@@ -91,9 +96,10 @@ public class BatchOperation implements AtomicOperation
     }
 
     /**
-     * Returns the records that will be used by this BatchOperation during execution.
-     * @return The JSONObjects used for the operation.
-     * @throws NullPointerException If the records have not been initialized.
+     * Returns the stream of records that will be used by this BatchOperation 
+     * during execution
+     * 
+     * @return The stream used for the operation. Null if the stream has not yet been set.
      */
     public Iterable<JSONObject> getRecords()
     {
@@ -101,7 +107,8 @@ public class BatchOperation implements AtomicOperation
     }
 
     /**
-     * Sets the records that will be used with to create the query during execution.
+     * Sets the records that will be inserted or updated during execution.
+     * 
      * @param records The JSONObjects to use.
      */
     public void setRecords(Iterable<JSONObject> records)
@@ -110,9 +117,11 @@ public class BatchOperation implements AtomicOperation
     }
     
     /**
-     * Returns the current auto commit interval used when processing the transactions. 
-     * After this many transactions are processed, the current batch will be executed.
-     * @return The auto commit interval.
+     * Returns the current auto commit interval used when processing the 
+     * transaction. A commit will be triggered after this number of inserts or
+     * updates. The default commit interval is 1,000.
+     * 
+     * @return The auto commit interval
      */
     public int getAutoCommit()
     {
@@ -120,9 +129,12 @@ public class BatchOperation implements AtomicOperation
     }
 
     /**
-     * Sets the auto commit interval to use when executing the operation. 
-     * After this many transactions are processed, the current batch will be executed before continuing. 
-     * @param commit The auto commit interval.
+     * Sets the auto commit interval used when processing the transaction. A 
+     * commit will be triggered after this number of inserts or updates. Be
+     * carefuly about setting too high of a number or the database may fail on a
+     * full transaction log.
+     * 
+     * @param commit The auto commit interval
      */
     public void setAutoCommit(int commit)
     {
@@ -161,13 +173,17 @@ public class BatchOperation implements AtomicOperation
     }
     
     /**
-     * Executes the operation, using the provided query for each record in the dataset. 
-     * An auto commit value is to execute the batch operation after a specified amount of records.
+     * DO NOT CALL DIRECTLY. This is called by {@link DBMS} to executes the 
+     * operation using the provided query for each record in the stream of data. 
+     * If the stream is larger than the auto commit threshold, the transaction 
+     * will be partially committed to prevent an overflow of the transaction 
+     * log.
      * 
-     * @param connection The connection to a DataSource.
+     * @param connection an active JDBC connection
      * @throws SQLException When an issue occurs while preparing the statement for the given records. Or while executing the batch operation.
-     * @throws NullPointerException If the records have not been initialized.
-     * @throws NullPointerException If the query has not been set.
+     * @throws NullPointerException if the records have not been initialized
+     * @throws NullPointerException if the batch SQL query has not been set
+     * @see DBMS#update(AtomicOperation)
      */
     @Override
     public void execute(Connection connection) throws SQLException

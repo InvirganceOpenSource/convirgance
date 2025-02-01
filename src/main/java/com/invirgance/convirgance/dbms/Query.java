@@ -28,8 +28,19 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Used for creating queries to be used against some DataSource. 
- * Use in conjunction with {@link QueryOperation} when modifying the DataSource in some way.
+ * A single SQL query for select, insert, and update operations. Can be passed
+ * directly to {@link DBMS} when selecting data from the database. For inserts,
+ * updates, and administrative calls use a {@link QueryOperation} to perform
+ * the query in an atomic transaction.
+ * <br><br>
+ * Query provides named binding rather than the classic question mark 
+ * binding. For example:
+ * <br><br>
+ * <code>select * from MY_TABLE where item = :item</code>
+ * <br><br>
+ * This allows values to be bound by name and even entire records to be bound
+ * by key/value pair.
+ * 
  * @author jbanes
  */
 public class Query
@@ -40,8 +51,8 @@ public class Query
     private ArrayList<Markup> markup;
 
     /**
-     * Creates a new Query based on the provided string.
-     * @param sql The SQL query.
+     * Creates a new Query based on the provided SQL query
+     * @param sql the SQL query
      */
     public Query(String sql)
     {
@@ -51,15 +62,16 @@ public class Query
     /**
      * Constructs a new Query object by parsing the provided SQL string and
      * binding values from the given {@link JSONObject} to the keys found in the
-     * SQL string. This constructor initializes the SQL query, parses parameter
-     * placeholders, and associates the provided bindings to their corresponding
-     * placeholders in the query.
+     * SQL string. Bind values must be in named form with a colon in front of the
+     * name. For example:
+     * <br><br>
+     * <code>select * from MY_TABLE where item = :keyName</code>
      *
-     * @param sql The SQL query string, which may include named placeholders in
-     * the format `:KEY` to be replaced by values from the bindings.
+     * @param sql The SQL query which may include named placeholders in
+     * the format <code>:key</code> to be replaced by values from the bindings
      * @param bindings A {@link JSONObject} containing key-value pairs where the
      * keys correspond to the placeholders in the SQL query and the values are
-     * the data to be bound.
+     * the data to be bound
      */
     public Query(String sql, JSONObject bindings)
     {
@@ -220,9 +232,9 @@ public class Query
     }
 
     /**
-     * Gets the current SQL query before parameters have been bound (if there are any).
+     * Get the original SQL query wrapped by this object
      * 
-     * @return The current SQL query.
+     * @return the original SQL query
      */
     public String getSQL()
     {
@@ -230,9 +242,9 @@ public class Query
     }
     
     /**
-     * A new JSONOBject based on the bindings from the current JSONOBject used to create the query.
+     * Returns a JSONObject containing all key/value pair bindings set for this query
      * 
-     * @return A new JSONOBject copied from the JSONOBject in use.
+     * @return key/value pairs of set bindings
      */
     public JSONObject getBindings()
     {
@@ -241,10 +253,10 @@ public class Query
     }
     
     /**
-     * Get the binding value used for the provided parameter name.
+     * Get the binding value set for the provided parameter name
      * 
-     * @param parameter The parameter associated to a binding.
-     * @return The value bound to the provided parameter as its Type (Object, Boolean, String, etc).
+     * @param parameter the parameter name for the desired binding
+     * @return the value bound to the provided parameter. Null if no binding has been set.
      */
     public Object getBinding(String parameter)
     {
@@ -268,10 +280,10 @@ public class Query
     }
     
     /**
-     * Binds multiple values from a {@link JSONObject} to the parameters in the query.
+     * Binds multiple values from a {@link JSONObject} to the parameters in the query
      * 
-     * @param bindings A {@link JSONObject} containing key-value pairs to bind to query parameters.
-     * @throws ConvirganceException If the current bindings contain a parameter found in the provided bindings.
+     * @param bindings a {@link JSONObject} containing key-value pairs to bind to query parameters
+     * @throws ConvirganceException if the object contains a binding that has already been set
      */
     public void setBindings(JSONObject bindings)
     {   
@@ -287,7 +299,8 @@ public class Query
     }
     
     /**
-     * Gets the markup representation of the query.
+     * Exposes the parsing of the SQL query for named bindings. Markup will
+     * include identified parameters and quoted strings in the SQL.
      * @return The markup values.
      */
     public Markup[] getMarkup()
@@ -296,9 +309,9 @@ public class Query
     }
     
     /**
-     * An array of {@link Parameter} objects representing the current
-     * query parameters. Each {@link Parameter} includes details such as the
-     * name, its index in the query, and the length of the parameter name.
+     * Exposes the {@link Parameter} objects parsed from the SQL query. Each 
+     * {@link Parameter} includes details such as the name, its index in the 
+     * query, and the length of the parameter name.
      * 
      * @return An array of parameters with info relating to query details.
      */
@@ -308,7 +321,8 @@ public class Query
     }
     
     /**
-     * An array containing the names of the parameters used for binding values.
+     * An array containing the names of the bind parameters identified in the SQL
+     * query.
      * 
      * @return An array of the parameters names.
      */
@@ -325,7 +339,11 @@ public class Query
     }
     
     /**
-     * Returns the SQL query with parameter names replaced by their bound values from the JSONObject.
+     * Returns the modified SQL query that will be passed to the database for 
+     * execution. Wherever possible, parameter values will be safely injected
+     * into the SQL string to encourage higher-performance query plans. Values
+     * that cannot be injected will be transformed into ? bind format with
+     * offset values provided by {@link #getDatabaseBindings()}.
      *
      * @return The SQL query ready for execution.
      */
@@ -370,6 +388,11 @@ public class Query
         return list.toArray(Object[]::new);
     }
     
+    /**
+     * Represents the location of a parameter in the SQL query. This markup is
+     * used to identify the text needing replacement when generating a query to 
+     * pass to the database.
+     */
     public static class Parameter extends Markup
     {
         private String name;
@@ -383,6 +406,7 @@ public class Query
 
         /**
          * Returns the parameter name.
+         * 
          * @return The name.
          */
         public String getName()
@@ -397,6 +421,10 @@ public class Query
         }
     }
     
+    /**
+     * Represents a string identified in the SQL query. This can include both
+     * single-quoted strings and database identifiers in double quotes.
+     */
     public static class Text extends Markup
     {
         private String value;
@@ -425,6 +453,10 @@ public class Query
         }
     }
     
+    /**
+     * Base class for all markup of the SQL query. Represents a start location
+     * and length.
+     */
     public static class Markup
     {
         private final int start;

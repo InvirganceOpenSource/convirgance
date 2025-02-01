@@ -23,6 +23,11 @@
  */
 
 /**
- * Provides reliable ways to bind values to queries and execute multiple, or batched operations against a DataSource.
+ * High-performance access to SQL databases for querying, updating, and 
+ * inserting. Provides simplified database access handling through the use
+ * of DataSources which can be pre-configured in your application server or 
+ * provided by a connection pool.
+ * <br><br>
+ * Start with the {@link DBMS} object to learn how to use this package.
  */
 package com.invirgance.convirgance.dbms;

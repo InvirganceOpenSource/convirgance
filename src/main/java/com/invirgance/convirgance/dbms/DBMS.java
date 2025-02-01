@@ -29,13 +29,12 @@ import java.util.Iterator;
 import javax.sql.DataSource;
 
 /**
- * Provides a standardized way to interact with a source database. Handling connections and committing data.
- * This class abstracts the database connection management and transaction handling for more efficient and 
- * consistent interaction with the database.
+ * Primary interface for querying SQL-based database management 
+ * systems (DBMS) like MySQL, PostgreSQL, SQL Server, Oracle, and others. Connection 
+ * handling is automatic with a new connection being obtained from the DataSource for
+ * each operation. A connection pool is recommended for query-heavy scenarios
+ * like web application servers.
  * 
- * 
- * If you need to create custom query implementations, refer to the {@link AtomicOperation} interface to define 
- * your own batch or transaction operations.
  * @author jbanes
  */
 public class DBMS
@@ -44,8 +43,8 @@ public class DBMS
     
     /**
      * Creates a new instance of the DBMS with the specified DataSource. The
-     * DataSource provides a connection pool or means to acquire database
-     * connections. Methods/Operations will be executed against this connection.
+     * DataSource is the source of JDBC connections, thus the DataSource must 
+     * be correctly configured before DBMS attempts to use it.
      *
      * @param source The DataSource used to obtain database connections.
      */
@@ -56,7 +55,8 @@ public class DBMS
 
     /**
      * Returns the current DataSource being used for database operations.
-     * @return The DataSource.
+     * 
+     * @return the DataSource object
      */
     public DataSource getSource()
     {
@@ -64,15 +64,12 @@ public class DBMS
     }
     
     /**
-     * Executes a query that returns an iterable of JSONObjects from the
-     * results. This method is useful for comparing the resulting iterable
-     * against another source or for processing the results dynamically in some
-     * way.
+     * Executes the provided query and returns an Iterable stream of the
+     * results.
      *
      * @param query object containing the SQL query string and bindings (if any)
      * to execute.
-     * @return An {@link Iterable} of {@link JSONObject}, allowing iteration
-     * over the query results.
+     * @return An {@link Iterable} of {@link JSONObject} records
      * @throws ConvirganceException If any SQL-related errors occur while
      * preparing or executing the query, or when attempting to retrieve the
      * results.
@@ -118,12 +115,14 @@ public class DBMS
      * {@link Connection}, including starting a transaction, committing it upon
      * success, and rolling it back in case of an exception.
      *
-     * @param transaction The atomic operation to be executed. The operation
-     * itself usually contains logic for the database interaction, see
-     * {@link QueryOperation}.
+     * @param transaction the atomic operation to be executed. The operation
+     * itself provides the logic for the database interaction.
      * @throws ConvirganceException If an error occurs during the operation.
      * including SQL errors or transaction failures, the exception is wrapped
      * and rethrown as a {@link ConvirganceException}.
+     * @see QueryOperation
+     * @see BatchOperation
+     * @see TransactionOperation
      */
     public void update(AtomicOperation transaction) throws ConvirganceException
     {

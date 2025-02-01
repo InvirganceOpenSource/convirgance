@@ -27,8 +27,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a set of database operations, such as queries or updates, executed as a single transaction against the same Database. 
- * Ensures atomicity, meaning that either all operations succeed, or none are applied.
+ * Represents a set of database operations, such as queries or updates, executed 
+ * as a single transaction. The list of AtomicOperation objects will be executed
+ * one at a time in the sequence provided. This allows for a long transaction to
+ * be planned and then triggered as a single operation with all operations
+ * succeeding or all operations rolling back.
+ * 
  * @author jbanes
  */
 public class TransactionOperation implements AtomicOperation
@@ -36,7 +40,7 @@ public class TransactionOperation implements AtomicOperation
     private List<AtomicOperation> operations;
 
     /**
-     * Creates an empty TransactionOperation.
+     * Creates an empty TransactionOperation
      */
     public TransactionOperation()
     {
@@ -45,7 +49,8 @@ public class TransactionOperation implements AtomicOperation
 
     /**
      * Creates a new TransactionOperation based on the supplied operations.
-     * @param operations The operations for this transaction.
+     * 
+     * @param operations the operations to execute in the transaction
      */
     public TransactionOperation(AtomicOperation... operations)
     {
@@ -53,8 +58,9 @@ public class TransactionOperation implements AtomicOperation
     }
     
     /**
-     * Adds another operation to the transaction.
-     * @param operation The operation to add.
+     * Adds another operation to the transaction
+     * 
+     * @param operation the operation to add
      */
     public void add(AtomicOperation operation)
     {
@@ -62,8 +68,9 @@ public class TransactionOperation implements AtomicOperation
     }
     
     /**
-     * Set the operations to run for this transaction.
-     * @param operations The operations to run.
+     * Set the list of operations to run for this transaction
+     * 
+     * @param operations a list of operations to run
      */
     public void setOperations(AtomicOperation... operations)
     {
@@ -71,7 +78,8 @@ public class TransactionOperation implements AtomicOperation
     }
 
     /**
-     * Gets the operations planned for this transaction.
+     * Gets the list of operations planned for this transaction
+     * 
      * @return An array of operations.
      */
     public AtomicOperation[] getOperations()
@@ -80,10 +88,13 @@ public class TransactionOperation implements AtomicOperation
     }
     
     /**
-     * Executes all the operations planned for this transaction against the provided connection. 
-     * If any operation fails the Database/DataSource will remain unchanged.
-     * @param connection The Database/DataSource connection.
-     * @throws SQLException Thrown when an issue occurs while executing one the operations.
+     * DO NOT CALL DIRECTLY. This is called by {@link DBMS} to execute the 
+     * transaction. The transaction is automatically rolled back if an error
+     * occurs.
+     * 
+     * @param connection the JDBC connection
+     * @throws SQLException if an error occurs during the transaction
+     * @see DBMS#update(AtomicOperation)
      */
     @Override
     public void execute(Connection connection) throws SQLException
