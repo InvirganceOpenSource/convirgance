@@ -21,10 +21,11 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.target;
 
+import com.invirgance.convirgance.ConvirganceException;
 import java.io.OutputStream;
 
 /**
- * A Target implementation that manages single-use output stream access.
+ * A Target implementation that wraps an OutputStream and provides one-time access to it
  * @author jbanes
  */
 public class OutputStreamTarget implements Target
@@ -33,25 +34,35 @@ public class OutputStreamTarget implements Target
     private boolean used;
 
     /**
-     * Creates a OutputStreamTarget from a provided OutputStream.
-     * @param out The OutputStream to use.
+     * Creates a OutputStreamTarget from a provided OutputStream
+     * 
+     * @param out the OutputStream to wrap
      */
     public OutputStreamTarget(OutputStream out)
     {
         this.out = out;
     }
     
+    /**
+     * Gets the underlying OutputStream
+     * 
+     * @return the stream
+     * @throws ConvirganceException if attempting to reuse the stream
+     */
     @Override
     public OutputStream getOutputStream()
     {
+        if(used) throw new ConvirganceException("Attempted to reuse an output stream");
+
         used = true;
         
         return out;
     }
 
     /**
-     * Streams of this type are not reusable.
-     * @return false.
+     * Streams from targets of this type are not reusable
+     * 
+     * @return false
      */
     @Override
     public boolean isReusable()
@@ -59,6 +70,11 @@ public class OutputStreamTarget implements Target
         return false;
     }
 
+    /**
+     * If this OutputStream has been used
+     * 
+     * @return true if the underlying OutputStream has already been used, false otherwise
+     */
     @Override
     public boolean isUsed()
     {

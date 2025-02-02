@@ -28,8 +28,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Provides controlled access to the OutputStream from a File. 
- * Ensuring content is properly handled.
+ * Provides write access to an underlying file resource. The file will be created
+ * on write if it doesn't exist. If the file already exists it will be overwritten
+ * every time an OutputStream is written to.
  * 
  * @author jbanes
  */
@@ -38,8 +39,9 @@ public class FileTarget implements Target
     private File file;
 
     /**
-     * Creates a FileTarget using the provided File (assuming it exists).
-     * @param file The File source to use.
+     * Creates a FileTarget based on the provided File
+     * 
+     * @param file the underlying file resource to write to
      */
     public FileTarget(File file)
     {
@@ -47,8 +49,9 @@ public class FileTarget implements Target
     }
 
     /**
-     * Returns the {@link File}.
-     * @return The target file.
+     * Returns the underlying file resource to write to
+     * 
+     * @return the target file
      */
     public File getFile()
     {
@@ -56,9 +59,12 @@ public class FileTarget implements Target
     }
     
     /**
-     * Returns a new {@link FileOutputStream} using this objects file.
-     * @return The stream.
-     * @throws ConvirganceException If an error occurs while creating an FileOutputStream from this objects file.
+     * Returns an OutputStream to write to the underlying file resource. If the
+     * file does not exist it will be created. If the file already exists it
+     * will be overwritten with each call to this method.
+     * 
+     * @return the output stream
+     * @throws ConvirganceException if the file is inaccessible
      */
     @Override
     public OutputStream getOutputStream()

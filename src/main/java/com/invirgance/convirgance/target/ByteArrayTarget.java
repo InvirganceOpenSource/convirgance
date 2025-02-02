@@ -26,9 +26,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
- * A temporary, single-use byte array buffer for data processing.
- * Once the output stream is retrieved, it cannot be accessed again, 
- * ensuring content is not overwritten and remains unchanged.
+ * A Target that writes the data to a memory buffer. While this can be very
+ * useful for test cases and quick wins, it is not recommended for production
+ * code. Buffering large amounts of data in memory will significantly slow
+ * down your application and put pressure on the Java Garbage Collector.
  * 
  * @author jbanes
  */
@@ -37,8 +38,9 @@ public class ByteArrayTarget implements Target
     private ByteArrayOutputStream out;
     
     /**
-     * Gets the current output stream contents as a byte array.
-     * @return The output stream as a byte array. 
+     * Get the written data as a byte array
+     * 
+     * @return the written data as a byte array. 
      */
     public byte[] getBytes()
     {
@@ -46,8 +48,11 @@ public class ByteArrayTarget implements Target
     }
     
     /**
-     * Returns the output stream to write to.
-     * @return The stream.
+     * Returns the output stream to write to. This memory buffer can only be 
+     * written to once. You will want to create a new instance of this Target
+     * if you want to write another data set.
+     * 
+     * @return an output stream that writes to a memory buffer
      * @throws ConvirganceException If the target stream has already been used.
      */
     @Override
@@ -61,8 +66,9 @@ public class ByteArrayTarget implements Target
     }
 
     /**
-     * Streams of this type are not reusable.
-     * @return false.
+     * Streams from targets of this type are not reusable
+     * 
+     * @return false
      */
     @Override
     public boolean isReusable()
@@ -70,6 +76,11 @@ public class ByteArrayTarget implements Target
         return false;
     }
 
+    /**
+     * If this OutputStream has been used
+     * 
+     * @return true if the underlying memory buffer has already been written to, false otherwise
+     */
     @Override
     public boolean isUsed()
     {

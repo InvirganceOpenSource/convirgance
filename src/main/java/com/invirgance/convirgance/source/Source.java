@@ -44,7 +44,7 @@ public interface Source
      * Returns true if the source is reusable. The default implementation returns
      * true, so this must be overridden if your implementation is not reusable.
      * 
-     * @return true. 
+     * @return true
      */
     default public boolean isReusable()
     {
@@ -55,7 +55,8 @@ public interface Source
      * Returns true if the InputStream has already been accessed and another attempt
      * to access {@link #getInputStream()} will fail. The default implementation returns
      * false, so this must be overridden if your implementation is not reusable.
-     * @return false.
+     * 
+     * @return false
      */
     default public boolean isUsed()
     {

@@ -23,7 +23,11 @@
  */
 
 /**
-* Provides classes for reliably retrieving and handling the OutputStreams from various data sources.
-* These are used when writing content from an Output to a Target.
+* Provides abstraction for writing raw data to a variety of output targets such 
+* as files, classpaths, and byte arrays
+* 
+* @see Output
 */
 package com.invirgance.convirgance.target;
+
+import com.invirgance.convirgance.output.Output;

@@ -24,22 +24,27 @@ package com.invirgance.convirgance.target;
 import java.io.OutputStream;
 
 /**
- * Provides a safe way to write out content to a Object implementing Target.
+ * Abstracts away access to an on-demand OutputStream over a given resource. Most 
+ * implementations are able to provide repeated access to the underlying resource.
+ * However, not all resources can be reused and multiple calls to 
+ * {@link #getOutputStream()} will fail if {@link #isReusable()} returns false.
  * 
- * Used when needing to write data for file operations, network transfers.
  * @author jbanes
  */
 public interface Target
 {  
     /**
-     * Gets the output stream to write to.
-     * @return The {@link OutputStream}.
+     * Returns an {@link OutputStream} over the underlying resource
+     * 
+     * @return an OutputStream
      */
     public OutputStream getOutputStream();
     
     /**
-     * Returns if the output stream for the target can be reused, default true.
-     * @return true.
+     * Returns true if the target is reusable. The default implementation returns
+     * true, so this must be overridden if your implementation is not reusable.
+     * 
+     * @return true
      */
     default public boolean isReusable()
     {
@@ -47,8 +52,11 @@ public interface Target
     }
     
     /**
-     * Returns if the output stream for the target has been used, default false.
-     * @return false.
+     * Returns true if the OutputStream has already been accessed and another attempt
+     * to access {@link #getOutputStream()} will fail. The default implementation returns
+     * false, so this must be overridden if your implementation is not reusable.
+     * 
+     * @return false
      */
     default public boolean isUsed()
     {
