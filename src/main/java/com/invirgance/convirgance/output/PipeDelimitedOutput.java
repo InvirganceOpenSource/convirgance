@@ -26,13 +26,16 @@ package com.invirgance.convirgance.output;
 import com.invirgance.convirgance.ConvirganceException;
 
 /**
- * Support for writing pipe delimited file format
+ * Provides support for writing pipe-delimited files as a stream of data.  
+ * Convenience object for working with pipe-delimited files. Extends 
+ * {@link DelimitedOutput} and sets the delimiter character to the '|' character.
+ * 
  * @author timur
  */
 public class PipeDelimitedOutput extends DelimitedOutput
 {
     /**
-     * Creates a new PipeDelimitedOutput.
+     * Creates a new PipeDelimitedOutput defaulting to UTF-8 text encoding
      */
     public PipeDelimitedOutput()
     {
@@ -40,8 +43,9 @@ public class PipeDelimitedOutput extends DelimitedOutput
     }
     
     /**
-     * Creates a PipeDelimitedOuput with specified columns.
-     * @param columns A String array of column names.
+     * Creates a PipeDelimitedOuput with specified columns
+     * 
+     * @param columns an array of column names
      */
     public PipeDelimitedOutput(String[] columns)
     {
@@ -49,9 +53,11 @@ public class PipeDelimitedOutput extends DelimitedOutput
     }
     
     /**
-     * Overriding the setDelimiter method to throw an exception when usage is attempted.
-     * @param delimiter The delimiter being set.
-     * @throws ConvirganceException always as usage not allowed
+     * Throws an exception when called to prevent the delimiter being
+     * changed from '|'.
+     * 
+     * @param delimiter the new delimiter to set
+     * @throws ConvirganceException thrown always to prevent the delimiter from being changed
      */
     @Override
     public void setDelimiter(char delimiter)

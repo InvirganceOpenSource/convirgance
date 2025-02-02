@@ -26,23 +26,25 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 
 /**
- * Defines a format-specific output factory that utilizes OutputCursors for writing JSON data
- * to targets. Ensuring all data is written to the provided target.
+ * Interface for writing file formats from an Iterable stream of data
+ * 
  * @author jbanes
  */
 public interface Output
 {
     /**
-     * Returns a {@link OutputCursor} to some target that will be written to.
-     * @param target The target to write to.
-     * @return The OutputCursor to write to the provided target.
+     * Opens a stream returns a cursor to write data to the specified target
+     * 
+     * @param target the target to write to
+     * @return an OutputCursor to which data can be written
      */
     public OutputCursor write(Target target);
     
     /**
-     * Used when writing a 'collection' of JSONObjects to some target.
+     * Writes a stream of data to the specified target
+     * 
      * @param target The target to write to.
-     * @param records A 'collection' of JSONObjects to sequentially write.
+     * @param records a stream of data
      * @throws ConvirganceException If an error occurs while writing to the target.
      */
     default public void write(Target target, Iterable<JSONObject> records)

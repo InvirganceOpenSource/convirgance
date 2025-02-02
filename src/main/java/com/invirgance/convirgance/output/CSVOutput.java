@@ -28,7 +28,11 @@ import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
 
 /**
- * Used when writing JSON to CSV that will then be written to some target stream.
+ * Writes data in RFC 4180 compliant CSV format. String data will be quoted with
+ * double quotes, quotes in data will be escaped by two double quotes, and newlines
+ * are allowed in quoted data. Lines are always terminated with CRLF as recommended
+ * by the specification.
+ * 
  * @author tadghh
  */
 public class CSVOutput implements Output
@@ -36,7 +40,7 @@ public class CSVOutput implements Output
     private String[] headers;
     
     /**
-     * Creates a new CSVOutput.
+     * Creates a new CSVOutput
      */
     public CSVOutput()
     {
@@ -44,8 +48,9 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Creates a new CSVOutput only writing the provided columns.
-     * @param headers The columns to include or add while writing.
+     * Creates a new CSVOutput only writing the provided columns
+     * 
+     * @param headers The columns to include or add while writing
      */
     public CSVOutput(String[] headers)
     {
@@ -53,8 +58,9 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Returns the current headers that will be used when writing.
-     * If columns aren't provided, they will be created based on the fields of the first record.
+     * Returns the current headers that will be used when writing. If columns 
+     * aren't provided, they will be created based on the keys found in the first 
+     * record.
      * 
      * @return The headers used while writing.
      * @throws NullPointerException If no headers are set or found.
@@ -65,9 +71,10 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Used to reliably write out data to the provided {@link Target}.
-     * @param target A place to write data, ex File, Network.
-     * @return A CSVOutputCursor.
+     * Creates a new writer to output data to the specified target
+     * 
+     * @param target the target writeable output stream
+     * @return the OutputCursor to write data
      */
     @Override
     public OutputCursor write(Target target)
@@ -78,10 +85,9 @@ public class CSVOutput implements Output
     }
 
     /**
-     * Returns the mime-type for the content that will be output. 
-     * For this specific class it will be 'text/csv'.
+     * Returns the <code>text/csv</code> MIME type
      * 
-     * @return The mime-type.
+     * @return the MIME type
      */
     @Override
     public String getContentType()

@@ -31,7 +31,9 @@ import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Encodes JSON into JBIN and writes it to a target, with optional compression.
+ * Provides support for writing binary encoded JSON data in the JBIN format. Data
+ * can be optionally compressed for lower storage costs in exchange for slower
+ * encoding.
  * 
  * @author jbanes
  */
@@ -49,9 +51,9 @@ public class JBINOutput implements Output
     }
 
     /**
-     * Creates a new JBINOutput, that will use compression depending on the provided value.
+     * Creates a new JBINOutput with an option to enable compression
      *
-     * @param compressed If compression should be used.
+     * @param compressed true if data should be compressed
      */
     public JBINOutput(boolean compressed)
     {
@@ -59,9 +61,9 @@ public class JBINOutput implements Output
     }
 
     /**
-     * Returns if compression is used when writing.
+     * Returns true if compression is used when writing
      *
-     * @return True if compression is enabled, false otherwise
+     * @return true if compression is enabled, false otherwise
      */
     public boolean isCompressed()
     {
@@ -69,15 +71,21 @@ public class JBINOutput implements Output
     }
 
     /**
-     * Enable or disable the usage of compression when writing to a target.
+     * Enable or disable the usage of compression when writing to a target
      *
-     * @param compressed True to enable compression, false to disable it.
+     * @param compressed true to enable compression, false to disable it
      */
     public void setCompressed(boolean compressed)
     {
         this.compressed = compressed;
     }
 
+    /**
+     * Obtain an output cursor to manually write data to the output stream
+     * 
+     * @param target a target to which the data will be written
+     * @return a cursor to write data to
+     */
     @Override
     public OutputCursor write(Target target)
     {

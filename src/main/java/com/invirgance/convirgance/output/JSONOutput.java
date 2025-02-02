@@ -28,15 +28,21 @@ import com.invirgance.convirgance.target.Target;
 import java.io.*;
 
 /**
- * Support for writing JSON formatted data.
+ * Provides support for writing a stream of data as JSON formatted objects. This
+ * format will simulate a JSON array by writing opening and closing brackets along
+ * with commas after each JSON object. This makes the JSON compatible with most
+ * viewer tools and query tools like <code>jq</code>. JSON objects are written 
+ * one per line to make the output easier to verify with unix command-line tools. 
+ * 
  * @author jbanes
  */
 public class JSONOutput implements Output
 {
     /**
-     * Used to reliably write out data to the provided {@link Target}.
-     * @param target A place to write data, ex File, Network.
-     * @return A {@link JSONOutputCursor}.
+     * Obtain an output cursor to manually write data to the output stream
+     * 
+     * @param target a target to which the data will be written
+     * @return a cursor to write data to
      */
     @Override
     public OutputCursor write(Target target)
@@ -45,8 +51,9 @@ public class JSONOutput implements Output
     }
 
     /**
-     * Returns the mime-type 'application/json'.
-     * @return A string with the data's mime-type.
+     * Returns the MIME type 'application/json'
+     * 
+     * @return the mime type for this format
      */
     @Override
     public String getContentType()

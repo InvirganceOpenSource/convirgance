@@ -28,8 +28,13 @@ import java.nio.charset.Charset;
 import java.util.Set;
 
 /**
- * Support for writing delimited file formats like tab delimited and pipe delimited formats.
+ * Support for writing delimited file formats like tab delimited and pipe delimited 
+ * formats. Note that this format does not protect against delimiters appearing
+ * in the data. If you are writing a command-delimited file, it is recommended to
+ * use {@link CSVOutput} instead.
+ * 
  * @author jbanes
+ * @see CSVOutput
  */
 public class DelimitedOutput implements Output
 {
@@ -38,7 +43,7 @@ public class DelimitedOutput implements Output
     private String encoding = "UTF-8";
     
     /**
-     * Creates a new DelimitedOutput, delimiting on '|'.
+     * Creates a new DelimitedOutput defaulting to the pipe character '|'.
      */
     public DelimitedOutput()
     {
@@ -46,8 +51,9 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * Creates a new DelimitedOutput using the provided character to delimit content.
-     * @param delimiter The delimiting character.
+     * Creates a new DelimitedOutput using the provided character to delimit content
+     * 
+     * @param delimiter the delimiting character
      */
     public DelimitedOutput(char delimiter)
     {
@@ -55,7 +61,8 @@ public class DelimitedOutput implements Output
     }
     
     /**
-     * Creates a DelimitedOuput with specified columns.
+     * Creates a DelimitedOuput with specified columns defaulting to the pipe character '|'
+     * 
      * @param columns A String array of column names.
      */
     public DelimitedOutput(String[] columns)
@@ -64,9 +71,10 @@ public class DelimitedOutput implements Output
     }
     
     /**
-     * Creates a DelimitedOuput with specified columns and delimiter.
-     * @param columns A String array of column names.
-     * @param delimiter The character to delimit on.
+     * Creates a DelimitedOuput with specified columns and delimiter
+     * 
+     * @param columns an array of column names.
+     * @param delimiter the character to delimit on
      */
     public DelimitedOutput(String[] columns, char delimiter)
     {
@@ -75,8 +83,9 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * Gets the current character used when delimiting content.
-     * @return The delimiting character in use.
+     * Gets the current character used when writing delimited output
+     * 
+     * @return the delimiting character
      */
     public char getDelimiter()
     {
@@ -84,8 +93,9 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * Sets the character to use when delimiting.
-     * @param delimiter The character to delimit on.
+     * Sets the character to use when writing delimited content
+     * 
+     * @param delimiter the delimiter character
      */
     public void setDelimiter(char delimiter)
     {
@@ -93,8 +103,9 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * Gets the current text encoding.
-     * @return String representation of the encoding.
+     * Gets the current text encoding. Default encoding is "UTF-8".
+     * 
+     * @return the current text encoding format
      */
     public String getEncoding()
     {
@@ -102,8 +113,9 @@ public class DelimitedOutput implements Output
     }
 
     /**
-     * Set the text encoding.
-     * @param encoding Encoding type.
+     * Set the text encoding format. This will override the default of "UTF-8".
+     * 
+     * @param encoding text encoding format
      */
     public void setEncoding(String encoding)
     {
@@ -114,8 +126,8 @@ public class DelimitedOutput implements Output
      * Creates a new writer to output delimited data to the specified target.
      * Uses the current column definitions of this object to format the output.
      * 
-     * @param target The target writeable output stream.
-     * @return The OutputCursor to write delimited data.
+     * @param target the target writeable output stream
+     * @return the OutputCursor to write delimited data
      */
     @Override
     public OutputCursor write(Target target)
@@ -124,8 +136,10 @@ public class DelimitedOutput implements Output
     }
     
     /**
-     * Returns 'text/plain', but if the delimiter in use is ',' 'text/csv' is returned.
-     * @return One of the two content mime types.
+     * Returns <code>text/plain</code> for most delimiters. The exception is a 
+     * comma which returns <code>text/csv</code> instead.
+     * 
+     * @return the MIME type for this format
      */
     @Override
     public String getContentType()

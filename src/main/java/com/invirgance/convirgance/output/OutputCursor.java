@@ -22,27 +22,33 @@ SOFTWARE.
 package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.target.Target;
 import java.util.Iterator;
 
 /**
- * Handles reliably writing out JSON records to an output destination. Supports writing
- * both individual records and collections, with implementations managing the specific 
- * details of the output destination (e.g. files, databases, network streams).
+ * A cursor for manually writing data to a given {@link Output} format. Obtaining
+ * a cursor from an Output is ideal when you are pulling or generating records
+ * from disparate sources and need precise control over writing to the the
+ * output stream. If you don't need manual control, consider calling 
+ * {@link Output#write(Target, Iterable)} instead.
  * 
  * @author jbanes
+ * @see Output#write(Target)
  */
 public interface OutputCursor extends AutoCloseable
 {
-    
     /**
-     * Used to write a record to the stream.
-     * @param record The {@link JSONObject} to write.
+     * Write a single record to the output stream
+     * 
+     * @param record the {@link JSONObject} to write
      */
     public void write(JSONObject record);
     
     /**
-     * Used to write a 'collection' of {@link JSONObject} to the stream.
-     * @param iterable The iterable of JSONObjects to write.
+     * Write a stream of data to the output stream. This call does not close
+     * the cursor and can be called repeatedly as needed.
+     * 
+     * @param iterable a stream a data to write
      */
     default public void write(Iterable<JSONObject> iterable)
     {
@@ -50,8 +56,10 @@ public interface OutputCursor extends AutoCloseable
     }
     
     /**
-     * Writes each {@link JSONObject} in the iterator to the source.
-     * @param iterator The iterator of JSONObjects to write.
+     * Write a stream of data to the output stream. This call does not close
+     * the cursor and can be called repeatedly as needed.
+     * 
+     * @param iterator a stream a data to write
      */
     default public void write(Iterator<JSONObject> iterator)
     {

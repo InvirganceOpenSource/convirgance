@@ -26,13 +26,16 @@ package com.invirgance.convirgance.output;
 import com.invirgance.convirgance.ConvirganceException;
 
 /**
- * Support for writing tab delimited file format
+ * Provides support for writing tab-delimited (tsv) files as a stream of data.  
+ * Convenience object for working with tab-delimited files. Extends 
+ * {@link DelimitedOutput} and sets the delimiter character to the '\t' character.
+ * 
  * @author timur
  */
 public class TabDelimitedOutput extends DelimitedOutput
 {
     /**
-     * Creates a new TabeDelimitedOutput.
+     * Creates a new TabeDelimitedOutput
      */
     public TabDelimitedOutput()
     {
@@ -40,8 +43,9 @@ public class TabDelimitedOutput extends DelimitedOutput
     }
     
     /**
-     * Creates a TabDelimitedOuput with specified columns.
-     * @param columns A String array of column names.
+     * Creates a TabDelimitedOuput with specified columns
+     * 
+     * @param columns a String array of column names
      */
     public TabDelimitedOutput(String[] columns)
     {
@@ -49,9 +53,11 @@ public class TabDelimitedOutput extends DelimitedOutput
     }
     
     /**
-     * Overriding the setDelimiter method to throw an exception when usage is attempted.
-     * @param delimiter The delimiter being set.
-     * @throws ConvirganceException always as usage not allowed
+     * Throws an exception when called to prevent the delimiter being
+     * changed from '\t'.
+     * 
+     * @param delimiter the new delimiter to set
+     * @throws ConvirganceException thrown always to prevent the delimiter from being changed
      */
     @Override
     public void setDelimiter(char delimiter)
