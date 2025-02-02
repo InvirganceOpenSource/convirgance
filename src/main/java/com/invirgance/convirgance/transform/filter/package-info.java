@@ -23,8 +23,7 @@
  */
 
 /**
- * Provides filter implementations for transforming and evaluating JSONObjects 
- * based on specified conditions. This package includes classes for combining 
- * filters using logical operations and comparing field values.
+ * Provides transformers to filter data from streams based upon common 
+ * logic like equals, great than, less than, etc.
  */
 package com.invirgance.convirgance.transform.filter;

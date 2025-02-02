@@ -23,8 +23,7 @@
  */
 
 /**
- * A library of transformers for processing streams of JSON objects efficiently.
- * Provides a collection of reusable components for common data transformation tasks.
+ * A library transformers for manipulating streams of data
  * 
  * <p>Key features of this package:</p>
  * <ul>
