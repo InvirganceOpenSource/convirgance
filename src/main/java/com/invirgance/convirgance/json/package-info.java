@@ -23,8 +23,18 @@
  */
 
 /**
-* Provides classes for reading, writing, and manipulating JSON data.
-* This package supports standard JSON data types and formatting according to the
-* JSON specification.
+* Provides classes for reading, writing, and manipulating JSON data. This package 
+* supports standard JSON data types and formatting according to the JSON 
+* specification.
+* <br><br>
+* The implementation is similar to the official <code>org.json</code> package
+* with the key improvement that the implementation plugs into the Java
+* Collections Framework (JCF). {@link JSONObject} implements {@link Map} and 
+* {@link JSONArray} implements {@link List}. This provides greater flexibility 
+* when working with parsed JSON data and makes the objects compatible with any 
+* APIs or frameworks that understands Maps and Lists.
 */
 package com.invirgance.convirgance.json;
+
+import java.util.List;
+import java.util.Map;

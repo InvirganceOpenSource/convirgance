@@ -458,7 +458,7 @@ public class JSONParser implements AutoCloseable
         
         //TODO: String, number, boolean, null
         
-        throw new IOException("Unrecognized character: " + c);
+        throw new IOException("Unrecognized character: " + c + " (" + (int)c + ")");
     }
     
     /**

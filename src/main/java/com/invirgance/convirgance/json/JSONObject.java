@@ -104,8 +104,9 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Returns if the object is ordered or unordered.
-     * @return True (ordered) or false (unordered).
+     * Returns if ordering is maintained on the insert of keys
+     * 
+     * @return true (ordered) or false (unordered).
      */
     public boolean isOrdered()
     {
@@ -113,9 +114,8 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-    * Controls whether this object's map maintains key order.
-    * If switching to ordered mode, creates and populates a new OrderedKeys collection 
-    * with the current map's keys. If disabling order, clears the OrderedKeys collection.
+    * Controls whether this object's map maintains key order
+    * 
     * @param ordered true to enable key ordering, false to disable it.
     */
     public void setOrdered(boolean ordered)
@@ -136,8 +136,9 @@ public class JSONObject implements Map<String, Object>
     
     
     /**
-     * Returns the size of the JSONObjects map.
-     * @return The size.
+     * Returns the number of entries in this Map
+     * 
+     * @return the count of entries
      */
     @Override
     public int size()
@@ -146,8 +147,9 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Returns if the JSONObjects map is empty.
-     * @return True if empty, otherwise false.
+     * Returns true if this Map is empty
+     * 
+     * @return true if empty, otherwise false.
      */
     @Override
     public boolean isEmpty()
@@ -156,11 +158,10 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Checks if a key's value is null.
-     * Returns true if the key itself is not present.
-     * Or if the key's value is null.
-     * @param key The key.
-     * @return If the key is not present or the key's value is null.
+     * Checks if a key's value is null including if the key is not present
+     * 
+     * @param key the key to check
+     * @return true if the key is not present or the key's value is null
      */
     public boolean isNull(String key)
     {
@@ -168,9 +169,10 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Used to check if the JSONObject contains a key.
-     * @param key The key.
-     * @return If the key is present.
+     * Used to check if the JSONObject contains a key
+     * 
+     * @param key the key to check
+     * @return true if the key is present
      */
     @Override
     public boolean containsKey(Object key)
@@ -180,8 +182,9 @@ public class JSONObject implements Map<String, Object>
 
     /**
      * Used to check if the JSONObject contains a given value.
-     * @param value The value.
-     * @return If the value is present.
+     * 
+     * @param value the value to look for
+     * @return true if the value is present
      */
     @Override
     public boolean containsValue(Object value)
@@ -190,9 +193,10 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Gets the value for the provided key.
-     * @param key The key.
-     * @return Null if they key is not present, otherwise the key's value.
+     * Gets the value for the provided key
+     * 
+     * @param key the key to look up
+     * @return the key's value or null if not present
      */
     @Override
     public Object get(Object key)
@@ -513,9 +517,9 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Returns the string representation of the JSONObject.
-     * @return A string.
-     * @throws ConvirganceException If an issue occurs while creating the string from the object.
+     * Returns the string representation of the JSONObject in JSON notation
+     * @return a JSON string
+     * @throws ConvirganceException if an error occurs while serializing the object to JSON
      */
     @Override
     public String toString()
@@ -528,10 +532,11 @@ public class JSONObject implements Map<String, Object>
     }
 
     /**
-     * Returns a JSON string of this object.
-     * @param indent The number of spaces to use for each level of indentation.
-     * @return A formatted JSON string representation of this object.
-     * @throws ConvirganceException If the JSONWriter encounters an error during string conversion.
+     * Converts this JSONObject to a formatted JSON string with specified indentation
+     * 
+     * @param indent the number of spaces to use for each level of indentation
+     * @return a formatted JSON string representation of this object
+     * @throws ConvirganceException if an error occurs while serializing the object to JSON
      */
     public String toString(int indent)
     {
@@ -543,9 +548,11 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Used to see if another object has the same key value pairs.
-     * @param obj The object to compare to.
-     * @return True, if the two objects have the same key value pairs.
+     * Returns true if <code>obj</code> is also a JSONObject and contains
+     * the same list of key/value pairs. Key ordering is not taken into account.
+     * 
+     * @param obj the object to compare to
+     * @return true if the passed in object is equal to this object
      */
     @Override
     public boolean equals(Object obj)
@@ -580,8 +587,9 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Creates a hashcode from this objects values.
-     * @return A hashcode.
+     * Creates stable hash code based on the key/value pairs in this object
+     * 
+     * @return a hashed representation of this object
      */
     @Override
     public int hashCode()

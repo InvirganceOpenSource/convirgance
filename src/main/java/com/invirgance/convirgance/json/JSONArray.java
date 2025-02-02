@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * A List implementation to work with JSON data as an array.
+ * A List implementation that supports JSON array data
  * 
  * @author jbanes
  * @param <T> Optional typing to apply to the array
@@ -389,11 +389,11 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
-     * Converts this JSONArray to a formatted JSON string with indentation.
+     * Converts this JSONArray to a formatted JSON string with specified indentation
      *
-     * @param indent The indentation to use for the JSONWriter.
-     * @return A formatted JSON string representation of this array.
-     * @throws ConvirganceException If there is an error during JSON writing.
+     * @param indent the number of spaces to indent when formatting the JSON
+     * @return a formatted JSON string representation of this array.
+     * @throws ConvirganceException if an error occurs while serializing the JSON
      */
     public String toString(int indent)
     {
@@ -405,9 +405,11 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
-     * Checks if the provided JSONArray is the exact same as this.
-     * @param obj The comparison array.
-     * @return True if the arrays contain exactly identical items.
+     * Checks if the provided object is also a JSONArray and has the same 
+     * contents in the same order
+     * 
+     * @param obj the comparison array.
+     * @return true if the arrays contain exactly identical items, false otherwise
      */
     @Override
     public boolean equals(Object obj)
@@ -445,8 +447,9 @@ public class JSONArray<T> implements List<T>
     }
 
     /**
-     * Creates a based on the values in the array.
-     * @return A hashcode.
+     * Creates stable hash code based on the values in the array
+     * 
+     * @return a hashed representation of this object
      */
     @Override
     public int hashCode()

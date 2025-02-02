@@ -26,7 +26,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 /**
- * Converts data into JSON format and writes it to an output stream.
+ * Serializes data into JSON format and writes it to an output stream
  *
  * @author jbanes
  */
@@ -38,7 +38,7 @@ public class JSONWriter implements AutoCloseable
     private int level;
 
     /**
-     * Creates a new JSONWriter.
+     * Creates a new JSONWriter that writes to a memory buffer
      */
     public JSONWriter()
     {
@@ -46,8 +46,8 @@ public class JSONWriter implements AutoCloseable
     }
 
     /**
-     * Creates a new JSONWriter that will use the provided indentation when
-     * writing.
+     * Creates a new JSONWriter that writes to a memory buffer and formats the
+     * JSON with the provided indentation
      *
      * @param indent The indentation to use when writing.
      */
@@ -379,8 +379,11 @@ public class JSONWriter implements AutoCloseable
     }
     
     /**
-     * Returns the JSON content written so far.
-     * @return A string of JSON content.
+     * Returns the JSON content written so far if writing to a memory buffer. If
+     * writing to an output stream, the default implementation of {@link Object#toString()}
+     * will be returned.
+     * 
+     * @return a string of JSON content
      */
     @Override
     public String toString()
