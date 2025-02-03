@@ -23,6 +23,7 @@
  */
 package com.invirgance.convirgance.output;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.input.CSVInput;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
@@ -33,6 +34,8 @@ import com.invirgance.convirgance.target.OutputStreamTarget;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -306,5 +309,31 @@ public class CSVOutputTest
         }
       
         assertTrue(Arrays.equals(output.getHeaders(),headers));                 
+    }
+    
+    /**
+     * Make sure CSVOutput throws an exception when using invalid encoding.
+     */
+    @Test
+    public void testBadEncodingSet()
+    {
+        String test = "["
+                + "{\"name\":\"John\", \"age\":\"30\"},"
+                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
+                + "]";
+
+        ByteArrayTarget target = new ByteArrayTarget();   
+        CSVOutput output = new CSVOutput();
+        
+        output.setEncoding("Base64");
+        Exception exception = assertThrows(ConvirganceException.class, () ->
+        {
+            try (OutputCursor cursor = output.write(target))
+            {
+                cursor.write(new JSONArray(test));
+            }
+        });
+        
+        assertEquals("Failed to initialize CSV output writer", exception.getMessage());
     }
 }

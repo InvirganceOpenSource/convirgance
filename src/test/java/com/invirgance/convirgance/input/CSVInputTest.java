@@ -252,6 +252,31 @@ public class CSVInputTest
         assertArrayEquals(tester.getHeaders(), expected);
     }
     
+    /**
+     * Make sure CSVInput throws an exception when using invalid encoding.
+     */
+    @Test
+    public void testBadEncodingSet()
+    {
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+        tester.setEncoding("Base64");
+        String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
+
+        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        
+        Exception exception = assertThrows(ConvirganceException.class, () ->
+        {
+            for (JSONObject item : tester.read(source))
+            {
+                output.add(item);
+            }
+        });
+      
+        assertEquals("Failed to initialize CSV reader", exception.getMessage());
+    }
+    
     
     /**
      * Test that an exception will be raised if the header is missing. 

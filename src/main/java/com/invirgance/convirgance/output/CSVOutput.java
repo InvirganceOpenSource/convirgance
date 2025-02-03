@@ -23,6 +23,7 @@
  */
 package com.invirgance.convirgance.output;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
@@ -204,8 +205,15 @@ public class CSVOutput implements Output
             
             if(out == null) 
             {
-                out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
-        
+                try
+                {
+                    out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
+                }
+                catch (Exception e)
+                {
+                    throw new ConvirganceException("Failed to initialize CSV output writer", e);
+                }
+                
                 stringify(headers);
                 out.print("\r\n");                
             }
