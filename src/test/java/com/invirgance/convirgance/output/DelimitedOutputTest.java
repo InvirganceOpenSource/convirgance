@@ -23,9 +23,8 @@ package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.ByteArrayTarget;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -48,7 +47,7 @@ public class DelimitedOutputTest
         record.put("Column 2", "Value 2");
         record.put("Column 3", "Value 3");
         
-        try(var cursor = output.write(target))
+        try(OutputCursor cursor = output.write(target))
         {
             cursor.write(record);
         }
@@ -73,7 +72,7 @@ public class DelimitedOutputTest
         record.put("Column 2", "Value 2");
         record.put("Column 3", "Value 3");
         
-        try(var cursor = output.write(target))
+        try(OutputCursor cursor = output.write(target))
         {
             record.put("Column 1", "Value 1");
             record.put("Column 2", "Value 2");

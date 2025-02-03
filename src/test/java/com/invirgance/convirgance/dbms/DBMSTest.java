@@ -33,9 +33,9 @@ import java.io.File;
 import java.util.Iterator;
 import javax.sql.DataSource;
 import org.hsqldb.jdbc.JDBCDataSource;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -78,22 +78,20 @@ public class DBMSTest
         source.setUser("SA");
         source.setPassword("");
         
-        dbms.update(new QueryOperation(new Query("""
-                             create table CUSTOMER (
-                                 CUSTOMER_ID INTEGER,
-                                 DISCOUNT_CODE CHAR(1),
-                                 ZIP VARCHAR(10),
-                                 NAME VARCHAR(30),
-                                 ADDRESSLINE1 VARCHAR(30),
-                                 ADDRESSLINE2 VARCHAR(30),
-                                 CITY VARCHAR(25),
-                                 STATE CHAR(2),
-                                 PHONE CHAR(12),
-                                 FAX CHAR(12),
-                                 EMAIL VARCHAR(40),
-                                 CREDIT_LIMIT INTEGER
-                             )
-                             """)));
+        dbms.update(new QueryOperation(new Query("create table CUSTOMER (\n" +
+"                                 CUSTOMER_ID INTEGER,\n" +
+"                                 DISCOUNT_CODE CHAR(1),\n" +
+"                                 ZIP VARCHAR(10),\n" +
+"                                 NAME VARCHAR(30),\n" +
+"                                 ADDRESSLINE1 VARCHAR(30),\n" +
+"                                 ADDRESSLINE2 VARCHAR(30),\n" +
+"                                 CITY VARCHAR(25),\n" +
+"                                 STATE CHAR(2),\n" +
+"                                 PHONE CHAR(12),\n" +
+"                                 FAX CHAR(12),\n" +
+"                                 EMAIL VARCHAR(40),\n" +
+"                                 CREDIT_LIMIT INTEGER\n" +
+"                             )")));
         
         for(JSONObject record : new JSONInput().read(new FileSource(new File("src/test/resources/dbms/delimited/customer.json"))))
         {

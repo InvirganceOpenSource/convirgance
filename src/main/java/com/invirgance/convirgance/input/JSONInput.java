@@ -62,7 +62,7 @@ public class JSONInput implements Input<JSONObject>
             this.source = source;
         }
         
-        private static boolean find(BufferedReader reader) throws IOException
+        private boolean find(BufferedReader reader) throws IOException
         {
             int c;
             
@@ -91,7 +91,7 @@ public class JSONInput implements Input<JSONObject>
             return true;
         }
         
-        private static JSONObject read(BufferedReader reader, JSONParser parser)
+        private JSONObject read(BufferedReader reader, JSONParser parser)
         {
             try
             {

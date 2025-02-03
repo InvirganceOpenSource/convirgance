@@ -51,7 +51,7 @@ public interface Output
     {
         try(OutputCursor cursor = write(target))
         {
-            for(var record : records)
+            for(JSONObject record : records)
             {
                 cursor.write(record);
             }
