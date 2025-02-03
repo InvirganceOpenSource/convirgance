@@ -60,7 +60,7 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Set the content encoding to use on the input
+     * Set the file encoding to use for the output
      *
      * @param encoding The content encoding to use
      */
@@ -70,7 +70,7 @@ public class CSVOutput implements Output
     }
 
     /**
-     * Returns the file encoding being used on the input
+     * Returns the file encoding being used for the output
      *
      * @return The current expected content encoding
      */
@@ -80,7 +80,7 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Set the headers to use when reading in CSV values
+     * Set the headers to use when writing out CSV values
      *
      * @param columns The column headers.
      */
