@@ -28,6 +28,7 @@ import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.ByteArraySource;
 import com.invirgance.convirgance.source.InputStreamSource;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -223,6 +224,32 @@ public class CSVInputTest
         JSONArray expected = new JSONArray("[{\"Name\":\"John\"},{\"Name\":\"Alice\"}]");
 
         assertEquals(expected, output);
+    }
+    
+    /**
+     * Make sure CSVInput headers are updated (if needed) when the cursor is run.
+     */
+    @Test
+    public void testHeadersSync()
+    {
+        String[] expected = new String[]
+        {
+            "Name","Age","City"
+        };
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+       
+        String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
+
+        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+    
+        assertArrayEquals(tester.getHeaders(), expected);
     }
     
     

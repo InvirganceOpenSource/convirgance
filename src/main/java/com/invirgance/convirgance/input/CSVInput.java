@@ -30,7 +30,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ import java.util.List;
  */
 public class CSVInput implements Input<JSONObject>
 {
-    private String encoding; 
+    private String encoding = "UTF-8"; 
     private String[] headers;
     
     /**
@@ -52,7 +51,7 @@ public class CSVInput implements Input<JSONObject>
      */
     public CSVInput()
     {
-        this(null, "UTF-8");
+        this(null);
     }
     
     /**
@@ -60,12 +59,10 @@ public class CSVInput implements Input<JSONObject>
      * The encoding parameter can be changed to support the input file's encoding.
      * 
      * @param headers The headers to use when reading.
-     * @param encoding The files encoding.
      */
-    public CSVInput(String[] headers, String encoding)
+    public CSVInput(String[] headers)
     {
-        this.headers = headers;    
-        this.encoding = encoding;
+        this.headers = headers;
     }
     
     /**
@@ -85,6 +82,16 @@ public class CSVInput implements Input<JSONObject>
     }
 
     /**
+     * Set the content encoding to use on the input
+     *
+     * @param encoding The content encoding to use
+     */
+    public void setEncoding(String encoding)
+    {
+        this.encoding = encoding;
+    }
+    
+    /**
      * Returns the file encoding being used on the input
      *
      * @return The current expected content encoding
@@ -95,13 +102,13 @@ public class CSVInput implements Input<JSONObject>
     }
 
     /**
-     * Set the content encoding to use on the input
-     * 
-     * @param encoding The content encoding to use
+     * Set the headers to use when reading in CSV values
+     *
+     * @param columns The column headers.
      */
-    public void setEncoding(String encoding)
+    public void setHeaders(String[] columns)
     {
-        this.encoding = encoding;
+        this.headers = columns;
     }
     
     /**
@@ -114,29 +121,19 @@ public class CSVInput implements Input<JSONObject>
         return headers;
     }
 
-    /**
-     * Set the headers to use when reading in CSV values
-     * 
-     * @param columns The column headers.
-     */
-    public void setHeaders(String[] columns)
-    {
-        this.headers = columns;
-    }    
-    
     private class CSVInputCursor implements InputCursor<JSONObject>
     {
         private final Source source;  
         private final StringBuilder builder = new StringBuilder();
         
-        private List<String> headers;
+        private String[] headers;
         private String nextLine;
         private String headerLine;
         private String append;        
 
         public CSVInputCursor(Source source, String[] headers)
         {
-            if(headers != null) this.headers = Arrays.asList(headers);
+            if(headers != null) this.headers = headers;
             
             this.source = source;
         }
@@ -157,7 +154,9 @@ public class CSVInput implements Input<JSONObject>
                         {
                             if (headerLine != null)
                             {
-                                headers = parseCSVLine(headerLine);
+                                headers = parseCSVLine(headerLine).toArray(new String[0]);
+                              
+                                CSVInput.this.headers = headers;
                             }
                             else
                             {
@@ -279,11 +278,11 @@ public class CSVInput implements Input<JSONObject>
                 {
                     JSONObject record = new JSONObject(true);
                     
-                    for (int i = 0; i < Math.min(headers.size(), values.size()); i++)
+                    for (int i = 0; i < Math.min(headers.length, values.size()); i++)
                     {
                         append = values.get(i);
                         
-                        record.put(headers.get(i), append.isEmpty() ? null : append);
+                        record.put(headers[i], append.isEmpty() ? null : append);
                     }
                     
                     return record;

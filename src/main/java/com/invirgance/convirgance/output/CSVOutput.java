@@ -26,6 +26,7 @@ package com.invirgance.convirgance.output;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
 /**
  * Writes data in RFC 4180 compliant CSV format. String data will be quoted with
@@ -37,6 +38,7 @@ import java.io.PrintWriter;
  */
 public class CSVOutput implements Output
 {
+    private String encoding = "UTF-8";
     private String[] headers;
     
     /**
@@ -55,6 +57,36 @@ public class CSVOutput implements Output
     public CSVOutput(String[] headers)
     {
         this.headers = headers;
+    }
+    
+    /**
+     * Set the content encoding to use on the input
+     *
+     * @param encoding The content encoding to use
+     */
+    public void setEncoding(String encoding)
+    {
+        this.encoding = encoding;
+    }
+
+    /**
+     * Returns the file encoding being used on the input
+     *
+     * @return The current expected content encoding
+     */
+    public String getEncoding()
+    {
+        return encoding;
+    }
+    
+    /**
+     * Set the headers to use when reading in CSV values
+     *
+     * @param columns The column headers.
+     */
+    public void setHeaders(String[] columns)
+    {
+        this.headers = columns;
     }
     
     /**
@@ -172,8 +204,8 @@ public class CSVOutput implements Output
             
             if(out == null) 
             {
-                out = new PrintWriter(target.getOutputStream(), false);
-                
+                out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
+        
                 stringify(headers);
                 out.print("\r\n");                
             }
