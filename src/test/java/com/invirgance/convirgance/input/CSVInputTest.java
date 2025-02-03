@@ -61,7 +61,7 @@ public class CSVInputTest
         
         return output;
     }
-    
+ 
     /**
      * Simple read test.
      */
@@ -194,6 +194,38 @@ public class CSVInputTest
         assertCSVEquals(test, expected, "CSV with escaped quotes.");
     }
 
+    
+    /**
+     * Test that headers can be predefined, and any other headers values are removed.
+     */
+    @Test
+    public void testSetHeaders()
+    {
+        String[] example = new String[]
+        {
+            "Name"
+        };
+        JSONArray output = new JSONArray();
+
+        CSVInput tester = new CSVInput();
+        tester.setHeaders(example);
+
+        String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
+
+        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+
+        JSONArray expected = new JSONArray("[{\"Name\":\"John\"},{\"Name\":\"Alice\"}]");
+
+        assertEquals(expected, output);
+    }
+    
+    
     /**
      * Test that an exception will be raised if the header is missing. 
      * This test could be improved, there's no way to define missing header as 

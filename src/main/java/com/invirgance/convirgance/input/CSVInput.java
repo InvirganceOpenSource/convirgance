@@ -30,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +41,33 @@ import java.util.List;
  */
 public class CSVInput implements Input<JSONObject>
 {
-
+    private String encoding; 
+    private String[] headers;
+    
+    /**
+     * Creates a new CSVInput.
+     * 
+     * By default no headers are selected, they will be auto-detected. 
+     * The expected file encoding is UTF-8, this can be changed with setEncoding()
+     */
+    public CSVInput()
+    {
+        this(null, "UTF-8");
+    }
+    
+    /**
+     * Creates a new CSVInput with an array of headers to use when reading. 
+     * The encoding parameter can be changed to support the input file's encoding.
+     * 
+     * @param headers The headers to use when reading.
+     * @param encoding The files encoding.
+     */
+    public CSVInput(String[] headers, String encoding)
+    {
+        this.headers = headers;    
+        this.encoding = encoding;
+    }
+    
     /**
      * Used to iterate across a source contains CSV values, converting them into JSONObjects.
      *
@@ -54,13 +81,52 @@ public class CSVInput implements Input<JSONObject>
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
-        return new CSVInputCursor(source);
+        return new CSVInputCursor(source, headers);
     }
 
+    /**
+     * Returns the file encoding being used on the input
+     *
+     * @return The current expected content encoding
+     */
+    public String getEncoding()
+    {
+        return encoding;
+    }
+
+    /**
+     * Set the content encoding to use on the input
+     * 
+     * @param encoding The content encoding to use
+     */
+    public void setEncoding(String encoding)
+    {
+        this.encoding = encoding;
+    }
+    
+    /**
+     * Returns the column headers of the expected input content
+     * 
+     * @return The column headers
+     */
+    public String[] getHeaders()
+    {
+        return headers;
+    }
+
+    /**
+     * Set the headers to use when reading in CSV values.
+     * 
+     * @param columns The column headers.
+     */
+    public void setHeaders(String[] columns)
+    {
+        this.headers = columns;
+    }    
+    
     private class CSVInputCursor implements InputCursor<JSONObject>
     {
-        
-        private final BufferedReader reader;
+        private final Source source;  
         private final StringBuilder builder = new StringBuilder();
         
         private List<String> headers;
@@ -68,29 +134,36 @@ public class CSVInput implements Input<JSONObject>
         private String headerLine;
         private String append;        
 
-        public CSVInputCursor(Source source)
+        public CSVInputCursor(Source source, String[] headers)
         {
-            reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
+            if(headers != null) this.headers = Arrays.asList(headers);
+            
+            this.source = source;
         }
 
         @Override
         public CloseableIterator<JSONObject> iterator()
         {
             return new CloseableIterator<JSONObject>(){
-
+                private BufferedReader reader;
                 {
                     try
-                    {                   
+                    {          
+                        reader = new BufferedReader(new InputStreamReader(source.getInputStream(), encoding));
+                        
                         headerLine = reader.readLine();
-
-                        if (headerLine != null)
+                        
+                        if (headers == null)
                         {
-                            headers = parseCSVLine(headerLine);
-                        }
-                        else
-                        {
-                            throw new ConvirganceException("CSV file is empty - no header row found.");
-                        }        
+                            if (headerLine != null)
+                            {
+                                headers = parseCSVLine(headerLine);
+                            }
+                            else
+                            {
+                                throw new ConvirganceException("CSV file is empty - no header row found.");
+                            }
+                        }                    
                         
                         nextLine = reader.readLine();
                     }
