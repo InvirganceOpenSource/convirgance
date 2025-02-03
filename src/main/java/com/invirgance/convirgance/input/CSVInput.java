@@ -56,7 +56,7 @@ public class CSVInput implements Input<JSONObject>
     }
     
     /**
-     * Creates a new CSVInput with an array of headers to use when reading. 
+     * Creates a new CSVInput with an array of headers to use when reading.
      * The encoding parameter can be changed to support the input file's encoding.
      * 
      * @param headers The headers to use when reading.
@@ -105,7 +105,7 @@ public class CSVInput implements Input<JSONObject>
     }
     
     /**
-     * Returns the column headers of the expected input content
+     * Returns the column headers to use when getting values for JSONObjects
      * 
      * @return The column headers
      */
@@ -115,7 +115,7 @@ public class CSVInput implements Input<JSONObject>
     }
 
     /**
-     * Set the headers to use when reading in CSV values.
+     * Set the headers to use when reading in CSV values
      * 
      * @param columns The column headers.
      */
@@ -149,7 +149,7 @@ public class CSVInput implements Input<JSONObject>
                 {
                     try
                     {          
-                        reader = new BufferedReader(new InputStreamReader(source.getInputStream(), encoding));
+                        reader = new BufferedReader(new InputStreamReader(source.getInputStream(), encoding), 16 * 1024);
                         
                         headerLine = reader.readLine();
                         
