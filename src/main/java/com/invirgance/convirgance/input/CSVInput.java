@@ -158,7 +158,7 @@ public class CSVInput implements Input<JSONObject>
                             {
                                 headers = parseCSVLine(headerLine).toArray(new String[0]);
 
-                                CSVInput.this.headers = headers;
+                                CSVInput.this.setHeaders(headers);
                             }
                             else
                             {
