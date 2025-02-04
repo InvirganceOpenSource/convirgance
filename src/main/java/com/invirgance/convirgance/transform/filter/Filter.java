@@ -24,6 +24,7 @@ package com.invirgance.convirgance.transform.filter;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.Transformer;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 /**
  * Defines a filter that evaluates each record in a collection against a
@@ -32,7 +33,7 @@ import java.util.Iterator;
  *
  * @author jbanes
  */
-public interface Filter extends Transformer
+public interface Filter extends Transformer, Predicate<JSONObject>
 {
     @Override
     public default Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
@@ -95,5 +96,6 @@ public interface Filter extends Transformer
      * @param record The JSONObject to test.
      * @return If the record passed or failed.
      */
+    @Override
     public boolean test(JSONObject record);
 }
