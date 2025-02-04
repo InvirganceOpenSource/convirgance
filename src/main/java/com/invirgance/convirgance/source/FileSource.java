@@ -37,6 +37,16 @@ public class FileSource implements Source
     private final File file;
 
     /**
+     * Creates a new FileSource based on the provided path.
+     * 
+     * @param path a path to the underlying file resource
+     */
+    public FileSource(String path)
+    {
+        this(new File(path));
+    }
+    
+    /**
      * Creates a new FileSource based on the provided File.
      * 
      * @param file the underlying file resource
