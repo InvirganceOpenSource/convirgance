@@ -92,7 +92,7 @@ public class CSVInputTest
     }
     
     /**
-     *  Make sure multiple + quoted new lines are parsed correctly.
+     * Make sure multiple + quoted new lines are parsed correctly.
      */
     @Test
     public void testMultiplenewLineInQuotes()
