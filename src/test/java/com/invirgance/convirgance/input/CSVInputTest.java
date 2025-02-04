@@ -35,7 +35,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests to insure CSVs are properly parsed to JSON.
+ * Tests to ensure CSVs are properly parsed according to RFC 4180. 
+ * The expected output is a JSONObject for each row of values. 
+ * 
+ * If a value is missing it will be considered blank.
+ * If headers are provided and the CSV file has its own headers the files headers will be considered a row of values (you will end up with a JSONObject of headers).
  * 
  * @author tadghh
  */
