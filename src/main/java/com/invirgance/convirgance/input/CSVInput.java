@@ -92,7 +92,7 @@ public class CSVInput implements Input<JSONObject>
     }
     
     /**
-     * Returns the file encoding being used on the input
+     * Returns the file encoding being used to read the input stream
      *
      * @return The current expected content encoding
      */
@@ -102,8 +102,10 @@ public class CSVInput implements Input<JSONObject>
     }
 
     /**
-     * Set the headers to use when reading in CSV values
-     *
+     * Set the headers to use when reading in CSV values. 
+     * These headers will also be used as the fields for any new JSONObjects.
+     * If the CSV file has no headers of its own the values will be mapped in the order they occur in the columns array. (element1: value1, element2: value2)
+     * 
      * @param columns The column headers.
      */
     public void setHeaders(String[] columns)
@@ -112,7 +114,7 @@ public class CSVInput implements Input<JSONObject>
     }
     
     /**
-     * Returns the column headers to use when getting values for JSONObjects
+     * Returns the headers that will be used as the fields for JSONObjects
      * 
      * @return The column headers
      */
@@ -278,7 +280,7 @@ public class CSVInput implements Input<JSONObject>
                 {
                     JSONObject record = new JSONObject(true);
                     
-                    for (int i = 0; i < Math.min(headers.length, values.size()); i++)
+                    for (int i = 0; i < headers.length; i++)
                     {
                         append = values.get(i);
                         
