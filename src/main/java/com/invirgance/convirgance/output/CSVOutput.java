@@ -196,7 +196,8 @@ public class CSVOutput implements Output
             }
         }
           
-        private void initialize(JSONObject firstRecord) {
+        private void initialize(JSONObject firstRecord) 
+        {
             if (initialized) return;
             
             try 
