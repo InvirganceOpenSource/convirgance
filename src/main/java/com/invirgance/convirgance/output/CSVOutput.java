@@ -147,14 +147,11 @@ public class CSVOutput implements Output
             this(target, null);
         }
         
-        private String escapeAndQuoteValue(Object value)
+        private String escapeAndQuoteValue(String value)
         {
             boolean needsQuoting;
-            String evaluate;
+            String evaluate = value;
             
-            if (value == null) return "";
-            
-            evaluate = value.toString();
             needsQuoting = evaluate.contains(",")
                     || evaluate.contains("\"")
                     || evaluate.contains("\n")
@@ -173,13 +170,19 @@ public class CSVOutput implements Output
         private void stringify(JSONObject record)
         {
             boolean first = true;
+            Object value;
+            String processed;
             
             for (String header : headers)
             {
                 if (!first) out.append(',');
                 
                 first = false;
-                out.append(escapeAndQuoteValue(record.get(header)));
+                value = record.get(header);
+                
+                processed = value == null ? "" : escapeAndQuoteValue(value.toString());
+                
+                out.append(processed);
             }
         }
 
