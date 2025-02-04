@@ -277,11 +277,12 @@ public class CSVOutputTest
     
     /**
      * Make sure CSVOutput headers are updated (if needed) when the cursor is run.
+     * Note: Headers are taken from the keys of the first JSONObject, notice that quote will not be included.
      */
     @Test
     public void testHeaderSync() throws Exception
     {
-        String[] headers = new String[]{"name","age"};
+        String[] headers = new String[]{ "name", "age" };
         String test = "["
                 + "{\"name\":\"John\", \"age\":\"30\"},"
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
@@ -309,6 +310,45 @@ public class CSVOutputTest
         }
         
         assertArrayEquals(headers, output.getHeaders());                
+    }
+    
+    /**
+     * Make sure CSVOutput uses the provided headers.
+     */
+    @Test
+    public void testHeaderUseOnlyProvidedValues() throws Exception
+    {
+        String[] headers = new String[]{ "name" };
+        String test = "["
+                + "{\"name\":\"John\", \"age\":\"30\"},"
+                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
+                + "]";
+        JSONArray expected = new JSONArray("[{\"name\":\"John\"},{\"name\":\"Bob\"}]");
+        JSONArray verify = new JSONArray();
+        
+        InputStreamSource source;
+        ByteArraySource stream;
+        ByteArrayTarget target = new ByteArrayTarget();   
+        
+        CSVOutput output = new CSVOutput();           
+        CSVInput tester = new CSVInput();
+            
+        output.setHeaders(headers);
+        
+        try(OutputCursor cursor = output.write(target))
+        {
+            cursor.write(new JSONArray(test));
+        } 
+            
+        stream = new ByteArraySource(target.getBytes());
+        source = new InputStreamSource(stream.getInputStream());
+
+        for (JSONObject item : tester.read(source))
+        {
+            verify.add(item);
+        }
+        
+        assertTrue(expected.equals(verify));                
     }
     
     /**
