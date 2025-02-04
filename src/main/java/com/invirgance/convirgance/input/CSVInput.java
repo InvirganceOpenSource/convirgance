@@ -82,7 +82,7 @@ public class CSVInput implements Input<JSONObject>
     }
 
     /**
-     * Set the content encoding to use on the input
+     * Set the text encoding to use for the input stream. This will override the default of "UTF-8"
      *
      * @param encoding The content encoding to use
      */
@@ -92,9 +92,9 @@ public class CSVInput implements Input<JSONObject>
     }
     
     /**
-     * Returns the file encoding being used to read the input stream
+     * Returns the text encoding being used to read the input stream. Default is "UTF-8"
      *
-     * @return The current expected content encoding
+     * @return The current text encoding
      */
     public String getEncoding()
     {
