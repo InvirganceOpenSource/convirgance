@@ -33,7 +33,7 @@ import com.invirgance.convirgance.target.ByteArrayTarget;
 import com.invirgance.convirgance.target.OutputStreamTarget;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -307,8 +307,8 @@ public class CSVOutputTest
         {
             verify.add(item);
         }
-      
-        assertTrue(Arrays.equals(output.getHeaders(),headers));                 
+        
+        assertArrayEquals(headers, output.getHeaders());                
     }
     
     /**
