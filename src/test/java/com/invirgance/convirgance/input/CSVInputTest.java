@@ -249,6 +249,36 @@ public class CSVInputTest
     }
     
     /**
+     * Make sure CSVInput headers are used correctly, when the file does not contain headers itself.
+     */
+    @Test
+    public void testUseProvidedHeadersWhenFileIsMissingHeaders()
+    {
+        String[] headers = new String[]
+        {
+            "Name","Age","City"
+        };
+        String test = "John,30,New York\nAlice,25,Paris";
+        String json = "[{\"Name\":\"John\",\"Age\":\"30\",\"City\":\"New York\"},{\"Name\":\"Alice\",\"Age\":\"25\",\"City\":\"Paris\"}]";
+        
+        JSONArray expected = new JSONArray(json);
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+            
+        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
+        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+
+        tester.setHeaders(headers);
+        
+        for (JSONObject item : tester.read(source))
+        {
+            output.add(item);
+        }
+
+        assertTrue(expected.equals(output));
+    }
+    
+    /**
      * Make sure CSVInput throws an exception when using invalid encoding.
      */
     @Test

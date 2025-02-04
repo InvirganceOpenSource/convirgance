@@ -145,25 +145,25 @@ public class CSVInput implements Input<JSONObject>
                 private BufferedReader reader;
                 {
                     try
-                    {          
+                    {
                         reader = new BufferedReader(new InputStreamReader(source.getInputStream(), encoding), 16 * 1024);
-                        
-                        headerLine = reader.readLine();
-                        
+
                         if (headers == null)
                         {
+                            headerLine = reader.readLine();
+                            
                             if (headerLine != null)
                             {
                                 headers = parseCSVLine(headerLine).toArray(new String[0]);
-                              
+
                                 CSVInput.this.headers = headers;
                             }
                             else
                             {
                                 throw new ConvirganceException("CSV file is empty - no header row found.");
                             }
-                        }                    
-                        
+                        }
+
                         nextLine = reader.readLine();
                     }
                     catch (IOException e)
