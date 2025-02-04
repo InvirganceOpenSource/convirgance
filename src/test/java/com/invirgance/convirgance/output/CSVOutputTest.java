@@ -326,6 +326,7 @@ public class CSVOutputTest
         CSVOutput output = new CSVOutput();
         
         output.setEncoding("Base64");
+        
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
             try (OutputCursor cursor = output.write(target))

@@ -245,7 +245,7 @@ public class CSVInputTest
             output.add(item);
         }
     
-        assertArrayEquals(tester.getHeaders(), expected);
+        assertArrayEquals(expected, tester.getHeaders());
     }
     
     /**
