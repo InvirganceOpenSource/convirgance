@@ -61,9 +61,9 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Set the file encoding to use for the output
+     * Set the text encoding to use for the output stream. This will override the default of "UTF-8"
      *
-     * @param encoding The content encoding to use
+     * @param encoding The text encoding to use
      */
     public void setEncoding(String encoding)
     {
@@ -71,9 +71,9 @@ public class CSVOutput implements Output
     }
 
     /**
-     * Returns the file encoding being used for the output
+     * Returns the file encoding being used for the output stream. Default is "UTF-8"
      *
-     * @return The current expected content encoding
+     * @return The current text encoding
      */
     public String getEncoding()
     {
