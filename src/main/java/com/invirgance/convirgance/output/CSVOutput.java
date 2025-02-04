@@ -61,7 +61,7 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Set the text encoding to use for the output stream. Default is "UTF-8"
+     * Set the text encoding to use for the output stream. This will override the default of "UTF-8"
      *
      * @param encoding The text encoding to use
      */
@@ -71,7 +71,7 @@ public class CSVOutput implements Output
     }
 
     /**
-     * Returns the file encoding being used for the output stream.  Default is "UTF-8"
+     * Returns the file encoding being used for the output stream. Default is "UTF-8"
      *
      * @return The current text encoding
      */
