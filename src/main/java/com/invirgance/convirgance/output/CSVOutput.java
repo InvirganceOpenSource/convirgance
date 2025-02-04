@@ -134,7 +134,8 @@ public class CSVOutput implements Output
        
         private PrintWriter out;
         private String[] headers;
-
+        private boolean initialized = false;
+        
         public CSVOutputCursorWriter(Target target, String[] headers)
         {
             this.target = target;
@@ -194,30 +195,39 @@ public class CSVOutput implements Output
                 out.append(escapeAndQuoteValue(header));
             }
         }
+          
+        private void initialize(JSONObject firstRecord) {
+            if (initialized) return;
+            
+            try 
+            {
+                out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
+                
+                if (headers == null) 
+                {
+                    headers = detectHeaders(firstRecord);
+                    CSVOutput.this.setHeaders(headers);
+                    stringify(headers);
+                } 
+                else 
+                {
+                    stringify(headers);
+                }
+                
+                out.print("\r\n");
+                initialized = true;
+            } 
+            catch (Exception e)
+            {
+                throw new ConvirganceException("Failed to initialize CSV output writer", e);
+            }
+        }
         
         @Override
         public void write(JSONObject record)
         {   
-            if(headers == null) {
-                headers = detectHeaders(record);
-                CSVOutput.this.headers = headers;
-            }
-            
-            if(out == null) 
-            {
-                try
-                {
-                    out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
-                }
-                catch (Exception e)
-                {
-                    throw new ConvirganceException("Failed to initialize CSV output writer", e);
-                }
-                
-                stringify(headers);
-                out.print("\r\n");                
-            }
-
+            if (!initialized) initialize(record);
+                    
             stringify(record);
             out.print("\r\n");
         }
