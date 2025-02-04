@@ -202,26 +202,22 @@ public class CSVInputTest
     @Test
     public void testSetHeaders()
     {
-        String[] example = new String[]
-        {
-            "Name"
-        };
-        JSONArray output = new JSONArray();
-
-        CSVInput tester = new CSVInput();
-        tester.setHeaders(example);
-
+        String[] example = new String[] { "Name" };
         String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
 
+        JSONArray output = new JSONArray();
+        JSONArray expected = new JSONArray("[{\"Name\":\"John\"},{\"Name\":\"Alice\"}]");
+        CSVInput tester = new CSVInput();
+          
         ByteArraySource inputStream = new ByteArraySource(test.getBytes());
         InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
 
+        tester.setHeaders(example);
+        
         for (JSONObject item : tester.read(source))
         {
             output.add(item);
         }
-
-        JSONArray expected = new JSONArray("[{\"Name\":\"John\"},{\"Name\":\"Alice\"}]");
 
         assertEquals(expected, output);
     }
@@ -236,11 +232,11 @@ public class CSVInputTest
         {
             "Name","Age","City"
         };
-        JSONArray output = new JSONArray();
-        CSVInput tester = new CSVInput();
-       
         String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
 
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+            
         ByteArraySource inputStream = new ByteArraySource(test.getBytes());
         InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
 
@@ -258,13 +254,15 @@ public class CSVInputTest
     @Test
     public void testBadEncodingSet()
     {
-        JSONArray output = new JSONArray();
-        CSVInput tester = new CSVInput();
-        tester.setEncoding("Base64");
         String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
 
+        JSONArray output = new JSONArray();
+        CSVInput tester = new CSVInput();
+           
         ByteArraySource inputStream = new ByteArraySource(test.getBytes());
         InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        
+        tester.setEncoding("Base64");
         
         Exception exception = assertThrows(ConvirganceException.class, () ->
         {
