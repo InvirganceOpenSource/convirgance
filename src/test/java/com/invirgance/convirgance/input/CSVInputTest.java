@@ -203,7 +203,7 @@ public class CSVInputTest
     public void testSetHeaders()
     {
         String[] example = new String[] { "Name" };
-        String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
+        String test = "John,30,New York\nAlice,25,Paris";
 
         JSONArray output = new JSONArray();
         JSONArray expected = new JSONArray("[{\"Name\":\"John\"},{\"Name\":\"Alice\"}]");
