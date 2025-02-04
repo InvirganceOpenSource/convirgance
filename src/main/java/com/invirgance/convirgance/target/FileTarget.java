@@ -39,6 +39,16 @@ public class FileTarget implements Target
     private File file;
 
     /**
+     * Creates a FileTarget based on the provided path
+     * 
+     * @param path a path to the underlying file resource
+     */
+    public FileTarget(String path)
+    {
+        this(new File(path));
+    }
+
+    /**
      * Creates a FileTarget based on the provided File
      * 
      * @param file the underlying file resource to write to
