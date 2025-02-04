@@ -25,5 +25,26 @@
 /**
  * Provides transformers to filter data from streams based upon common 
  * logic like equals, great than, less than, etc.
+ * 
+ * <p>Key features of this package:</p>
+ * <ul>
+ * <li>Supports logical operations such as AND, OR, and NOT.</li>
+ * <li>Provides comparison filters for greater than, less than, and equality checks.</li>
+ * <li>Designed to be composable for complex filtering scenarios.</li>
+ * </ul>
+ *
+ * <p>Common filters include:</p>
+ * <ul>
+ * <li>{@link com.invirgance.convirgance.transform.filter.AndFilter} - Combines multiple filters using logical AND.</li>
+ * <li>{@link com.invirgance.convirgance.transform.filter.OrFilter} - Combines multiple filters using logical OR.</li>
+ * <li>{@link com.invirgance.convirgance.transform.filter.NotFilter} - Negates a given filter.</li>
+ * <li>{@link com.invirgance.convirgance.transform.filter.EqualsFilter} - Checks for equality between values.</li>
+ * <li>{@link com.invirgance.convirgance.transform.filter.GreaterThanFilter} - Filters values greater than a threshold.</li>
+ * <li>{@link com.invirgance.convirgance.transform.filter.LessThanFilter} - Filters values less than a threshold.</li>
+ * <li>{@link com.invirgance.convirgance.transform.filter.ComparatorFilter} - Applies custom comparisons using a comparator.</li>
+ * </ul>
+ * 
+ * @see com.invirgance.convirgance.transform.filter.Filter
+ * @since 1.0.0
  */
 package com.invirgance.convirgance.transform.filter;
