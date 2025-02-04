@@ -33,10 +33,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides support for reading comma separated (CSV) files as a stream of data.
- * Compliant with RFC 4180.
+ * Provides streaming support for reading RFC 4180 compliant CSV (Comma-Separated Values) files
+ * and converting them to JSONObjects. This class handles:
+ * <ul>
+ *   <li>Automatic header detection from CSV files</li>
+ *   <li>Custom header mapping</li>
+ *   <li>Configurable character encoding</li>
+ *   <li>Proper handling of quoted values and escape sequences</li>
+ * </ul>
  * 
  * @author tadghh
+ * @see <a href="https://tools.ietf.org/html/rfc4180">RFC 4180 Specification</a>
  */
 public class CSVInput implements Input<JSONObject>
 {
@@ -64,27 +71,12 @@ public class CSVInput implements Input<JSONObject>
     {
         this.headers = headers;
     }
-    
-    /**
-     * Used to iterate across a source contains CSV values, converting them into JSONObjects.
-     *
-     * @param source A {@link Source} to CSV data.
-     * @return A CSVInputCursor with the decoded stream.
-     * @throws ConvirganceException Exceptions are thrown when:
-     * - An iteration into nothing was attempted.
-     * - An invalid JSONObject is created (CSV -> JSON spec conflicts)
-     * - There is an issue with the CSV file itself.
-     */
-    @Override
-    public InputCursor<JSONObject> read(Source source)
-    {
-        return new CSVInputCursor(source, headers);
-    }
 
     /**
-     * Set the text encoding to use for the input stream. This will override the default of "UTF-8"
+     * Set the character encoding to use for the input stream. This will override the default of "UTF-8"
      *
-     * @param encoding The content encoding to use
+     * @param encoding The character encoding to use (e.g., "UTF-8", "ISO-8859-1").
+     *                
      */
     public void setEncoding(String encoding)
     {
@@ -92,9 +84,9 @@ public class CSVInput implements Input<JSONObject>
     }
     
     /**
-     * Returns the text encoding being used to read the input stream. Default is "UTF-8"
+     * Returns the character encoding being used to read the input stream.
      *
-     * @return The current text encoding
+     * @return The current character encoding (defaults to "UTF-8")
      */
     public String getEncoding()
     {
@@ -117,10 +109,31 @@ public class CSVInput implements Input<JSONObject>
      * Returns the headers that will be used as the fields for JSONObjects
      * 
      * @return The column headers
+     * @throws NullPointerException If this is called before headers have been auto-detected or set.
      */
     public String[] getHeaders()
     {
         return headers;
+    }
+        
+    /**
+     * Creates an iterator to process CSV data from the provided source, converting
+     * records into JSONObjects. Each CSV record is mapped to a JSONObject using
+     * either the specified headers or auto-detected headers from the first record.
+     *
+     * @param source The source containing CSV data to read
+     * @return An InputCursor that iterates over the CSV records as JSONObjects
+     * @throws ConvirganceException in the following cases:
+     *         <ul>
+     *           <li>Empty or invalid CSV source provided</li>
+     *           <li>If the reader fails to initialize</li>
+     *           <li>Malformed CSV data (invalid quotes, missing fields, etc.)</li>
+     *         </ul>
+     */
+    @Override
+    public InputCursor<JSONObject> read(Source source)
+    {
+        return new CSVInputCursor(source, headers);
     }
 
     private class CSVInputCursor implements InputCursor<JSONObject>
@@ -145,6 +158,7 @@ public class CSVInput implements Input<JSONObject>
         {
             return new CloseableIterator<JSONObject>(){
                 private BufferedReader reader;
+                
                 {
                     try
                     {

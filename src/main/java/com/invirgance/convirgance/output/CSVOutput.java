@@ -35,7 +35,15 @@ import java.nio.charset.Charset;
  * are allowed in quoted data. Lines are always terminated with CRLF as recommended
  * by the specification.
  * 
+ * This class provides functionality to:
+ * <ul>
+ *   <li>Write data with optional column headers</li>
+ *   <li>Handles string data with proper quote escaping</li>
+ *   <li>Supports configurable character encoding</li>
+ * </ul>
+ * 
  * @author tadghh
+ * @see <a href="https://tools.ietf.org/html/rfc4180">RFC 4180 Specification</a>
  */
 public class CSVOutput implements Output
 {
@@ -43,7 +51,8 @@ public class CSVOutput implements Output
     private String[] headers;
     
     /**
-     * Creates a new CSVOutput
+     * Creates a new CSVOutput instance without predefined headers.
+     * Headers will be automatically generated from the first record's keys if not set explicitly.
      */
     public CSVOutput()
     {
@@ -51,9 +60,9 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Creates a new CSVOutput only writing the provided columns
+     * Creates a new CSVOutput with the provided headers.
      * 
-     * @param headers The columns to include or add while writing
+     * @param headers The columns to use when writing out CSV data
      */
     public CSVOutput(String[] headers)
     {
@@ -61,9 +70,10 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Set the text encoding to use for the output stream. This will override the default of "UTF-8"
-     *
-     * @param encoding The text encoding to use
+     * Sets the character encoding for the output stream.
+     * 
+     * @param encoding The character encoding to use (e.g., "UTF-8", "ISO-8859-1").
+     *                Must be a valid character encoding supported by the JVM.
      */
     public void setEncoding(String encoding)
     {
@@ -71,9 +81,9 @@ public class CSVOutput implements Output
     }
 
     /**
-     * Returns the file encoding being used for the output stream. Default is "UTF-8"
+     * Returns the current character encoding used for the output stream.
      *
-     * @return The current text encoding
+     * @return The current character encoding (defaults to "UTF-8")
      */
     public String getEncoding()
     {
@@ -91,30 +101,16 @@ public class CSVOutput implements Output
     }
     
     /**
-     * Returns the current headers that will be used when writing. If columns 
-     * aren't provided, they will be created based on the keys found in the first 
-     * record.
+     * Returns the current headers that will be used when writing CSV data.
+     * If headers were not explicitly set, they will be generated from the keys
+     * found in the first record when writing begins.
      * 
-     * @return The headers used while writing.
-     * @throws NullPointerException If no headers are set or found.
+     * @return The headers used for CSV output.
+     * @throws NullPointerException if no headers are set and no records have been written yet to generate headers from
      */
     public String[] getHeaders()
     {
         return this.headers;
-    }
-    
-    /**
-     * Creates a new writer to output data to the specified target
-     * 
-     * @param target the target writeable output stream
-     * @return the OutputCursor to write data
-     */
-    @Override
-    public OutputCursor write(Target target)
-    {
-        if(headers != null) return new CSVOutputCursorWriter(target, headers);
-              
-        return new CSVOutputCursorWriter(target);
     }
 
     /**
@@ -128,6 +124,21 @@ public class CSVOutput implements Output
         return "text/csv";
     }
      
+    /**
+     * Creates a new writer to output CSV data to the specified target.
+     * 
+     * @param target The target writeable output stream
+     * @return An OutputCursor instance for writing CSV records
+     * @throws ConvirganceException if the write fails to initialize
+     */
+    @Override
+    public OutputCursor write(Target target)
+    {
+        if(headers != null) return new CSVOutputCursorWriter(target, headers);
+              
+        return new CSVOutputCursorWriter(target);
+    }    
+    
     private class CSVOutputCursorWriter implements OutputCursor
     {     
         private final Target target;
