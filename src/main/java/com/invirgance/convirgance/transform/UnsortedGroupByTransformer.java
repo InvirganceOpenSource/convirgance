@@ -79,16 +79,26 @@ public class UnsortedGroupByTransformer implements Transformer
      *               will be grouped together.
      * @param output The field name under which the grouped records will be stored as an array.
      * @throws ConvirganceException if:
-     *         <ul>
-     *         <li>The output field name is null or empty</li>
-     *         </ul>
+     * <ul>
+     * <li>The fields array is null or empty</li>
+     * <li>If a field name in the array is null or empty</li>
+     * <li>The output field name is null or empty</li>
+     * </ul>
      */
     public UnsortedGroupByTransformer(String[] fields, String output)
     {
         if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
         
+        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
+
+        for (String key : fields)
+        {
+            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
+        }
+        
         this.output = output;
-        this.setFields(fields);
+        this.fields = fields;
+        this.fieldKeys = new HashSet<>(Arrays.asList(fields));
     }
     
     /**
@@ -101,7 +111,7 @@ public class UnsortedGroupByTransformer implements Transformer
      * <li>If a field name in the array is null or empty</li>
      * </ul>
      */
-    public final void setFields(String[] fields)
+    public void setFields(String[] fields)
     {
         if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
 
