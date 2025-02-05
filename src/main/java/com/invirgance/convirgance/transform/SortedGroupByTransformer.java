@@ -70,14 +70,29 @@ public class SortedGroupByTransformer implements Transformer
      * @param output The field name under which the grouped records will be stored as an array.
      * @throws ConvirganceException if:
      *         <ul>
-     *         <li>The fields array is null or empty</li>
-     *         <li>If a field name in the array is null or empty</li>
      *         <li>The output field name is null or empty</li>
      *         </ul>
      */
     public SortedGroupByTransformer(String[] fields, String output)
+    {      
+        if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
+        
+        this.output = output;
+        this.setFields(fields);
+    }
+    
+    /**
+     * Sets the fields to evaluate with when grouping records.
+     *
+     * @param fields The fields.
+     * @throws ConvirganceException if:
+     * <ul>
+     * <li>The fields array is null or empty</li>
+     * <li>If a field name in the array is null or empty</li>
+     * </ul>
+     */
+    public final void setFields(String[] fields)
     {
-        // Test dependent exception messages.
         if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
 
         for (String key : fields)
@@ -85,11 +100,17 @@ public class SortedGroupByTransformer implements Transformer
             if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
         }
 
-        if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
-        
         this.fields = fields;
-        this.output = output;
     }
+    
+    /**
+     * Returns the current fields being used to evaluate grouping with.
+     * @return The fields.
+     */
+    public String[] getFields()
+    {
+        return fields;
+    }    
     
     /**
      * Transforms an iterator of JSON objects by grouping records with matching field values.
