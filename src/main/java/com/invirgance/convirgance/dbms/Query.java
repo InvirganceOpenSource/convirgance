@@ -23,6 +23,7 @@ package com.invirgance.convirgance.dbms;
 
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.source.Source;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -82,6 +83,35 @@ public class Query
         
         parseParameters();
         setBindings(bindings);
+    }
+    
+    /**
+     * Creates a new Query based on a SQL query read from the provided Source
+     * 
+     * @param sql a source to read the SQL query from
+     */
+    public Query(Source sql)
+    {
+        this(sql.readString());
+    }
+    
+    /**
+     * Constructs a new Query object by parsing a SQL string loaded from 
+     * the provided Source and binding values from the given {@link JSONObject} 
+     * to the keys found in the SQL string. Bind values must be in named form 
+     * with a colon in front of the name. For example:
+     * <br><br>
+     * <code>select * from MY_TABLE where item = :keyName</code>
+     *
+     * @param sql The SQL query which may include named placeholders in
+     * the format <code>:key</code> to be replaced by values from the bindings
+     * @param bindings A {@link JSONObject} containing key-value pairs where the
+     * keys correspond to the placeholders in the SQL query and the values are
+     * the data to be bound
+     */
+    public Query(Source sql, JSONObject bindings)
+    {
+        this(sql.readString(), bindings);
     }
     
     private int countString(int start)
