@@ -27,7 +27,7 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.InputStreamSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +61,7 @@ public class TabDelimitedInputTest
             }
             
             // Last item will be alternating blank or not blank
-            if(empty) assertEquals("", record.get("Column " + size));
+            if(empty) assertNull(record.get("Column " + size));
             else assertEquals("Value " + size, record.get("Column " + size));
             
             empty = !empty;

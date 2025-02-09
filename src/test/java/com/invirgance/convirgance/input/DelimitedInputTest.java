@@ -57,6 +57,8 @@ public class DelimitedInputTest
         int count = 3;
         boolean empty = false;
         
+        example1.setNullable(false); // Disable parsing as nulls
+        
         for(JSONObject record : example1.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/example1.txt"))))
         {
             assertEquals(count, record.size());
@@ -79,18 +81,48 @@ public class DelimitedInputTest
             total++;
         }
         
+        // Reset state
+        total = 0;
+        count = 3;
+        empty = false;
+        
+        example1.setNullable(true); // Enable parsing as nulls
+        
+        for(JSONObject record : example1.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/example1.txt"))))
+        {
+            assertEquals(count, record.size());
+            
+            size = record.size();
+            
+            for(int i=1; i<=size-1; i++)
+            {
+                assertEquals("Value " + i, record.get("Column " + i));
+            }
+            
+            // Last item will be alternating blank or not blank
+            if(empty) assertNull(record.get("Column " + size));
+            else assertEquals("Value " + size, record.get("Column " + size));
+            
+            empty = !empty;
+            
+            if(!empty) count--;
+            
+            total++;
+        }
+        
         assertEquals(5, total);
     }
     
     @Test
     public void testParseLine()
     {
-        String[] none = DelimitedInput.parseLine("", '|');
-        String[] one = DelimitedInput.parseLine("Column 1", '|');
-        String[] two = DelimitedInput.parseLine("Column 1|Column 2", '|');
-        String[] three = DelimitedInput.parseLine("Column 1|Column 2|Column 3", '|');
-        String[] trailing = DelimitedInput.parseLine("Column 1|Column 2|Column 3|", '|');
-        String[] empty = DelimitedInput.parseLine("|||", '|');
+        String[] none = DelimitedInput.parseLine("", '|', false);
+        String[] one = DelimitedInput.parseLine("Column 1", '|', false);
+        String[] two = DelimitedInput.parseLine("Column 1|Column 2", '|', false);
+        String[] three = DelimitedInput.parseLine("Column 1|Column 2|Column 3", '|', false);
+        String[] trailing = DelimitedInput.parseLine("Column 1|Column 2|Column 3|", '|', false);
+        String[] empty = DelimitedInput.parseLine("|||", '|', false);
+        String[] nulls = DelimitedInput.parseLine("|||", '|', true);
        
         assertEquals(0, none.length);
         assertEquals(1, one.length);
@@ -112,6 +144,9 @@ public class DelimitedInputTest
         assertEquals("", empty[0]);
         assertEquals("", empty[1]);
         assertEquals("", empty[2]);
+        assertNull(nulls[0]);
+        assertNull(nulls[1]);
+        assertNull(nulls[2]);
     }
     
 }
