@@ -26,6 +26,9 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import java.sql.*;
 import java.util.Iterator;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
@@ -34,6 +37,12 @@ import javax.sql.DataSource;
  * handling is automatic with a new connection being obtained from the DataSource for
  * each operation. A connection pool is recommended for query-heavy scenarios
  * like web application servers.
+ * <br><br>
+ * Application servers with JNDI registrations for the DataSource can use the
+ * {@link #lookup(String)} API to pull the DataSource from the JNDI.
+ * <br><br>
+ * <code>var dbms = DMBS.lookup("jdbc/my-connection");</code>
+ * <br><br>
  * 
  * @author jbanes
  */
@@ -51,6 +60,42 @@ public class DBMS
     public DBMS(DataSource source)
     {
         this.source = source;
+    }
+    
+    /**
+     * Attempts to retrieve a DataSource from the specified JNDI location. If
+     * successful, returns a fully initialized DBMS instance. Returns null if the
+     * lookup fails.
+     * 
+     * @param jndiPath a Java native directory path to a registered DataSource
+     * @return an initialized DBMS instance if successful, null otherwise
+     * @throws ConvirganceException if an error occurs while looking up the jndi path
+     */
+    public static DBMS lookup(String jndiPath)
+    {
+        Context context;
+        DataSource source;
+        
+        try
+        {
+            context = new InitialContext();
+            source = (DataSource)context.lookup(jndiPath);
+            
+            if(source != null) return new DBMS(source);
+            
+            // Tomcat prefixes java:/comp/env/ to database registrations
+            source = (DataSource)context.lookup("java:/comp/env/" + jndiPath);
+            
+            if(source != null) return new DBMS(source);
+            
+            System.err.println("No DataSource configured at JNDI location " + jndiPath);
+            
+            return null;
+        }
+        catch(NamingException e)
+        {
+            throw new ConvirganceException(e);
+        }
     }
 
     /**
