@@ -21,6 +21,10 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.source;
 
+import com.invirgance.convirgance.ConvirganceException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -61,5 +65,47 @@ public interface Source
     default public boolean isUsed()
     {
         return false;
+    }
+    
+    /**
+     * Convenience method for loading the contents of the source as a UTF-8 
+     * string. This is useful for small files like configuration files, SQL 
+     * files, and other small reads. Do not use for large reads or there may 
+     * be significant performance problems or failures.
+     * 
+     * @return a string of the source contents
+     */
+    default public String readString()
+    {
+        return readString("UTF-8");
+    }
+    
+    /**
+     * Convenience method for loading the contents of the source as a string, 
+     * using the specified encoding. This is useful for small files like 
+     * configuration files, SQL files, and other small reads. Do not use for
+     * large reads or there may be significant performance problems or 
+     * failures.
+     * 
+     * @param encoding the character set encoding to interpret the data as
+     * @return a string of the source contents
+     */
+    default public String readString(String encoding)
+    {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] data = new byte[4096];
+        
+        int count;
+        
+        try(InputStream in = getInputStream())
+        {
+            while((count = in.read(data)) > 0) out.write(data, 0, count);
+            
+            return new String(out.toByteArray(), encoding);
+        }
+        catch(IOException e)
+        {
+            throw new ConvirganceException(e);
+        }
     }
 }

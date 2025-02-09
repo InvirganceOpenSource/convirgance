@@ -36,41 +36,21 @@ public class ByteArraySourceTest
     public void testUsage() throws Exception
     {
         String expected = "This is a test";
-        StringBuffer buffer = new StringBuffer();
-        int c;
-        
         ByteArraySource source = new ByteArraySource(expected.getBytes("UTF-8"));
         
         // Ensure the source is configured as expected
         assertTrue(source.isReusable());
         assertFalse(source.isUsed());
         
-        try(InputStream in = source.getInputStream())
-        {
-            while((c = in.read()) >= 0)
-            {
-                buffer.append((char)c);
-            }
-            
-            assertEquals(expected, buffer.toString());
-        }
+        // Read the data from the source
+        assertEquals(expected, source.readString());
         
         // Ensure that nothing has changed through use
         assertTrue(source.isReusable());
         assertFalse(source.isUsed());
         
         // Verify that the source can be reused
-        buffer.setLength(0);
-        
-        try(InputStream in = source.getInputStream())
-        {
-            while((c = in.read()) >= 0)
-            {
-                buffer.append((char)c);
-            }
-            
-            assertEquals(expected, buffer.toString());
-        }
+        assertEquals(expected, source.readString());
         
         // Ensure once again that nothing has changed through use
         assertTrue(source.isReusable());
