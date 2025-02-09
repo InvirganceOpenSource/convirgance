@@ -44,6 +44,7 @@ public class DelimitedInput implements Input<JSONObject>
     private String[] columns;
     private String encoding; 
     private char delimiter;
+    private boolean nullable;
 
     /**
      * Creates a new DelimitedInput, with '|' as the delimiter.
@@ -95,6 +96,7 @@ public class DelimitedInput implements Input<JSONObject>
         this.columns = columns;
         this.encoding = encoding;
         this.delimiter = delimiter;
+        this.nullable = true;
     }
 
     /**
@@ -150,8 +152,31 @@ public class DelimitedInput implements Input<JSONObject>
     {
         this.encoding = encoding;
     }
+
+    /**
+     * The current setting for whether blank columns will be interpreted as 
+     * nulls (true) or empty strings (false). Default is to interpret empty
+     * strings as null. (true)
+     * 
+     * @return true for nulls, false for empty strings
+     */
+    public boolean isNullable()
+    {
+        return nullable;
+    }
+
+    /**
+     * Sets whether blank columns will be interpreted as nulls (true) or empty
+     * strings (false)
+     * 
+     * @param nullable true for nulls, false for empty strings
+     */
+    public void setNullable(boolean nullable)
+    {
+        this.nullable = nullable;
+    }
     
-    static String[] parseLine(String line, char delimiter)
+    static String[] parseLine(String line, char delimiter, boolean nullable)
     {
         ArrayList<String> list = new ArrayList<>();
         int start = 0;
@@ -165,14 +190,15 @@ public class DelimitedInput implements Input<JSONObject>
             
             if(end < 0) break;
             
-            if(start == end) list.add("");
+            if(start == end) list.add(nullable ? null : "");
             else list.add(line.substring(start, end));
             
             start = end+1;
         }
         
         // Snag the last item
-        list.add(line.substring(start, line.length()));
+        if(start == line.length()) list.add(nullable ? null : "");
+        else list.add(line.substring(start, line.length()));
         
         return list.toArray(String[]::new);
     }
@@ -191,18 +217,20 @@ public class DelimitedInput implements Input<JSONObject>
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
-        return new DelimitedInputCursor(source, columns);
+        return new DelimitedInputCursor(source, columns, nullable);
     }
     
     private class DelimitedInputCursor implements InputCursor<JSONObject>
     {
         private final Source source;
         private final String[] columns;
+        private final boolean nullable;
 
-        public DelimitedInputCursor(Source source, String[] columns)
+        public DelimitedInputCursor(Source source, String[] columns, boolean nullable)
         {
             this.source = source;
             this.columns = columns;
+            this.nullable = nullable;
         }
         
         @Override
@@ -217,7 +245,7 @@ public class DelimitedInput implements Input<JSONObject>
                 reader = new BufferedReader(new InputStreamReader(source.getInputStream(), encoding), 16 * 1024);
 
                 if(this.columns != null) columns = this.columns;
-                else columns = parseLine(reader.readLine(), delimiter);
+                else columns = parseLine(reader.readLine(), delimiter, false);
 
                 return new CloseableIterator<JSONObject>() {
 
@@ -236,7 +264,7 @@ public class DelimitedInput implements Input<JSONObject>
                     public JSONObject next()
                     {
                         JSONObject record = new JSONObject(true);
-                        String[] data = parseLine(line, delimiter);
+                        String[] data = parseLine(line, delimiter, nullable);
 
                         for(int i=0; i<columns.length; i++)
                         {
