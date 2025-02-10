@@ -21,7 +21,6 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
@@ -39,6 +38,14 @@ public class SortedGroupByTransformer implements Transformer
 {   
     private String[] fields;
     private String output;
+    
+    /**
+     * Creates a new SortedGroupByTransformer. 
+     * No values are initialized, use this classes setters to setup `fields` and `output`.
+     */    
+    public SortedGroupByTransformer()
+    {      
+    }
     
     /**
      * Creates a new transformer that groups pre-sorted JSON objects based on common field values.
@@ -68,24 +75,9 @@ public class SortedGroupByTransformer implements Transformer
      * @param fields The fields to group by. All records sharing the same values for these fields
      *               will be grouped together.
      * @param output The field name under which the grouped records will be stored as an array.
-     * @throws ConvirganceException if:
-     * <ul>
-     * <li>The fields array is null or empty</li>
-     * <li>If a field name in the array is null or empty</li>
-     * <li>The output field name is null or empty</li>
-     * </ul>
      */
     public SortedGroupByTransformer(String[] fields, String output)
     {      
-        if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
-        
-        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
-
-        for (String key : fields)
-        {
-            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
-        }
-
         this.output = output;
         this.fields = fields;
     }
@@ -94,26 +86,15 @@ public class SortedGroupByTransformer implements Transformer
      * Sets the fields to evaluate with when grouping records.
      *
      * @param fields The fields.
-     * @throws ConvirganceException if:
-     * <ul>
-     * <li>The fields array is null or empty</li>
-     * <li>If a field name in the array is null or empty</li>
-     * </ul>
      */
     public void setFields(String[] fields)
     {
-        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
-
-        for (String key : fields)
-        {
-            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
-        }
-
         this.fields = fields;
     }
     
     /**
      * Returns the current fields being used to evaluate grouping with.
+     * 
      * @return The fields.
      */
     public String[] getFields()
@@ -138,12 +119,11 @@ public class SortedGroupByTransformer implements Transformer
      *
      * @param iterator An iterator of pre-sorted JSONObjects to be grouped.
      * @return A new iterator that provides the grouped JSON objects.
-     * @throws ConvirganceException if attempting to get the next element when none exists.
      */
     @Override
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) {
         return new Iterator<JSONObject>() {
-            private JSONObject current = null;          
+            private JSONObject current;          
             private JSONObject group;
             private JSONArray children;
             
@@ -160,14 +140,8 @@ public class SortedGroupByTransformer implements Transformer
             @Override
             public JSONObject next() 
             {
-                // Initial: Create new group object and array for this group's records
                 group = new JSONObject();
                 children = new JSONArray();
-                
-                if (!hasNext())
-                {
-                    throw new ConvirganceException("Attempted to iterate with no next element.");
-                }
         
                 // Set the group keys from current parent record
                 for (String key : fields) 
@@ -189,6 +163,16 @@ public class SortedGroupByTransformer implements Transformer
                 return group;
             }
             
+            private boolean keysMatch(JSONObject groupKeys)
+            {
+                for (String key : groupKeys.keySet())
+                {
+                    if (!Objects.equals(current.get(key), groupKeys.get(key))) return false;
+                }
+                
+                return true;
+            }
+            
             private JSONObject addFilteredRecordToGroup(JSONObject record)
             {
                 for (String key : fields)
@@ -199,15 +183,6 @@ public class SortedGroupByTransformer implements Transformer
                 return record;
             }
                      
-            private boolean keysMatch(JSONObject groupKeys)
-            {
-                for (String key : groupKeys.keySet())
-                {
-                    if (!Objects.equals(current.get(key), groupKeys.get(key))) return false;
-                }
-                
-                return true;
-            }
         };
     }
 }

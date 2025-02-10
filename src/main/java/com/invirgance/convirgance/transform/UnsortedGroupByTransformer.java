@@ -21,7 +21,6 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
@@ -37,10 +36,17 @@ import java.util.*;
  */
 public class UnsortedGroupByTransformer implements Transformer 
 {   
-    private String[] fields; 
-    private Set<String> fieldKeys;    
-    private final String output;   
-     
+    private String output;   
+    private String[] fields;
+    
+    /**
+     * Creates a new UnsortedGroupByTransformer. 
+     * No values are initialized, use this classes setters to setup `fields` and `output`.
+     */    
+    public UnsortedGroupByTransformer()
+    {
+    }
+    
     /**
      * Creates a new transformer that groups JSON objects based on common field values,
      * regardless of the records order in the iterator.
@@ -78,59 +84,51 @@ public class UnsortedGroupByTransformer implements Transformer
      * @param fields The fields to group by. All records sharing the same values for these fields
      *               will be grouped together.
      * @param output The field name under which the grouped records will be stored as an array.
-     * @throws ConvirganceException if:
-     * <ul>
-     * <li>The fields array is null or empty</li>
-     * <li>If a field name in the array is null or empty</li>
-     * <li>The output field name is null or empty</li>
-     * </ul>
      */
     public UnsortedGroupByTransformer(String[] fields, String output)
     {
-        if (output == null || output.isEmpty()) throw new ConvirganceException("Output key must not be null or empty.");
-        
-        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
-
-        for (String key : fields)
-        {
-            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
-        }
-        
         this.output = output;
         this.fields = fields;
-        this.fieldKeys = new HashSet<>(Arrays.asList(fields));
     }
     
     /**
      * Sets the fields to evaluate with when grouping records.
      *
      * @param fields The fields.
-     * @throws ConvirganceException if:
-     * <ul>
-     * <li>The fields array is null or empty</li>
-     * <li>If a field name in the array is null or empty</li>
-     * </ul>
      */
     public void setFields(String[] fields)
     {
-        if (fields == null || fields.length == 0) throw new ConvirganceException("Fields must not be null or empty.");      
-
-        for (String key : fields)
-        {
-            if (key == null || key.isEmpty()) throw new ConvirganceException("Fields must not contain null or empty values.");
-        }
-
         this.fields = fields;
-        this.fieldKeys = new HashSet<>(Arrays.asList(fields));
     }
     
     /**
      * Returns the current fields being used to evaluate grouping with.
+     * 
      * @return The fields.
      */
     public String[] getFields()
     {
         return fields;
+    }      
+    
+    /**
+     * Sets the field to contain related fields and values.
+     *
+     * @param output The output field.
+     */
+    public void setOutput(String output)
+    {
+        this.output = output;
+    }
+    
+    /**
+     * Returns the current field used to contain fields and values of the related records.
+     * 
+     * @return The output field.
+     */
+    public String getOutput()
+    {
+        return output;
     }      
     
     /**
@@ -161,6 +159,7 @@ public class UnsortedGroupByTransformer implements Transformer
         
         Map<String, JSONArray> related = new HashMap();
         JSONArray groups = new JSONArray();
+        Set<String> fieldKeys = new HashSet<>(Arrays.asList(fields));
               
         while (iterator.hasNext())
         {

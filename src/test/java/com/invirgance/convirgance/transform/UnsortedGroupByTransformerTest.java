@@ -23,10 +23,8 @@
  */
 package com.invirgance.convirgance.transform;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -184,39 +182,4 @@ public class UnsortedGroupByTransformerTest
         assertTransformEquals(test,known,"Nested transform test.");
     }
     
-    /**
-     * Test that grouping on empty fields will throw.
-     */
-    @Test
-    public void testTransformSillyFields()
-    {       
-        String[] fields = new String[] {"Fish", ""};       
-
-        // Verify that creating the transformer with empty keys throws an exception
-        Exception exception = assertThrows(ConvirganceException.class, () ->
-        {
-            new UnsortedGroupByTransformer(fields, "temps");
-        });
-
-        // Assert that the exception message matches what is expected
-        assertEquals("Fields must not contain null or empty values.", exception.getMessage());
-    }
-
-    /**
-     * Test that an exception will throw when no output key is provided.
-     */
-    @Test
-    public void testTransformNoOutput()
-    {       
-        String[] fields = new String[] {"Fish", "Dog"};       
-
-        // Verify that creating the transformer with no output throws an exception
-        Exception exception = assertThrows(ConvirganceException.class, () ->
-        {
-            new UnsortedGroupByTransformer(fields, "");
-        });
-
-        // Assert that the exception message matches what is expected
-        assertEquals("Output key must not be null or empty.", exception.getMessage());
-    }
 }
