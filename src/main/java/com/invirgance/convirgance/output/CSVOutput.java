@@ -23,7 +23,6 @@
  */
 package com.invirgance.convirgance.output;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
 import java.io.PrintWriter;
@@ -58,7 +57,6 @@ public class CSVOutput implements Output
      */
     public CSVOutput()
     {
-        this(null);
     }
 
     /**
@@ -142,7 +140,6 @@ public class CSVOutput implements Output
      *
      * @param target The target writeable output stream
      * @return An OutputCursor instance for writing CSV records
-     * @throws ConvirganceException if the write fails to initialize
      */
     @Override
     public OutputCursor write(Target target)

@@ -58,7 +58,6 @@ public class CSVInput implements Input<JSONObject>
      */
     public CSVInput()
     {
-        this(null);
     }
     
     /**
@@ -88,8 +87,7 @@ public class CSVInput implements Input<JSONObject>
     /**
      * Set the character encoding to use for the input stream. This will override the default of "UTF-8"
      *
-     * @param encoding The character encoding to use (e.g., "UTF-8", "ISO-8859-1").
-     *                
+     * @param encoding The character encoding to use (e.g., "UTF-8", "ISO-8859-1").        
      */
     public void setEncoding(String encoding)
     {
@@ -122,7 +120,6 @@ public class CSVInput implements Input<JSONObject>
      * Returns the headers that will be used as the fields for JSONObjects
      * 
      * @return The column headers
-     * @throws NullPointerException If this is called before headers have been auto-detected or set.
      */
     public String[] getHeaders()
     {
@@ -139,7 +136,6 @@ public class CSVInput implements Input<JSONObject>
      * @throws ConvirganceException in the following cases:
      *         <ul>
      *           <li>Empty or invalid CSV source provided</li>
-     *           <li>If the reader fails to initialize</li>
      *           <li>Malformed CSV data (invalid quotes, missing fields, etc.)</li>
      *         </ul>
      */
@@ -301,8 +297,6 @@ public class CSVInput implements Input<JSONObject>
 
                     return parseCSVLine(builder.toString());
                 }
-
-                
 
             };
         }
