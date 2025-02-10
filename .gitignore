@@ -4,3 +4,4 @@ target/*
 nb-configuration.xml
 nbactions.xml
 nbproject/*
+jshell.history
