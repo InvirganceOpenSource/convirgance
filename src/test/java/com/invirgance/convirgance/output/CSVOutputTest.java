@@ -23,19 +23,12 @@
  */
 package com.invirgance.convirgance.output;
 
-import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.input.CSVInput;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.ByteArraySource;
-import com.invirgance.convirgance.source.InputStreamSource;
 import com.invirgance.convirgance.target.ByteArrayTarget;
-import com.invirgance.convirgance.target.OutputStreamTarget;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -88,9 +81,8 @@ public class CSVOutputTest
         JSONArray output = new JSONArray();
         JSONArray expected = new JSONArray(test);
 
-        ByteArraySource inputStream = new ByteArraySource(outputCSV(test));
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
-        
+        ByteArraySource source = new ByteArraySource(outputCSV(test));
+
         for (JSONObject item : tester.read(source))
         {
             output.add(item);
@@ -122,8 +114,7 @@ public class CSVOutputTest
         CSVInput tester = new CSVInput();
         JSONObject jsonOutput;
         
-        ByteArraySource inputStream = new ByteArraySource(outputCSV(test));
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        ByteArraySource source = new ByteArraySource(outputCSV(test));
 
         for (JSONObject item : tester.read(source))
         {
@@ -141,21 +132,16 @@ public class CSVOutputTest
     public void testNoRecords() throws Exception
     {
         String test = "[]";
-        String result;
         CSVOutput output = new CSVOutput();
         
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(byteArrayOutputStream);     
-        OutputStreamTarget target = new OutputStreamTarget(printStream);
+        ByteArrayTarget target = new ByteArrayTarget();
             
         try (OutputCursor cursor = output.write(target))
         {
             cursor.write(new JSONArray(test));
         }
-        
-        result = byteArrayOutputStream.toString();
 
-        assertTrue(result.length() == 0);
+        assertTrue(new String(target.getBytes()).length() == 0);
     }
     
     /**
@@ -178,8 +164,7 @@ public class CSVOutputTest
         CSVInput tester = new CSVInput();
         JSONObject jsonOutput;
         
-        ByteArraySource inputStream = new ByteArraySource(outputCSV(test));
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        ByteArraySource source = new ByteArraySource(outputCSV(test));
 
         for (JSONObject item : tester.read(source))
         {
@@ -203,8 +188,7 @@ public class CSVOutputTest
         
         ByteArrayTarget target = new ByteArrayTarget();   
         CSVOutput outputCSV = new CSVOutput(new String[]{"name"});
-        ByteArraySource stream;
-        InputStreamSource source;    
+        ByteArraySource source;
 
         JSONArray output = new JSONArray();
         CSVInput tester = new CSVInput();
@@ -215,8 +199,8 @@ public class CSVOutputTest
             cursor.write(new JSONArray(test));
         } 
             
-        stream = new ByteArraySource(target.getBytes());
-        source = new InputStreamSource(stream.getInputStream());
+        source = new ByteArraySource(target.getBytes());
+//        source = new InputStreamSource(stream.getInputStream());
 
         for (JSONObject item : tester.read(source))
         {
@@ -243,8 +227,7 @@ public class CSVOutputTest
                 + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
                 + "]";
 
-        InputStreamSource source;
-        ByteArraySource stream;
+        ByteArraySource source;
         ByteArrayTarget target = new ByteArrayTarget();   
         CSVOutput output = new CSVOutput(new String[]{"name","accident"});
         
@@ -257,8 +240,7 @@ public class CSVOutputTest
             cursor.write(new JSONArray(test));
         } 
             
-        stream = new ByteArraySource(target.getBytes());
-        source = new InputStreamSource(stream.getInputStream());
+        source = new ByteArraySource(target.getBytes());
 
         for (JSONObject item : tester.read(source))
         {
@@ -267,50 +249,13 @@ public class CSVOutputTest
 
         jsonOutput = (JSONObject) verify.get(1);
         
-        assertTrue(
-                !jsonOutput.containsKey("quote") 
-                && !jsonOutput.containsKey("age") 
-                && jsonOutput.containsKey("name")
-                && jsonOutput.containsKey("accident")
-        );
+        assertFalse(jsonOutput.containsKey("quote"));
+        assertFalse(jsonOutput.containsKey("age"));
+        assertTrue(jsonOutput.containsKey("name"));
+        assertTrue(jsonOutput.containsKey("accident"));
     }
     
-    /**
-     * Make sure CSVOutput headers are updated (if needed) when the cursor is run.
-     * Note: Headers are taken from the keys of the first JSONObject, notice that quote will not be included.
-     */
-    @Test
-    public void testHeaderSync() throws Exception
-    {
-        String[] headers = new String[]{ "name", "age" };
-        String test = "["
-                + "{\"name\":\"John\", \"age\":\"30\"},"
-                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
-                + "]";
-
-        InputStreamSource source;
-        ByteArraySource stream;
-        ByteArrayTarget target = new ByteArrayTarget();   
-        CSVOutput output = new CSVOutput();
-        
-        JSONArray verify = new JSONArray();
-        CSVInput tester = new CSVInput();
-            
-        try(OutputCursor cursor = output.write(target))
-        {
-            cursor.write(new JSONArray(test));
-        } 
-            
-        stream = new ByteArraySource(target.getBytes());
-        source = new InputStreamSource(stream.getInputStream());
-
-        for (JSONObject item : tester.read(source))
-        {
-            verify.add(item);
-        }
-        
-        assertArrayEquals(headers, output.getHeaders());                
-    }
+  
     
     /**
      * Make sure CSVOutput uses the provided headers.
@@ -326,8 +271,7 @@ public class CSVOutputTest
         JSONArray expected = new JSONArray("[{\"name\":\"John\"},{\"name\":\"Bob\"}]");
         JSONArray verify = new JSONArray();
         
-        InputStreamSource source;
-        ByteArraySource stream;
+        ByteArraySource source;
         ByteArrayTarget target = new ByteArrayTarget();   
         
         CSVOutput output = new CSVOutput();           
@@ -340,9 +284,8 @@ public class CSVOutputTest
             cursor.write(new JSONArray(test));
         } 
             
-        stream = new ByteArraySource(target.getBytes());
-        source = new InputStreamSource(stream.getInputStream());
-
+        source = new ByteArraySource(target.getBytes());
+      
         for (JSONObject item : tester.read(source))
         {
             verify.add(item);
@@ -351,30 +294,5 @@ public class CSVOutputTest
         assertTrue(expected.equals(verify));                
     }
     
-    /**
-     * Make sure CSVOutput throws an exception when using invalid encoding.
-     */
-    @Test
-    public void testBadEncodingSet()
-    {
-        String test = "["
-                + "{\"name\":\"John\", \"age\":\"30\"},"
-                + "{\"name\":\"Bob\", \"age\":\"30\", \"quote\":\"Welcome!\"}"
-                + "]";
-
-        ByteArrayTarget target = new ByteArrayTarget();   
-        CSVOutput output = new CSVOutput();
-        
-        output.setEncoding("Base64");
-        
-        Exception exception = assertThrows(ConvirganceException.class, () ->
-        {
-            try (OutputCursor cursor = output.write(target))
-            {
-                cursor.write(new JSONArray(test));
-            }
-        });
-        
-        assertEquals("Failed to initialize CSV output writer", exception.getMessage());
-    }
+ 
 }

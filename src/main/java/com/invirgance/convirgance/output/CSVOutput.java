@@ -31,37 +31,39 @@ import java.nio.charset.Charset;
 
 /**
  * Writes data in RFC 4180 compliant CSV format. String data will be quoted with
- * double quotes, quotes in data will be escaped by two double quotes, and newlines
- * are allowed in quoted data. Lines are always terminated with CRLF as recommended
- * by the specification.
- * 
+ * double quotes, quotes in data will be escaped by two double quotes, and
+ * newlines are allowed in quoted data. Lines are always terminated with CRLF as
+ * recommended by the specification.
+ *
  * This class provides functionality to:
  * <ul>
- *   <li>Write data with optional column headers</li>
- *   <li>Handles string data with proper quote escaping</li>
- *   <li>Supports configurable character encoding</li>
+ * <li>Write data with optional column headers</li>
+ * <li>Handles string data with proper quote escaping</li>
+ * <li>Supports configurable character encoding</li>
  * </ul>
- * 
+ *
  * @author tadghh
  * @see <a href="https://tools.ietf.org/html/rfc4180">RFC 4180 Specification</a>
  */
 public class CSVOutput implements Output
 {
+
     private String encoding = "UTF-8";
     private String[] headers;
-    
+
     /**
-     * Creates a new CSVOutput instance without predefined headers.
-     * Headers will be automatically generated from the first record's keys if not set explicitly.
+     * Creates a new CSVOutput instance without predefined headers. Headers will
+     * be automatically generated from the first record's keys if not set
+     * explicitly.
      */
     public CSVOutput()
     {
         this(null);
     }
-    
+
     /**
      * Creates a new CSVOutput with the provided headers.
-     * 
+     *
      * @param headers The columns to use when writing out CSV data
      */
     public CSVOutput(String[] headers)
@@ -70,10 +72,22 @@ public class CSVOutput implements Output
     }
     
     /**
+     * Creates a new CSVOutput with the provided headers.
+     *
+     * @param headers The columns to use when writing out CSV data
+     * @param encoding The character encoding to use for the output
+     */
+    public CSVOutput(String[] headers, String encoding)
+    {
+        this.headers = headers;
+        this.encoding = encoding;
+    }
+
+    /**
      * Sets the character encoding for the output stream.
-     * 
-     * @param encoding The character encoding to use (e.g., "UTF-8", "ISO-8859-1").
-     *                Must be a valid character encoding supported by the JVM.
+     *
+     * @param encoding The character encoding to use (e.g., "UTF-8",
+     * "ISO-8859-1"). Must be a valid character encoding supported by the JVM.
      */
     public void setEncoding(String encoding)
     {
@@ -89,7 +103,7 @@ public class CSVOutput implements Output
     {
         return encoding;
     }
-    
+
     /**
      * Set the headers to use when writing out CSV values
      *
@@ -99,14 +113,13 @@ public class CSVOutput implements Output
     {
         this.headers = columns;
     }
-    
+
     /**
-     * Returns the current headers that will be used when writing CSV data.
-     * If headers were not explicitly set, they will be generated from the keys
+     * Returns the current headers that will be used when writing CSV data. If
+     * headers were not explicitly set, they will be generated from the keys
      * found in the first record when writing begins.
-     * 
+     *
      * @return The headers used for CSV output.
-     * @throws NullPointerException if no headers are set and no records have been written yet to generate headers from
      */
     public String[] getHeaders()
     {
@@ -115,7 +128,7 @@ public class CSVOutput implements Output
 
     /**
      * Returns the <code>text/csv</code> MIME type
-     * 
+     *
      * @return the MIME type
      */
     @Override
@@ -123,10 +136,10 @@ public class CSVOutput implements Output
     {
         return "text/csv";
     }
-     
+
     /**
      * Creates a new writer to output CSV data to the specified target.
-     * 
+     *
      * @param target The target writeable output stream
      * @return An OutputCursor instance for writing CSV records
      * @throws ConvirganceException if the write fails to initialize
@@ -134,123 +147,107 @@ public class CSVOutput implements Output
     @Override
     public OutputCursor write(Target target)
     {
-        if(headers != null) return new CSVOutputCursorWriter(target, headers);
-              
-        return new CSVOutputCursorWriter(target);
-    }    
-    
-    private class CSVOutputCursorWriter implements OutputCursor
-    {     
-        private final Target target;
-       
-        private PrintWriter out;
-        private String[] headers;
+        return new CSVOutputCursor(target, headers);
+    }
+
+    private class CSVOutputCursor implements OutputCursor
+    {
+
         private boolean initialized = false;
-        
-        public CSVOutputCursorWriter(Target target, String[] headers)
+
+        private final PrintWriter out;
+        private String[] headers;
+
+        public CSVOutputCursor(Target target, String[] headers)
         {
-            this.target = target;
             this.headers = headers;
-        }
-        
-        public CSVOutputCursorWriter(Target target)
-        {
-            this(target, null);
-        }
-        
-        private String escapeAndQuoteValue(String value)
-        {
-            boolean needsQuoting;
-            String evaluate = value;
-            
-            needsQuoting = evaluate.contains(",")
-                    || evaluate.contains("\"")
-                    || evaluate.contains("\n")
-                    || evaluate.contains("\r");
-
-            if (needsQuoting) return "\"" + evaluate.replace("\"", "\"\"") + "\"";        
-
-            return evaluate;
-        }
-        
-        private String[] detectHeaders(JSONObject record)
-        {               
-            return record.keySet().toArray(String[]::new);
+            this.out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
         }
 
-        private void stringify(JSONObject record)
+        @Override
+        public void write(JSONObject record)
         {
-            boolean first = true;
-            Object value;
-            String processed;
-            
-            for (String header : headers)
+            if (!initialized) initialize(record);
+
+            stringify(record);
+            out.print("\r\n");
+        }
+
+        @Override
+        public void close()
+        {
+            if (out != null) out.close();
+        }
+
+        private void initialize(JSONObject firstRecord)
+        {
+            if (initialized) return;
+
+            if (headers == null)
             {
-                if (!first) out.append(',');
-                
-                first = false;
-                value = record.get(header);
-                
-                processed = value == null ? "" : escapeAndQuoteValue(value.toString());
-                
-                out.append(processed);
+                headers = detectHeaders(firstRecord);
+                stringify(headers);
             }
+            else
+            {
+                stringify(headers);
+            }
+            
+            out.print("\r\n");
+            initialized = true;
+        }
+
+        private String[] detectHeaders(JSONObject record)
+        {
+            return record.keySet().toArray(String[]::new);
         }
 
         private void stringify(String[] columns)
         {
             boolean first = true;
-            
+
             for (String header : columns)
             {
                 if (!first) out.append(',');
-                
+
                 first = false;
                 out.append(escapeAndQuoteValue(header));
             }
         }
-          
-        private void initialize(JSONObject firstRecord) 
+        
+        private void stringify(JSONObject record)
         {
-            if (initialized) return;
-            
-            try 
+            boolean first = true;
+            Object value;
+            String processed;
+
+            for (String header : headers)
             {
-                out = new PrintWriter(target.getOutputStream(), false, Charset.forName(encoding));
-                
-                if (headers == null) 
-                {
-                    headers = detectHeaders(firstRecord);
-                    CSVOutput.this.setHeaders(headers);
-                    stringify(headers);
-                } 
-                else 
-                {
-                    stringify(headers);
-                }
-                
-                out.print("\r\n");
-                initialized = true;
-            } 
-            catch (Exception e)
-            {
-                throw new ConvirganceException("Failed to initialize CSV output writer", e);
+                if (!first) out.append(',');
+
+                first = false;
+                value = record.get(header);
+
+                processed = value == null ? "" : escapeAndQuoteValue(value.toString());
+
+                out.append(processed);
             }
         }
-        
-        @Override
-        public void write(JSONObject record)
-        {   
-            if (!initialized) initialize(record);
-                    
-            stringify(record);
-            out.print("\r\n");
-        }
-        
-        @Override
-        public void close()
+
+        private String escapeAndQuoteValue(String value)
         {
-            if(out != null) out.close();
+            boolean needsQuoting = false;
+            String evaluate = value;
+
+            needsQuoting |= evaluate.contains(",");
+            needsQuoting |= evaluate.contains("\"");
+            needsQuoting |= evaluate.contains("\n");
+            needsQuoting |= evaluate.contains("\r");
+
+            if (needsQuoting) return "\"" + evaluate.replace("\"", "\"\"") + "\"";
+
+            return evaluate;
         }
+
     }
 }

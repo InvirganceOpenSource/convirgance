@@ -63,13 +63,26 @@ public class CSVInput implements Input<JSONObject>
     
     /**
      * Creates a new CSVInput with an array of headers to use when reading.
-     * The encoding parameter can be changed to support the input file's encoding.
+     * The default character encoding of `UTF-8` will be used.
      * 
      * @param headers The headers to use when reading.
      */
     public CSVInput(String[] headers)
     {
         this.headers = headers;
+    }
+
+    /**
+     * Creates a new CSVInput with an array of headers to use when reading.
+     * The encoding parameter changes the character encoding used when reading the input stream.
+     * 
+     * @param headers The headers to use when reading.
+     * @param encoding The character encoding to use while reading.
+     */
+    public CSVInput(String[] headers, String encoding)
+    {
+        this.headers = headers;
+        this.encoding = encoding;
     }
 
     /**
@@ -148,15 +161,14 @@ public class CSVInput implements Input<JSONObject>
 
         public CSVInputCursor(Source source, String[] headers)
         {
-            if(headers != null) this.headers = headers;
-            
+            this.headers = headers;
             this.source = source;
         }
 
         @Override
         public CloseableIterator<JSONObject> iterator()
         {
-            return new CloseableIterator<JSONObject>(){
+            return new CloseableIterator<JSONObject>() {
                 private BufferedReader reader;
                 
                 {
@@ -167,17 +179,7 @@ public class CSVInput implements Input<JSONObject>
                         if (headers == null)
                         {
                             headerLine = reader.readLine();
-                            
-                            if (headerLine != null)
-                            {
-                                headers = parseCSVLine(headerLine).toArray(new String[0]);
-
-                                CSVInput.this.setHeaders(headers);
-                            }
-                            else
-                            {
-                                throw new ConvirganceException("CSV file is empty - no header row found.");
-                            }
+                            headers = parseCSVLine(headerLine).toArray(new String[0]);                           
                         }
 
                         nextLine = reader.readLine();
@@ -197,50 +199,20 @@ public class CSVInput implements Input<JSONObject>
                 @Override
                 public JSONObject next()
                 {
-                    if (!hasNext())
-                    {
-                        throw new ConvirganceException("Attempted to iterate with no next element.");
-                    }               
-
                     try
                     {                   
-                        return createJSONObject(parseCompleteRecord());
+                        return createJSONObject();
                     }
                     catch (IOException e)
                     {
                         throw new ConvirganceException("Error reading CSV line", e);
                     }
-                    catch (Exception e)
-                    {
-                        throw new ConvirganceException("Error processing CSV line", e);
-                    }
                 }
-
-                private List<String> parseCompleteRecord() throws IOException
+                
+                @Override
+                public void close() throws Exception
                 {
-                    int quoteCount = 0;
-                    
-                    builder.setLength(0);
-                    builder.append(nextLine);
-
-                    for (char c : nextLine.toCharArray())
-                    {
-                        if (c == '"') quoteCount++;                        
-                    }
-
-                    while (quoteCount % 2 != 0 && (nextLine = reader.readLine()) != null)
-                    {
-                        builder.append("\n").append(nextLine);
-                        
-                        for (char c : nextLine.toCharArray())
-                        {
-                            if (c == '"') quoteCount++;                     
-                        }
-                    }
-
-                    nextLine = reader.readLine();
-
-                    return parseCSVLine(builder.toString());
+                    reader.close();
                 }
 
                 private List<String> parseCSVLine(String line)
@@ -248,6 +220,7 @@ public class CSVInput implements Input<JSONObject>
                     boolean quotes = false;
                     char character;
                     
+                    // TODO: Is this slow with silly JSON Objects (super big lots of fields)?                    
                     List<String> values = new ArrayList<>();
                
                     builder.setLength(0);
@@ -280,18 +253,16 @@ public class CSVInput implements Input<JSONObject>
                         }
                     }
 
+                    if (quotes) throw new ConvirganceException("Unclosed quotes in CSV line: " + line);
+                    
                     values.add(builder.toString());
-                 
-                    if (quotes)
-                    {
-                        throw new ConvirganceException("Unclosed quotes in CSV line: " + line);
-                    }
                     
                     return values;
                 }
-
-                private JSONObject createJSONObject(List<String> values)
+                
+                private JSONObject createJSONObject() throws IOException
                 {
+                    List<String> values = parseCompleteRecord();
                     JSONObject record = new JSONObject(true);
                     
                     for (int i = 0; i < headers.length; i++)
@@ -303,12 +274,36 @@ public class CSVInput implements Input<JSONObject>
                     
                     return record;
                 }
-
-                @Override
-                public void close() throws Exception
+                
+                private List<String> parseCompleteRecord() throws IOException
                 {
-                    reader.close();
+                    int quoteCount = 0;
+                    
+                    builder.setLength(0);
+                    builder.append(nextLine);
+
+                    for (char c : nextLine.toCharArray())
+                    {
+                        if (c == '"') quoteCount++;                        
+                    }
+
+                    while (quoteCount % 2 != 0 && (nextLine = reader.readLine()) != null)
+                    {
+                        builder.append("\n").append(nextLine);
+                        
+                        for (char c : nextLine.toCharArray())
+                        {
+                            if (c == '"') quoteCount++;                     
+                        }
+                    }
+
+                    nextLine = reader.readLine();
+
+                    return parseCSVLine(builder.toString());
                 }
+
+                
+
             };
         }
     }

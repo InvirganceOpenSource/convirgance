@@ -27,8 +27,6 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.ByteArraySource;
-import com.invirgance.convirgance.source.InputStreamSource;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,9 +54,8 @@ public class CSVInputTest
         CSVInput tester = new CSVInput();
         JSONArray output = new JSONArray();
         
-        ByteArraySource inputStream = new ByteArraySource(input.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
-        
+        ByteArraySource source = new ByteArraySource(input.getBytes());
+     
         for (JSONObject item : tester.read(source))
         {
             output.add(item);
@@ -213,8 +210,7 @@ public class CSVInputTest
         JSONArray expected = new JSONArray("[{\"Name\":\"John\"},{\"Name\":\"Alice\"}]");
         CSVInput tester = new CSVInput();
           
-        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        ByteArraySource source = new ByteArraySource(test.getBytes());
 
         tester.setHeaders(example);
         
@@ -224,32 +220,6 @@ public class CSVInputTest
         }
 
         assertEquals(expected, output);
-    }
-    
-    /**
-     * Make sure CSVInput headers are updated (if needed) when the cursor is run.
-     */
-    @Test
-    public void testHeadersSync()
-    {
-        String[] expected = new String[]
-        {
-            "Name","Age","City"
-        };
-        String test = "Name,Age,City\nJohn,30,New York\nAlice,25,Paris";
-
-        JSONArray output = new JSONArray();
-        CSVInput tester = new CSVInput();
-            
-        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
-
-        for (JSONObject item : tester.read(source))
-        {
-            output.add(item);
-        }
-    
-        assertArrayEquals(expected, tester.getHeaders());
     }
     
     /**
@@ -269,8 +239,7 @@ public class CSVInputTest
         JSONArray output = new JSONArray();
         CSVInput tester = new CSVInput();
             
-        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        ByteArraySource source = new ByteArraySource(test.getBytes());
 
         tester.setHeaders(headers);
         
@@ -293,8 +262,7 @@ public class CSVInputTest
         JSONArray output = new JSONArray();
         CSVInput tester = new CSVInput();
            
-        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
+        ByteArraySource source = new ByteArraySource(test.getBytes());
         
         tester.setEncoding("Base64");
         
@@ -309,26 +277,4 @@ public class CSVInputTest
         assertEquals("Failed to initialize CSV reader", exception.getMessage());
     }
     
-    
-    /**
-     * Test that an exception will be raised if the header is missing. 
-     * This test could be improved, there's no way to define missing header as 
-     * it could be a row of data. For now we just assume the first row is the header.
-     */
-    @Test
-    public void testTransformNoMoreInput()
-    {
-        String test = "";
-        ByteArraySource inputStream = new ByteArraySource(test.getBytes());
-        InputStreamSource source = new InputStreamSource(inputStream.getInputStream());
-        InputCursor<JSONObject> tester = new CSVInput().read(source);
-        
-        Exception exception = assertThrows(ConvirganceException.class, () ->
-        {
-            tester.iterator();
-        });
-
-        // Assert that the exception message matches what is expected
-        assertEquals("CSV file is empty - no header row found.", exception.getMessage());
-    }
 }
