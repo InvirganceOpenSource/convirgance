@@ -42,9 +42,7 @@ public class IntersectionIterableTest
     public void testBasicIntersection() 
     {
         int count = 0;
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection;
-
+  
         JSONArray locations = new JSONArray("[" +
             "{\"country\": \"Canada\", \"state\": \"ON\", \"height\": 175}," +
             "{\"country\": \"USA\", \"state\": \"CA\", \"height\": 165}," +
@@ -57,7 +55,8 @@ public class IntersectionIterableTest
             "{\"country\": \"USA\", \"state\": \"NY\", \"height\": 172}" +
         "]");
 
-        intersection = new IntersectionIterable(fields, locations, visited);
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
 
         for(JSONObject item : intersection) 
         {
@@ -73,8 +72,6 @@ public class IntersectionIterableTest
     public void testNoIntersection() 
     {
         int count = 0;
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection;
         
         JSONArray locations = new JSONArray("[" +
             "{\"country\": \"USA\", \"state\": \"CA\"}," +
@@ -85,8 +82,9 @@ public class IntersectionIterableTest
             "{\"country\": \"Canada\", \"state\": \"BC\"}," +
             "{\"country\": \"Canada\", \"state\": \"ON\"}" +
         "]");
-
-        intersection = new IntersectionIterable(fields, locations, visited);
+        
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
 
         for(JSONObject item : intersection) 
         {
@@ -100,9 +98,6 @@ public class IntersectionIterableTest
     @Test
     public void testPartialIntersection() 
     {
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection;
-        
         List<JSONObject> results = new ArrayList<>();    
         
         JSONArray locations = new JSONArray("[" +
@@ -116,8 +111,9 @@ public class IntersectionIterableTest
             "{\"country\": \"USA\", \"state\": \"CA\", \"city\": \"LA\"}," +
             "{\"country\": \"USA\", \"state\": \"NY\", \"city\": \"Buffalo\"}" +
         "]");
-
-        intersection = new IntersectionIterable(fields, locations, visited);
+        
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited); 
         
         for(JSONObject item : intersection) 
         {
@@ -130,8 +126,7 @@ public class IntersectionIterableTest
     @Test
     public void testThreeWayIntersection() 
     {
-        String[] fields = {"country", "state"};       
-        IntersectionIterable intersection;
+       
         
         List<JSONObject> results = new ArrayList<>();
         
@@ -139,8 +134,8 @@ public class IntersectionIterableTest
         JSONArray locations = new JSONArray("[{\"country\": \"Mexico\", \"state\": \"DF\"}, {\"country\": \"USA\", \"state\": \"NY\"}]");
         JSONArray visited = new JSONArray("[{\"country\": \"France\", \"state\": \"IDF\"}, {\"country\": \"USA\", \"state\": \"NY\"}]");
 
-
-        intersection = new IntersectionIterable(fields, planned, locations, visited);
+        String[] fields = {"country", "state"};       
+        IntersectionIterable intersection = new IntersectionIterable(fields, planned, locations, visited);
 
         for(JSONObject item : intersection) 
         {
@@ -156,14 +151,13 @@ public class IntersectionIterableTest
     public void testEmptyStream() 
     {
         int count = 0;
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection;
         
         JSONArray locations = new JSONArray("[{\"country\": \"USA\", \"state\": \"NY\"}]");
 
         JSONArray visited = new JSONArray("[]");
 
-        intersection = new IntersectionIterable(fields, locations, visited);
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
 
         for(JSONObject item : intersection) 
         {
@@ -177,15 +171,14 @@ public class IntersectionIterableTest
     public void testMultiEmptyStream() 
     {
         int count = 0;
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection;
         
         JSONArray locations = new JSONArray("[]");
 
         JSONArray visited = new JSONArray("[]");
 
-        intersection = new IntersectionIterable(fields, locations, visited);
-
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
+        
         for(JSONObject item : intersection) 
         {
             count++;
@@ -198,13 +191,12 @@ public class IntersectionIterableTest
     public void testSingleKeyIntersection() 
     {
         int count = 0;
-        String[] fields = {"country"};
-        IntersectionIterable intersection;
         
         JSONArray locations = new JSONArray("[{\"country\": \"USA\", \"state\": \"CA\"}, {\"country\": \"USA\", \"state\": \"NY\"}]");
         JSONArray visited = new JSONArray("[{\"country\": \"USA\", \"state\": \"FL\"}, {\"country\": \"USA\", \"state\": \"TX\"}]");
 
-        intersection = new IntersectionIterable(fields, locations, visited);
+        String[] fields = {"country"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
 
         for(JSONObject item : intersection) 
         {
@@ -218,9 +210,6 @@ public class IntersectionIterableTest
     @Test
     public void testFiveWayIntersectionWithMixedData() 
     {
-        String[] fields = {"code", "type"};
-        IntersectionIterable intersection; 
-        
         List<JSONObject> results = new ArrayList<>();
         
         JSONArray stocksJune = new JSONArray("[{\"code\": \"ABC\", \"type\": 1, \"value\": 100}, {\"code\": \"XYZ\", \"type\": 2, \"value\": 200}]");
@@ -229,7 +218,8 @@ public class IntersectionIterableTest
         JSONArray stocksOctober = new JSONArray("[{\"code\": \"ABC\", \"type\": 0, \"value\": 125}, {\"code\": \"ABC\", \"type\": 1, \"value\": 125}, {\"code\": \"JKL\", \"type\": 5, \"value\": 500}]");
         JSONArray stocksSeptember = new JSONArray("[{\"code\": \"ABC\", \"type\": 1, \"value\": 160}, {\"code\": \"MNO\", \"type\": 6, \"value\": 600}]");
         
-        intersection = new IntersectionIterable(fields, stocksJune, stocksMarch, stocksApril, stocksOctober, stocksSeptember);
+        String[] fields = {"code", "type"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, stocksJune, stocksMarch, stocksApril, stocksOctober, stocksSeptember);
 
         for(JSONObject item : intersection) 
         {
@@ -244,15 +234,13 @@ public class IntersectionIterableTest
     @Test
     public void testMultipleFieldsWithNulls()
     {
-        String[] fields = {"field1", "field2"};        
-        IntersectionIterable intersection;
-        
         List<JSONObject> results = new ArrayList<>();
           
         JSONArray test = new JSONArray("[{\"field1\": \"key1\", \"field2\": \"value1\"}, {\"field1\": \"key2\", \"field2\": null}, {\"field1\": null, \"field2\": \"value2\"}]");
         JSONArray comparison = new JSONArray("[{\"field1\": \"key1\", \"field2\": \"value1\"}, {\"field1\": \"key2\", \"field2\": null}, {\"field1\": null, \"field2\": \"value3\"}]");
-  
-        intersection = new IntersectionIterable(fields, test, comparison);
+        
+        String[] fields = {"field1", "field2"};        
+        IntersectionIterable intersection = new IntersectionIterable(fields, test, comparison);
 
         for(JSONObject item : intersection)
         {
@@ -270,15 +258,14 @@ public class IntersectionIterableTest
         assertNull(results.get(1).get("field2"));
     }
     
-    
+    /**
+     * This test is to make sure no stream is left behind when another iterator has been pulled through to the checkpoint/largest head(record).
+     */
     @Test
     public void testSmallestIteratorCheckpointAdvancement() 
     {
-        // This test is to make sure no stream is left behind when another iterator has been pulled through to the checkpoint.
-        String[] fields = {"field1", "field2"};   
-        IntersectionIterable intersection;
-        
         List<JSONObject> results = new ArrayList<>();        
+        
         JSONArray small = new JSONArray("["
                 + "{\"field1\": \"key001\", \"field2\": \"val1\"},"
                 + "{\"field1\": \"key002\", \"field2\": \"val2\"},"
@@ -307,8 +294,9 @@ public class IntersectionIterableTest
                 + "{\"field1\": \"key050\", \"field2\": \"val6\"},"  
                 + "{\"field1\": \"key051\", \"field2\": \"val7\"}"
                 + "]");
-     
-        intersection = new IntersectionIterable(fields, small, large, smallEntropy, entropy);
+        
+        String[] fields = {"field1", "field2"};   
+        IntersectionIterable intersection = new IntersectionIterable(fields, small, large, smallEntropy, entropy);
 
         for(JSONObject item : intersection) 
         {
@@ -327,9 +315,6 @@ public class IntersectionIterableTest
     @Test
     public void testLargeNumberOfIterables() 
     {
-        String[] fields = {"id", "shared"};
-        IntersectionIterable intersection;
-        
         List<Iterable<JSONObject>> streams = new ArrayList<>();
         
         List<JSONObject> results = new ArrayList<>();
@@ -340,8 +325,9 @@ public class IntersectionIterableTest
             generated = String.format("[{\"id\": %d, \"shared\": \"common\"}, {\"id\": %d, \"shared\": \"common\"}]", i, 100);       
             streams.add(new JSONArray(generated));
         }
-       
-        intersection = new IntersectionIterable(fields, streams);
+        
+        String[] fields = {"id", "shared"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, streams);
 
         for(JSONObject item : intersection) 
         {

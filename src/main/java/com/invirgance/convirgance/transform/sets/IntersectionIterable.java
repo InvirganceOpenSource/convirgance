@@ -90,138 +90,145 @@ public class IntersectionIterable implements Iterable<JSONObject>
     @Override
     public Iterator<JSONObject> iterator() 
     {
-        return new Iterator<JSONObject>() {
-            private final CoerciveComparator comparator = new CoerciveComparator();
-            private final List<Iterator<JSONObject>> iterators = new ArrayList<>();
-            private final List<JSONObject> heads = new ArrayList<>();
-            private JSONObject matching;
-            
+        return new IntersectionIterator();
+    }
+    
+    private class IntersectionIterator implements Iterator<JSONObject>
+    {
+        private final CoerciveComparator comparator = new CoerciveComparator();
+        private final List<Iterator<JSONObject>> iterators = new ArrayList<>();
+        private final List<JSONObject> heads = new ArrayList<>();
+        private JSONObject matching;
+
+        public IntersectionIterator()
+        {
+            Iterator<JSONObject> streamIterator;
+
+            for(Iterable<JSONObject> stream : streams) 
             {
-                Iterator<JSONObject> streamIterator;
-                
-                for(Iterable<JSONObject> stream : streams) 
+                streamIterator = stream.iterator();
+                iterators.add(streamIterator);
+
+                if(streamIterator.hasNext()) 
                 {
-                    streamIterator = stream.iterator();
-                    iterators.add(streamIterator);
-                    
-                    if(streamIterator.hasNext()) 
-                    {
-                        heads.add(streamIterator.next());
-                    }
-                    else 
-                    {
-                        heads.clear();
-                        break;
-                    }
+                    heads.add(streamIterator.next());
                 }
-                
-                findNextMatch();
-            }
-
-            @Override
-            public boolean hasNext() 
-            {
-                return matching != null;
-            }
-
-            @Override
-            public JSONObject next() 
-            {
-                JSONObject result = matching;
-                findNextMatch();
-                return result;
-            }
-            
-            private void findNextMatch() 
-            {
-                matching = null;
-                
-                while(!heads.isEmpty()) 
+                else 
                 {
-                    if(findMatch()) 
-                    {
-                        matching = heads.get(0);
-              
-                        for(int i = 0; i < iterators.size(); i++) 
-                        {
-                            if(iterators.get(i).hasNext()) 
-                            {
-                                heads.set(i, iterators.get(i).next());
-                            } 
-                            else 
-                            {
-                                heads.clear();
-                                return;
-                            }
-                        }
-                        
-                        return;
-                    }
+                    heads.clear();
+                    break;
                 }
             }
-            
-            private boolean findMatch()
+
+            findNextMatch();
+        }
+
+        @Override
+        public boolean hasNext() 
+        {
+            return matching != null;
+        }
+
+        @Override
+        public JSONObject next() 
+        {
+            JSONObject result = matching;
+            findNextMatch();
+            return result;
+        }
+
+        private void findNextMatch() 
+        {
+            matching = null;
+
+            while(!heads.isEmpty()) 
             {
-                boolean matching = true;
-
-                // The index of the iterator that has the smallest head value.
-                int smallestIterator;
-                int comparison;
-                Object smallest;
-                Object largest;
-                Object evaluated;
-
-                JSONObject next;
-                
-                for(String key : keys)
+                if(findMatch()) 
                 {
-                    smallest = heads.get(0).get(key);
-                    largest = smallest;
-                    smallestIterator = 0;
-                    
-                    // Comparing the current records across the streams.
-                    for(int i = 1; i < heads.size(); i++)
-                    {
-                        evaluated = heads.get(i).get(key);
-                        comparison = comparator.compare(evaluated, smallest);
+                    matching = heads.get(0);
 
-                        if(comparison < 0)
+                    for(int i = 0; i < iterators.size(); i++) 
+                    {
+                        if(iterators.get(i).hasNext()) 
                         {
-                            smallest = evaluated;
-                            smallestIterator = i;
-                            matching = false;
-                        }
-                        else if(comparison > 0)
+                            heads.set(i, iterators.get(i).next());
+                        } 
+                        else 
                         {
-                            matching = false;
-                            
-                            // The comparison value is larger than our smallest, lets leverage this...
-                            if(comparator.compare(evaluated, largest) > 0) largest = evaluated;
+                            heads.clear();
+                            return;
                         }
                     }
 
-                    if(!matching)
+                    return;
+                }
+            }
+        }
+
+        private boolean findMatch()
+        {
+            boolean matching = true;
+
+            // The index of the iterator that has the smallest `head`/record value.
+            int smallestIterator;
+            int comparison;
+            
+            // For evaluating the `head` records of the streams
+            Object smallest;
+            Object largest;
+            Object evaluated;
+
+            // Used when looping over the stream that contained the smallest value
+            JSONObject next;
+
+            for(String key : keys)
+            {
+                smallest = heads.get(0).get(key);
+                largest = smallest;
+                smallestIterator = 0;
+
+                // Comparing the current records across the streams.
+                for(int i = 1; i < heads.size(); i++)
+                {
+                    evaluated = heads.get(i).get(key);
+                    comparison = comparator.compare(evaluated, smallest);
+
+                    if(comparison < 0)
                     {
-                        // We can advance the smallest iterator directly to the `largest` (largest head record among the streams)
-                        while(comparator.compare(smallest, largest) < 0)
-                        {
-                            if(!iterators.get(smallestIterator).hasNext())
-                            {
-                                heads.clear();
-                                return matching;
-                            }
-                            
-                            next = iterators.get(smallestIterator).next();
-                            heads.set(smallestIterator, next);
-                            smallest = next.get(key);
-                        }
-                            
-                        break;
+                        smallest = evaluated;
+                        smallestIterator = i;
+                        matching = false;
+                    }
+                    else if(comparison > 0)
+                    {
+                        matching = false;
+
+                        // The comparison value is larger than our smallest, lets leverage this...
+                        if(comparator.compare(evaluated, largest) > 0) largest = evaluated;
                     }
                 }
-                
-                return matching;
+
+                if(!matching)
+                {
+                    // We can advance the smallest iterator directly to the `largest` (largest head record among the streams)
+                    while(comparator.compare(smallest, largest) < 0)
+                    {
+                        if(!iterators.get(smallestIterator).hasNext())
+                        {
+                            heads.clear();
+                            return matching;
+                        }
+
+                        next = iterators.get(smallestIterator).next();
+                        heads.set(smallestIterator, next);
+                        smallest = next.get(key);
+                    }
+
+                    break;
+                }
             }
-        };
+
+            return matching;
+        }
     }
 }
