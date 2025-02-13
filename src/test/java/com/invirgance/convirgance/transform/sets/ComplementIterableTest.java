@@ -29,6 +29,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -72,9 +73,7 @@ public class ComplementIterableTest
 
     @Test
     public void testNoComplement() 
-    {
-        int count = 0;
-        
+    {        
         JSONArray stream1 = new JSONArray("[" +
             "{\"country\": \"USA\", \"state\": \"CA\"}," +
             "{\"country\": \"USA\", \"state\": \"NY\"}" +
@@ -87,13 +86,8 @@ public class ComplementIterableTest
         
         String[] fields = {"country", "state"};
         ComplementIterable complement = new ComplementIterable(fields, stream1, stream2);
-
-        for(JSONObject item : complement) 
-        {
-            count++;
-        }
         
-        assertEquals(0, count, "Should find no unique records");
+        assertFalse(complement.iterator().hasNext(), "Should find no unique records");
     }
 
     @Test
@@ -121,9 +115,7 @@ public class ComplementIterableTest
     
     @Test
     public void testEmptyStreams() 
-    {
-        List<JSONObject> results = new ArrayList<>();
-        
+    {   
         JSONArray stream1 = new JSONArray("[]");
 
         JSONArray stream2 = new JSONArray("[]");
@@ -131,19 +123,12 @@ public class ComplementIterableTest
         String[] fields = {"country", "state"};
         ComplementIterable complement = new ComplementIterable(fields, stream1, stream2);
         
-        for(JSONObject item : complement) 
-        {
-            results.add(item);
-        }
-        
-        assertEquals(0, results.size(), "Should find all records from first stream");
+        assertFalse(complement.iterator().hasNext(), "Should contain no records");
     }
 
     @Test
     public void testEmptyFirstStream() 
     {
-        int count = 0;
-        
         JSONArray stream1 = new JSONArray("[]");
         
         JSONArray stream2 = new JSONArray("[" +
@@ -153,13 +138,8 @@ public class ComplementIterableTest
 
         String[] fields = {"country", "state"};
         ComplementIterable complement = new ComplementIterable(fields, stream1, stream2);
-
-        for(JSONObject item : complement) 
-        {
-            count++;
-        }
         
-        assertEquals(0, count, "Should find no records with empty first stream");
+        assertFalse(complement.iterator().hasNext(), "Should find no records with empty first stream");
     }
 
     @Test

@@ -178,7 +178,7 @@ public class ComplementIterable implements Iterable<JSONObject>
                     } 
                     else
                     {
-                        if (!compareIterator.hasNext()) break;
+                        if(!compareIterator.hasNext()) break;
                         compare = compareIterator.next();
                         heads.set(i, compare);
                     }
