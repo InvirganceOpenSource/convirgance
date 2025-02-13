@@ -141,6 +141,23 @@ public class ComplementIterableTest
         
         assertFalse(complement.iterator().hasNext(), "Should find no records with empty first stream");
     }
+    
+    @Test
+    public void testSingleStream() 
+    {     
+        JSONArray stream1 = new JSONArray("[" +
+            "{\"country\": \"Canada\", \"state\": \"ON\"}," +
+            "{\"country\": \"USA\", \"state\": \"CA\"}" +
+        "]");
+        
+        List<Iterable<JSONObject>> streams =  new ArrayList<>();
+        streams.add(stream1);
+        
+        String[] fields = {"country", "state"};
+        ComplementIterable complement = new ComplementIterable(fields, streams);
+        
+        assertFalse(complement.iterator().hasNext(), "Should find no records with empty first stream");
+    }
 
     @Test
     public void testThreeWayComplement() 

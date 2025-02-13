@@ -104,16 +104,19 @@ public class ComplementIterable implements Iterable<JSONObject>
         public ComplementIterator() 
         {
             Iterator<JSONObject> current;
-
-            for(Iterable<JSONObject> stream : streams) 
+            
+            if(streams.size() != 1)
             {
-                current = stream.iterator();
-                iterators.add(current);
+                for(Iterable<JSONObject> stream : streams) 
+                {
+                    current = stream.iterator();
+                    iterators.add(current);
 
-                if(current.hasNext()) heads.add(current.next());
-                else break;
+                    if(current.hasNext()) heads.add(current.next());
+                    else break;
+                }
             }
-
+            
             checkUnique();
         }
 
