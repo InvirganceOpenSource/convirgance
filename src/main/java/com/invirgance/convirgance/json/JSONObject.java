@@ -304,7 +304,7 @@ public class JSONObject implements Map<String, Object>
         Object value = this.map.get(key);
         
         if(value == null) throw new ConvirganceException(key + " is null and therefore can't be converted to an int");
-        if(value instanceof Integer) return ((Integer)value);
+        if(value instanceof Number) return ((Number)value).intValue();
         if(value instanceof String) return Integer.parseInt(value.toString());
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to an int");
@@ -325,10 +325,50 @@ public class JSONObject implements Map<String, Object>
         Object value = this.map.get(key);
         
         if(value == null) return defaultValue;
-        if(value instanceof Integer) return ((Integer)value);
+        if(value instanceof Number) return ((Number)value).intValue();
         if(value instanceof String) return Integer.parseInt(value.toString());
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to an int");
+    }
+    
+    /**
+     * Gets the value associated with the specified key as a Int. 
+     * Returns value if its already an Int.
+     * Otherwise we use Integer.parseInt() and the toString() of value.
+     * @param key The key whose associated value is to be retrieved.
+     * @return The key's value parsed to Int.
+     * @throws ConvirganceException When the key's value cannot be converted to a Int. Or the key itself is null.
+     */
+    public long getLong(String key) throws ConvirganceException
+    {
+        Object value = this.map.get(key);
+        
+        if(value == null) throw new ConvirganceException(key + " is null and therefore can't be converted to a long");
+        if(value instanceof Number) return ((Number)value).longValue();
+        if(value instanceof String) return Long.parseLong(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a long");
+    }
+    
+    /**
+     * Gets the value associated with the specified key as a Int returning the 
+     * provided default if the value is null.
+     * If value is null or the key doesn't exist defaultValue is returned.
+     * Otherwise if value is of type Int, it will be returned unchanged.
+     * @param key The key whose associated value is to be retrieved.
+     * @param defaultValue The default Int value to return if the key's value is null.
+     * @return The key's value parsed to Int, or defaultValue when value is null.
+     * @throws ConvirganceException When the key's value cannot be converted to a Int.
+     */
+    public long getLong(String key, int defaultValue) throws ConvirganceException
+    {
+        Object value = this.map.get(key);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof Number) return ((Number)value).longValue();
+        if(value instanceof String) return Long.parseLong(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a long");
     }
     
     

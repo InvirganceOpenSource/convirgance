@@ -182,6 +182,46 @@ public class JSONObjectTest
         } 
         catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to an int", e.getMessage()); }
     }
+    
+    @Test
+    public void testLongs()
+    {
+        JSONObject record = new JSONObject();
+        
+        record.put("integer", 1337l);
+        record.put("integerString", "1337");
+        record.put("integerNull", null);
+        record.put("notInteger", false);
+        
+        assertEquals(1337l, (Long)record.get("integer"));
+        assertEquals(1337l, record.getLong("integer"));
+        assertEquals(1337l, record.getLong("integerString"));
+        assertEquals(1337l, record.getLong("integer", 7331));
+        assertEquals(1337l, record.getLong("integerString", 7331));
+        assertEquals(1337l, record.getLong("integerNull", 1337));
+        assertNull(record.get("integerNull"));
+        
+        try 
+        {
+            record.getLong("integerNull");
+            fail("Expected failure on null lookup");
+        } 
+        catch(ConvirganceException e) { assertEquals("integerNull is null and therefore can't be converted to a long", e.getMessage()); }
+        
+        try 
+        {
+            record.getLong("notInteger");
+            fail("Expected failure on lookup of non-integer value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to a long", e.getMessage()); }
+        
+        try 
+        {
+            record.getLong("notInteger", 1337);
+            fail("Expected failure on lookup of non-integer value");
+        } 
+        catch(ConvirganceException e) { assertEquals("Class type of java.lang.Boolean for notInteger cannot be converted to a long", e.getMessage()); }
+    }
         
     @Test
     public void testJSONArray()
