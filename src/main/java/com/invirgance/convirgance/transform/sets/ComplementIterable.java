@@ -31,7 +31,26 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Finds unique (complement) JSON records that only appear in the first stream.
+ * <p>
+ * This class is useful for scenarios where large datasets are being processed, and we need to
+ * identify records that are in some primary stream but not included in any number of other streams. The streams must
+ * be sorted in order for the intersection logic to work correctly.
+ * </p>
  *
+ * <p>Example use case:</p>
+ * <pre>
+ *     List&lt;Iterable&lt;JSONObject&gt;&gt; streams = Arrays.asList(hospitalA, hospitalB);
+ *     ComplementIterable complement = new ComplementIterable(new String[]{"patient_id"}, streams);
+ *     
+ *     // Will print out patients that have only been at Hospital A (our primary stream as its first in the list)
+ *     for (JSONObject uncommon : complement) 
+ *     {
+ *         System.out.println(uncommon);
+ *     }
+ * </pre>
+ * <p><b>Note:</b> The input streams must be pre-sorted based on the given keys. If they are not sorted, 
+ * the behavior of this class is undefined.</p>
  * @author tadghh
  */
 public class ComplementIterable implements Iterable<JSONObject> 
@@ -41,7 +60,7 @@ public class ComplementIterable implements Iterable<JSONObject>
 
     /**
      * Constructs an ComplementIterable that identifies unique JSON records from a target stream that don't appear in the other stream(s).
-     * The streams must contain sorted JSON data based on the specified keys.
+     * The streams must contain JSON records, that are sorted based on the provided keys.
      *
      * @param keys The keys used to determine record equivalence.
      * @param streams The sorted streams of {@code JSONObject} records to be compared.
@@ -53,9 +72,9 @@ public class ComplementIterable implements Iterable<JSONObject>
 
     /**
      * Constructs an ComplementIterable that identifies unique JSON records from a target stream that don't appear in the other stream(s).
-     * The streams must contain sorted JSON data based on the specified keys.
+     * The streams must contain JSON records, that are sorted based on the provided keys.
      *
-     * @param keys The keys used to determine record equivalence.
+     * @param keys The keys used to determine if a record is unique.
      * @param streams The sorted streams of {@code JSONObject} records to be compared.
      */    
     public ComplementIterable(String[] keys, List<Iterable<JSONObject>> streams) 
@@ -67,14 +86,14 @@ public class ComplementIterable implements Iterable<JSONObject>
     /**
      * Returns an iterator that streams through each source returning records found in the target stream but not in the complement stream(s).
      * 
-     * @return An iterator that contains the complement records.
+     * @return An iterator that contains the complement/unique records.
      */
     @Override
     public Iterator<JSONObject> iterator() 
     {
         return new ComplementIterator();
     }
-    
+
     private class ComplementIterator implements Iterator<JSONObject> 
     {
         private final CoerciveComparator comparator = new CoerciveComparator();
@@ -129,11 +148,11 @@ public class ComplementIterable implements Iterable<JSONObject>
         private void checkUnique() 
         {
             matching = null;
-            
+
             while(!heads.isEmpty()) 
             {
                 if(findUnique()) matching = heads.get(0);
-                
+
                 if(iterators.get(0).hasNext()) 
                 {
                     heads.set(0, iterators.get(0).next());
@@ -150,13 +169,13 @@ public class ComplementIterable implements Iterable<JSONObject>
         private boolean findUnique() 
         {
             int comparison;
-                    
+
             Iterator<JSONObject> compareIterator;
             JSONObject compare;
             JSONObject main;
-            
+
             if(heads.isEmpty()) return false;
-            
+
             main = heads.get(0);
 
             for(int i = 1; i < heads.size(); i++) 
@@ -167,14 +186,14 @@ public class ComplementIterable implements Iterable<JSONObject>
                 while(true) 
                 {
                     comparison = checkCompare(main,compare);
-                    
+
                     if(comparison == 0) 
                     {
-                       return false;
+                        return false;
                     } 
                     else if(comparison > 0) 
                     {
-                       break;
+                        break;
                     } 
                     else
                     {
