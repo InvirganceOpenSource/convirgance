@@ -159,7 +159,87 @@ public class JSONArray<T> implements List<T>
     {
         return this.list.get(index);
     }
-
+  
+    /**
+     * Gets the value associated with the specified index as a Int. 
+     * Returns value if its already an Int.
+     * Otherwise we use Integer.parseInt() and the toString() of value.
+     * @param index The array index.
+     * @return The index's value parsed to Int.
+     * @throws ConvirganceException When the index's value cannot be converted to a Int.
+     */
+    public int getInt(int index) throws ConvirganceException
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) throw new ConvirganceException("Index " + index + " is null and therefore can't be converted to a int");
+        if(value instanceof Number) return ((Number)value).intValue();
+        if(value instanceof String) return Integer.parseInt(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a int");
+    }
+    
+    /**
+     * Gets the value associated with the specified index as a Int returning the 
+     * provided default if the value is null.
+     * If value is null or the key doesn't exist defaultValue is returned.
+     * Otherwise if value is of type Int, it will be returned unchanged.
+     * @param index The array index.
+     * @param defaultValue The default Int value to return if the index's value is null.
+     * @return The index's value parsed to Int, or defaultValue when value is null.
+     * @throws ConvirganceException When the index's value cannot be converted to a Int.
+     */
+    public int getInt(int index, int defaultValue) throws ConvirganceException
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof Number) return ((Number)value).intValue();
+        if(value instanceof String) return Integer.parseInt(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a int");
+    }
+    
+    /**
+     * Gets the value associated with the specified index as a Long. 
+     * Returns value if its already an Long.
+     * Otherwise we use Long.parseLong() and the toString() of value.
+     * @param index The array index.
+     * @return The index's value parsed to Long.
+     * @throws ConvirganceException When the index's value cannot be converted to a Long.
+     */
+    public long getLong(int index) throws ConvirganceException
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) throw new ConvirganceException("Index " + index + " is null and therefore can't be converted to a long");
+        if(value instanceof Number) return ((Number)value).longValue();
+        if(value instanceof String) return Long.parseLong(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a long");
+    }
+    
+    /**
+     * Gets the value associated with the specified index as a Long returning the 
+     * provided default if the value is null.
+     * If value is null or the index doesn't exist defaultValue is returned.
+     * Otherwise if value is of type Long, it will be returned unchanged.
+     * @param index The array index.
+     * @param defaultValue The default Long value to return if the index's value is null.
+     * @return The index's value parsed to Long, or defaultValue when value is null.
+     * @throws ConvirganceException When the index's value cannot be converted to a Long.
+     */
+    public long getLong(int index, long defaultValue) throws ConvirganceException
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof Number) return ((Number)value).longValue();
+        if(value instanceof String) return Long.parseLong(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a long");
+    }    
+    
     /**
      * Gets the Boolean value for the data at given index.
      *

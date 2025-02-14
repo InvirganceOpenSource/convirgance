@@ -332,12 +332,12 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the value associated with the specified key as a Int. 
-     * Returns value if its already an Int.
-     * Otherwise we use Integer.parseInt() and the toString() of value.
+     * Gets the value associated with the specified key as a Long. 
+     * Returns value if its already an Long.
+     * Otherwise we use Long.parseLong() and the toString() of value.
      * @param key The key whose associated value is to be retrieved.
-     * @return The key's value parsed to Int.
-     * @throws ConvirganceException When the key's value cannot be converted to a Int. Or the key itself is null.
+     * @return The key's value parsed to Long.
+     * @throws ConvirganceException When the key's value cannot be converted to a Long. Or the key itself is null.
      */
     public long getLong(String key) throws ConvirganceException
     {
@@ -351,16 +351,16 @@ public class JSONObject implements Map<String, Object>
     }
     
     /**
-     * Gets the value associated with the specified key as a Int returning the 
+     * Gets the value associated with the specified key as a Long returning the 
      * provided default if the value is null.
      * If value is null or the key doesn't exist defaultValue is returned.
-     * Otherwise if value is of type Int, it will be returned unchanged.
+     * Otherwise if value is of type Long, it will be returned unchanged.
      * @param key The key whose associated value is to be retrieved.
-     * @param defaultValue The default Int value to return if the key's value is null.
-     * @return The key's value parsed to Int, or defaultValue when value is null.
-     * @throws ConvirganceException When the key's value cannot be converted to a Int.
+     * @param defaultValue The default Long value to return if the key's value is null.
+     * @return The key's value parsed to Long, or defaultValue when value is null.
+     * @throws ConvirganceException When the key's value cannot be converted to a Long.
      */
-    public long getLong(String key, int defaultValue) throws ConvirganceException
+    public long getLong(String key, long defaultValue) throws ConvirganceException
     {
         Object value = this.map.get(key);
         

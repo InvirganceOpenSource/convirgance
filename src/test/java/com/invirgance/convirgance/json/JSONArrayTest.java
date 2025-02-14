@@ -22,8 +22,8 @@ SOFTWARE.
 package com.invirgance.convirgance.json;
 
 import java.util.Arrays;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -121,14 +121,16 @@ public class JSONArrayTest
     @Test
     public void testFromString() throws Exception
     {
-        JSONArray record = new JSONArray("[\"Hello world!\",1337,3.14159,true,null]");
+        JSONArray record = new JSONArray("[\"Hello world!\",1337,3.14159,true,null,1,9223372036854775807]");
         
-        assertEquals(5, record.size());
+        assertEquals(7, record.size());
         assertEquals("Hello world!", record.get(0));
         assertEquals(1337, record.get(1));
         assertEquals(3.14159, record.get(2));
         assertTrue(record.getBoolean(3));
         assertNull(record.get(4));
+        assertEquals(1, record.getInt(5));
+        assertEquals(9223372036854775807L, record.getLong(6));
     }
     
     @Test
