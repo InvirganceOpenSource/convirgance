@@ -60,14 +60,16 @@ import com.invirgance.convirgance.json.JSONObject;
  * @see JSONObject
  * @author tadghh
  */
-public class ContainsFilter extends ComparatorFilter
+public class ContainsFilter implements Filter
 {
+    private String key;
+    private String value;
+    
     /**
      * Creates a new ContainsFilter.
      */
     public ContainsFilter()
     {
-        super();
     }
 
     /**
@@ -78,7 +80,45 @@ public class ContainsFilter extends ComparatorFilter
      */
     public ContainsFilter(String key, String value)
     {
-        super(key, value);
+        this.key = key;
+        this.value = value;
+    }
+    
+    /**
+     * Gets the comparison key in use.
+     * @return The key.
+     */
+    public String getKey()
+    {
+        return key;
+    }
+
+    /**
+     * Set the comparison key.
+     * @param key The key.
+     */
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
+
+    /**
+     * Retrieves the value used for the key containment check.
+     * 
+     * @return The filter value.
+     */
+    public String getValue()
+    {
+        return value;
+    }
+
+    /**
+     * Sets the value that will be checked for containment within the specified key's value.
+     * @param value The substring to search for.
+     */
+    public void setValue(String value)
+    {
+        this.value = value;
     }
     
     /**
@@ -93,7 +133,7 @@ public class ContainsFilter extends ComparatorFilter
     public boolean test(JSONObject record)
     {
         String current = record.getString(getKey());
-        String compare = getValue().toString();
+        String compare = getValue();
         
         if(current == null) return false;
 
