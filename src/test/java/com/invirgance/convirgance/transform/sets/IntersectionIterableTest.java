@@ -28,6 +28,7 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,56 @@ import org.junit.jupiter.api.Test;
  */
 public class IntersectionIterableTest
 {
+
+    @Test
+    public void testEmptyMainStream() 
+    {
+        JSONArray locations = new JSONArray("[]");
+        JSONArray visited = new JSONArray("[{\"country\": \"USA\", \"state\": \"NY\"}]");
+
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
+        
+        assertFalse(intersection.iterator().hasNext(), "Should find no matching records with empty stream");
+    }
+    
+    @Test
+    public void testEmptySecondStream() 
+    {
+        JSONArray locations = new JSONArray("[{\"country\": \"USA\", \"state\": \"NY\"}]");
+        JSONArray visited = new JSONArray("[]");
+
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
+        
+        assertFalse(intersection.iterator().hasNext(), "Should find no matching records with empty stream");
+    }
+    
+    @Test
+    public void testMultiEmptyStream() 
+    {
+        JSONArray locations = new JSONArray("[]");
+        JSONArray visited = new JSONArray("[]");
+
+        String[] fields = {"country", "state"};
+        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);      
+        
+        assertFalse(intersection.iterator().hasNext(), "Should find no matching records with empty stream");
+    }
+    
+    @Test
+    public void testMultiEmptyStreamWithIntersection() 
+    {            
+        JSONArray planned = new JSONArray("[{\"country\": \"Canada\", \"state\": \"ON\"}, {\"country\": \"USA\", \"state\": \"NY\"}]");
+        JSONArray locations = new JSONArray("[]");
+        JSONArray visited = new JSONArray("[{\"country\": \"France\", \"state\": \"IDF\"}, {\"country\": \"USA\", \"state\": \"NY\"}]");
+
+        String[] fields = {"country", "state"};       
+        IntersectionIterable intersection = new IntersectionIterable(fields, planned, locations, visited);
+        
+        assertFalse(intersection.iterator().hasNext(), "Should find no matching records with empty stream");
+    }   
+
     @Test
     public void testBasicIntersection() 
     {
@@ -125,9 +176,7 @@ public class IntersectionIterableTest
 
     @Test
     public void testThreeWayIntersection() 
-    {
-       
-        
+    {      
         List<JSONObject> results = new ArrayList<>();
         
         JSONArray planned = new JSONArray("[{\"country\": \"Canada\", \"state\": \"ON\"}, {\"country\": \"USA\", \"state\": \"NY\"}]");
@@ -146,47 +195,7 @@ public class IntersectionIterableTest
         assertEquals("USA", results.get(0).getString("country"), "Country should be USA");
         assertEquals("NY", results.get(0).getString("state"), "State should be NY");
     }
-
-    @Test
-    public void testEmptyStream() 
-    {
-        int count = 0;
-        
-        JSONArray locations = new JSONArray("[{\"country\": \"USA\", \"state\": \"NY\"}]");
-
-        JSONArray visited = new JSONArray("[]");
-
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
-
-        for(JSONObject item : intersection) 
-        {
-            count++;
-        }
-        
-        assertEquals(0, count, "Should find no matching records with empty stream");
-    }
     
-    @Test
-    public void testMultiEmptyStream() 
-    {
-        int count = 0;
-        
-        JSONArray locations = new JSONArray("[]");
-
-        JSONArray visited = new JSONArray("[]");
-
-        String[] fields = {"country", "state"};
-        IntersectionIterable intersection = new IntersectionIterable(fields, locations, visited);
-        
-        for(JSONObject item : intersection) 
-        {
-            count++;
-        }
-        
-        assertEquals(0, count, "Should find no matching records with empty stream");
-    }
-
     @Test
     public void testSingleKeyIntersection() 
     {
@@ -266,34 +275,34 @@ public class IntersectionIterableTest
     {
         List<JSONObject> results = new ArrayList<>();        
         
-        JSONArray small = new JSONArray("["
-                + "{\"field1\": \"key001\", \"field2\": \"val1\"},"
-                + "{\"field1\": \"key002\", \"field2\": \"val2\"},"
-                + "{\"field1\": \"key003\", \"field2\": \"val3\"},"
-                + "{\"field1\": \"key004\", \"field2\": \"val4\"},"
-                + "{\"field1\": \"key005\", \"field2\": \"val5\"},"
-                + "{\"field1\": \"key050\", \"field2\": \"val6\"},"  
-                + "{\"field1\": \"key051\", \"field2\": \"val7\"}"
-                + "]");
+        JSONArray small = new JSONArray("[" +
+            "{\"field1\": \"key001\", \"field2\": \"val1\"}," + 
+            "{\"field1\": \"key002\", \"field2\": \"val2\"}," +
+            "{\"field1\": \"key003\", \"field2\": \"val3\"}," +
+            "{\"field1\": \"key004\", \"field2\": \"val4\"}," +
+            "{\"field1\": \"key005\", \"field2\": \"val5\"}," +
+            "{\"field1\": \"key050\", \"field2\": \"val6\"}," +  
+            "{\"field1\": \"key051\", \"field2\": \"val7\"}"  +
+        "]");
 
-        JSONArray large = new JSONArray("["
-                + "{\"field1\": \"key050\", \"field2\": \"val6\"},"  
-                + "{\"field1\": \"key051\", \"field2\": \"val7\"}"
-                + "]");
+        JSONArray large = new JSONArray("[" +
+            "{\"field1\": \"key050\", \"field2\": \"val6\"}," +  
+            "{\"field1\": \"key051\", \"field2\": \"val7\"}" +
+        "]");
 
-        JSONArray entropy = new JSONArray("["
-                + "{\"field1\": \"key050\", \"field2\": \"val6\"},"
-                + "{\"field1\": \"key051\", \"field2\": \"val7\"}"
-                + "]");
+        JSONArray entropy = new JSONArray("[" +
+            "{\"field1\": \"key050\", \"field2\": \"val6\"}," +
+            "{\"field1\": \"key051\", \"field2\": \"val7\"}" + 
+        "]");
 
-        JSONArray smallEntropy = new JSONArray("["
-                + "{\"field1\": \"key001\", \"field2\": \"val1\"},"
-                + "{\"field1\": \"key010\", \"field2\": \"valX\"},"  
-                + "{\"field1\": \"key020\", \"field2\": \"valY\"},"
-                + "{\"field1\": \"key030\", \"field2\": \"valZ\"},"
-                + "{\"field1\": \"key050\", \"field2\": \"val6\"},"  
-                + "{\"field1\": \"key051\", \"field2\": \"val7\"}"
-                + "]");
+        JSONArray smallEntropy = new JSONArray("[" +
+            "{\"field1\": \"key001\", \"field2\": \"val1\"}," +
+            "{\"field1\": \"key010\", \"field2\": \"valX\"}," +
+            "{\"field1\": \"key020\", \"field2\": \"valY\"}," +
+            "{\"field1\": \"key030\", \"field2\": \"valZ\"}," +
+            "{\"field1\": \"key050\", \"field2\": \"val6\"}," +  
+            "{\"field1\": \"key051\", \"field2\": \"val7\"}" +
+        "]");
         
         String[] fields = {"field1", "field2"};   
         IntersectionIterable intersection = new IntersectionIterable(fields, small, large, smallEntropy, entropy);
