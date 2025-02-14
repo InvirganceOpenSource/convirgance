@@ -133,10 +133,9 @@ public class ContainsFilter implements Filter
     public boolean test(JSONObject record)
     {
         String current = record.getString(getKey());
-        String compare = getValue();
-        
+
         if(current == null) return false;
 
-        return current.contains(compare);
+        return current.contains(getValue());
     }
 }
