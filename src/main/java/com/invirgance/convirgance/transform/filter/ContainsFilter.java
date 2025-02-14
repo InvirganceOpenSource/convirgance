@@ -56,7 +56,7 @@ import com.invirgance.convirgance.json.JSONObject;
  *   <li>Both the record value and comparison value are converted to strings before comparison</li>
  * </ul>
  * 
- * @see ComparatorFilter
+ * @see Filter
  * @see JSONObject
  * @author tadghh
  */
