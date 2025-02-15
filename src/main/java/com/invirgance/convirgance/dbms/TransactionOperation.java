@@ -23,6 +23,7 @@ package com.invirgance.convirgance.dbms;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class TransactionOperation implements AtomicOperation
      */
     public void setOperations(AtomicOperation... operations)
     {
-        this.operations = Arrays.asList(operations);
+        this.operations = new ArrayList<>(Arrays.asList(operations));
     }
 
     /**
