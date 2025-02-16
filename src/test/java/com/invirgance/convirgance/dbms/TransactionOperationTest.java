@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2025 Invirgance LLC
+ * Copyright 2025 jbanes.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.invirgance.convirgance.dbms;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tools for performing set logic on multiple streams of data 
+ *
+ * @author jbanes
  */
-package com.invirgance.convirgance.transform.sets;
+public class TransactionOperationTest
+{
+    @Test
+    public void testAddOperations()
+    {
+        TransactionOperation transaction = new TransactionOperation();
+        
+        transaction.add(new QueryOperation(new Query("select * from CUSTOMERS")));
+        
+        assertEquals(1, transaction.getOperations().length);
+    }
+    
+}
