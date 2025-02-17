@@ -23,7 +23,8 @@ package com.invirgance.convirgance.transform;
 
 import com.invirgance.convirgance.json.JSONObject;
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
@@ -55,6 +56,8 @@ import java.util.Set;
  */
 public class DateEpochTransformer implements IdentityTransformer
 {
+    private static final DateTimeFormatter DATE_FORMATTER = createDateFormatter();
+    
     private Set<String> included;
     private Set<String> excluded;
     
@@ -167,26 +170,29 @@ public class DateEpochTransformer implements IdentityTransformer
     {
         try
         {
-            return new DateTimeFormatterBuilder()
-                            .appendPattern("[yyyy-MM-dd]['T'][HH:mm:ss][HH:mm][.SSS][.SSSSSS][XXX][XX][X][Z]")
-                            .appendPattern("[yyyy-MM-dd][dd/MM/yyyy][MM/dd/yyyy]")
-                            .appendPattern("[yyyy'W'ww]['W'ww-e][yyyy-DDD]")
-                            .appendPattern("[yyyyMMdd][yyyyMMdd'T'HHmmss'Z']")
-                            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                            .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
-                            .parseDefaulting(ChronoField.MICRO_OF_SECOND, 0)
-                            .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
-                            .toFormatter()
-                            .withZone(ZoneId.systemDefault())
-                            .parse(value, Instant::from)
-                            .toEpochMilli();
+            return DATE_FORMATTER.parse(value, Instant::from).toEpochMilli();
         }
         catch (DateTimeParseException ignored)
         {
             // The value failed to parse, its either incorrect (not our problem) or the included fields were not set (we are checking every string value)
             return -1L;
         }
+    }
+    
+    private static DateTimeFormatter createDateFormatter()
+    {
+        return new DateTimeFormatterBuilder()
+            .appendPattern("[yyyy-MM-dd]['T'][HH:mm:ss][HH:mm][.SSS][.SSSSSS][XXX][XX][X][Z]")
+            .appendPattern("[yyyy-MM-dd][dd/MM/yyyy][MM/dd/yyyy]")
+            .appendPattern("[yyyy'W'ww]['W'ww-e][yyyy-DDD]")
+            .appendPattern("[yyyyMMdd][yyyyMMdd'T'HHmmss'Z']")
+            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+            .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
+            .parseDefaulting(ChronoField.MICRO_OF_SECOND, 0)
+            .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
+            .toFormatter()
+            .withZone(ZoneOffset.UTC);
     }
 }
