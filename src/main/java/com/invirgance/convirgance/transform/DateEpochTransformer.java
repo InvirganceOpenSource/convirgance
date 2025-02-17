@@ -154,16 +154,9 @@ public class DateEpochTransformer implements IdentityTransformer
             
             if(record.getString(entry) != null)
             {
-                epoch = toEpoch(record.getString(entry));
+                 epoch = toEpoch(record.getString(entry));
 
-                if(epoch != -1L) record.put(entry, epoch);
-            }
-           
-            if(record.getString(entry) != null)
-            {
-                epoch = toEpoch(record.getString(entry));
-
-                if(epoch != -1L) record.put(entry, epoch);
+                 if(epoch != -1L) record.put(entry, epoch);
             }
         }
 
