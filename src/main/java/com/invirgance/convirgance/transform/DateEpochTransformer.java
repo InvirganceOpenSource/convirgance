@@ -48,8 +48,8 @@ import java.util.Set;
  * fields are included, only those will be transformed. If specific fields are
  * excluded, all others will be transformed.</p>
  *
- * <p>
- * Example usage:</p>
+ * <p>Example usage:</p>
+ * 
  * <pre>
  * // Convert specific fields
  * String[] included = {"created_at", "updated_at"};
@@ -64,13 +64,12 @@ import java.util.Set;
  */
 public class DateEpochTransformer implements IdentityTransformer
 {
-
     private Set<String> included;
     private Set<String> excluded;
     private ISODateParser test = new ISODateParser();
 
     /**
-     * Creates a transformer that converts all date fields by default.
+     * Creates a DateEpochTransformer that try's to convert all String fields of a JSONObject to a epoch value.
      */
     public DateEpochTransformer()
     {
@@ -148,14 +147,17 @@ public class DateEpochTransformer implements IdentityTransformer
     public JSONObject transform(JSONObject record)
     {
         Long epoch;
-
+        Object value;
+        
         if(included != null)
         {
             for(String field : included)
             {
-                if(record.getString(field) != null)
+                value = record.get(field);
+                
+                if(value instanceof String)
                 {
-                    epoch = test.toEpoch(record.getString(field));
+                    epoch = test.toEpoch((String) value);
 
                     if(epoch != -1L) record.put(field, epoch);
                 }
@@ -164,15 +166,17 @@ public class DateEpochTransformer implements IdentityTransformer
             return record;
         }
 
-        for(String entry : record.keySet())
+        for(String field : record.keySet())
         {
-            if(excluded != null && excluded.contains(entry)) continue;
-
-            if(record.getString(entry) != null)
+            if(excluded != null && excluded.contains(field)) continue;
+            
+            value = record.get(field);
+                
+            if(value instanceof String)
             {
-                epoch = test.toEpoch(record.getString(entry));
+                epoch = test.toEpoch((String) value);
 
-                if(epoch != -1L) record.put(entry, epoch);
+                if(epoch != -1L) record.put(field, epoch);
             }
         }
 
