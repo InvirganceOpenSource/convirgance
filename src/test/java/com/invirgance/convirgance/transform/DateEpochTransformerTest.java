@@ -69,35 +69,49 @@ public class DateEpochTransformerTest
     }
     
     @Test  
-    private void testISO8601Formats() 
+    public void testISO8601Formats() 
     {
-        JSONObject record;
+        JSONObject record = new JSONObject();
         DateEpochTransformer transformer = new DateEpochTransformer();
 
-        String[] formats = {
-            "2025-05-19T14:30:00Z",             
-            "2025-05-19T14:30:00+00:00",         
-            "2025-05-19T14:30:00.123Z",          
-            "2025-05-19T14:30:00.123456Z",       
-            "2025-05-19T14:30:00.123+05:30",   
-            "2025-05-19",                      
-            "2025-05-19T14:30",               
-            "2025-05-19T14:30:00",             
-            "2025-W21",                       
-            "2025-W21-2",                      
-            "2025-140",                         
-            "20250519T143000Z",                  
-            "20250519"                          
+        String[] formats =
+        {
+            "2025-05-19T14:30:00.123+05:30",
+            "2025-05-19T14:30:00.123456Z",
+            "2025-05-19T14:30:00+00:00",
+            "2025-05-19T14:30:00,123Z",
+            "2011-12-03T10:15:30Z",
+            "2025-05-19T14:30:00",
+            "2025-05-19T14:30",
+            "2025-W21-2",
+            "2012-11-17",
+            "2025-W05-1",
+            "2025-W212",
+            "2025-W21",
+            "2012-337",
+            "2025W212",
+            "20121117",
+            "2012-112",
+            "2012337",
+            "2025W21",
+            "2012112",
+            "2012-11",
+            "201211",
+            "2012",
+            "20250519",
+            "20250519T143000",
+            "20250519T143000Z",
+            "20250519T143000.123",
+            "20250519T143000.123456",
+            "20250519T14:30:00,123Z",
+            "20250519T143000.123+0530",
         };
 
         for(String dateStr : formats) 
         {
-            record = new JSONObject();
             record.put("timestamp", dateStr);
-            record = transformer.transform(record);
-
+            record = transformer.transform(record);   
             assertTrue(record.get("timestamp") instanceof Long);
         }
     }
-    
 }
