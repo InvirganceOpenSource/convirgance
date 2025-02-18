@@ -66,7 +66,7 @@ public class DateEpochTransformer implements IdentityTransformer
 {
     private Set<String> included;
     private Set<String> excluded;
-    private ISODateParser test = new ISODateParser();
+    private final ISODateParser parser = new ISODateParser();
 
     /**
      * Creates a DateEpochTransformer that try's to convert all String fields of a JSONObject to a epoch value.
@@ -157,7 +157,7 @@ public class DateEpochTransformer implements IdentityTransformer
                 
                 if(value instanceof String)
                 {
-                    epoch = test.toEpoch((String) value);
+                    epoch = parser.toEpoch((String) value);
 
                     if(epoch != -1L) record.put(field, epoch);
                 }
@@ -174,7 +174,7 @@ public class DateEpochTransformer implements IdentityTransformer
                 
             if(value instanceof String)
             {
-                epoch = test.toEpoch((String) value);
+                epoch = parser.toEpoch((String) value);
 
                 if(epoch != -1L) record.put(field, epoch);
             }
@@ -238,7 +238,7 @@ public class DateEpochTransformer implements IdentityTransformer
                 .toFormatter()
                 .withZone(ZoneOffset.UTC);
 
-        // Year Month Day and possible
+        // Year Month Day and possible time
         private final DateTimeFormatter YEAR_MONTH_DAY_TIME = new DateTimeFormatterBuilder()
                 .appendPattern("[yyyyMMdd][yyyyMMdd'T'HHmmss]")
                 .optionalStart()

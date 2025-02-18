@@ -24,6 +24,10 @@ package com.invirgance.convirgance.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * Serializes data into JSON format and writes it to an output stream
@@ -348,11 +352,26 @@ public class JSONWriter implements AutoCloseable
 
         return this;
     }
+    
+    /**
+     * Writes out the given Date.
+     *
+     * @param date The date.
+     * @return This JSONWriter.
+     * @throws IOException If writing fails.
+     */
+    public JSONWriter write(Date date) throws IOException
+    {      
+        String content = Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        
+        writer.write(content);  
+        return this;
+    }
 
     /**
      * Writes a value to JSON based on its type.
      *
-     * @param object The value to write (supports null, Boolean, String, Number,
+     * @param object The value to write (supports null, Boolean, String, Number, Date,
      * JSONObject, JSONArray)
      * @return This JSONWriter.
      * @throws IOException When the given object's type is unsupported.
@@ -363,6 +382,7 @@ public class JSONWriter implements AutoCloseable
         else if(object instanceof Boolean) return write((boolean)object);
         else if(object instanceof String) return write((String)object);
         else if(object instanceof Number) return write((Number)object);
+        else if(object instanceof Date) return write((Date)object);
         else if(object instanceof JSONObject) return write((JSONObject)object);
         else if(object instanceof JSONArray) return write((JSONArray)object);
         else throw new IOException("Unrecognized object type " + object.getClass().getName());
@@ -388,12 +408,9 @@ public class JSONWriter implements AutoCloseable
     @Override
     public String toString()
     {
-        if (writer instanceof StringWriter)
-        {
-            return writer.toString();
-        }
-
+        if (writer instanceof StringWriter) return writer.toString();
+        
         return super.toString();
     }
-
+ 
 }

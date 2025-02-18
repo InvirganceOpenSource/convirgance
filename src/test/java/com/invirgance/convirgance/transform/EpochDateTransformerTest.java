@@ -135,7 +135,7 @@ public class EpochDateTransformerTest
             assertTrue(item.get("timestamp") instanceof Long);
             
             other.transform(item);
-            
+//            System.out.println(item.get("timestamp"));
             assertTrue(item.get("timestamp") instanceof String);         
         }
     }
