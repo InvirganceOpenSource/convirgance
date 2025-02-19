@@ -190,31 +190,62 @@ public class JSONWriterTest
         assertEquals("{}", new JSONWriter().write((Object) new JSONObject()).toString());
         assertEquals("[]", new JSONWriter().write((Object) new JSONArray()).toString());
     }
-
+    
     @Test
     public void testWriteDate() throws Exception 
-    {   
-        Date[] testDates = {         
-            new Date(),    
-            new Date(0L),
-            new Date(32503680000000L), 
-            new Date(-62167219200000L),       
-            Date.from(Instant.parse("2024-02-18T12:30:45.123Z"))
+    {
+        Object[][] dates = {
+            { new Date(), null },
+            { new Date(0L), "1970-01-01" },
+            { new Date(32503680000000L), "3000-01-01" },
+            { new Date(-62167219200000L), "0000-01-01" },
+            { Date.from(Instant.parse("2024-02-18T12:30:45.123Z")), "2024-02-18T12:30:45.123Z" },
+            { Date.from(Instant.parse("2025-02-19T00:00:00Z")), "2025-02-19" },
+            { Date.from(Instant.parse("2025-02-19T14:45:30Z")), "2025-02-19T14:45:30Z" },
+            { Date.from(Instant.parse("2024-02-19T15:30:00Z")), "2024-02-19T15:30:00Z" },               
+            { Date.from(Instant.parse("2024-02-19T15:30:00.1Z")), "2024-02-19T15:30:00.100Z" },         
+            { Date.from(Instant.parse("2024-02-19T15:30:00.01Z")), "2024-02-19T15:30:00.010Z" },       
+            { Date.from(Instant.parse("2024-02-19T15:30:00.001Z")), "2024-02-19T15:30:00.001Z" },       
+            { Date.from(Instant.parse("2024-02-19T15:30:00.111111Z")), "2024-02-19T15:30:00.111Z" },   
+            { Date.from(Instant.parse("2024-02-19T15:30:00.111111111Z")), "2024-02-19T15:30:00.111Z" }, 
+            { Date.from(Instant.parse("2024-02-19T15:30:00.999Z")), "2024-02-19T15:30:00.999Z" },       
+            { Date.from(Instant.parse("2024-02-19T15:30:00.9999Z")), "2024-02-19T15:30:00.999Z" },      
+            { Date.from(Instant.parse("1900-01-01T00:00:00Z")), "1900-01-01" },
+            { Date.from(Instant.parse("2079-06-06T23:59:00Z")), "2079-06-06T23:59:00Z" }
         };
-        
-        JSONWriter writer;
-        String expected;
-        String result;
-        
-        for (Date date : testDates)
-        {
-            writer = new JSONWriter();
-          
-            expected = Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);      
-            result = writer.write(date).toString();
 
-            assertEquals(expected, result);
+        Date test;
+        String expected;
+        JSONWriter writer;
+        String result;
+        Instant instant;
+        
+        for(Object[] date : dates) 
+        {
+            test = (Date) date[0];
+            expected = (String) date[1];
+                       
+            writer = new JSONWriter();
+
+            if(expected == null) 
+            {
+                instant = test.toInstant();
+                
+                if(instant.atZone(ZoneOffset.UTC).toLocalTime().equals(java.time.LocalTime.MIDNIGHT)) 
+                {
+                    expected = instant.atZone(ZoneOffset.UTC).toLocalDate().toString(); 
+                } 
+                else 
+                {
+                    expected = instant.atZone(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT); 
+                }
+            }
+
+            writer.write(test);
+            result = writer.toString().replace("\"", ""); // Remove quotes for comparison
+            assertEquals(expected, result, "Failed for date: " + test);
         }
     }
+
 
 }
