@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.invirgance.convirgance.transform;
+package com.invirgance.convirgance.transform.date;
 
 import com.invirgance.convirgance.json.JSONObject;
-import java.util.ArrayList;
+import java.time.Instant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -50,8 +50,7 @@ public class EpochDateTransformerTest
         
         record = new JSONObject();
         record.put("Item", "Pen");
-
-        record.put("Created", 1747612800000L);    
+        record.put("Created", 1747612800L);    
         record.put("Destroyed", 1747612800000L);
 
         unfiltered = new EpochDateTransformer();
@@ -61,9 +60,8 @@ public class EpochDateTransformerTest
         assertTrue(record.get("Destroyed") instanceof String);
         assertTrue(record.get("Item") instanceof String);
         
-        assertEquals("2025-05-19T00:00", record.get("Created"));
-        assertEquals("2025-05-19T00:00", record.get("Destroyed"));
-
+        assertEquals("2025-05-19T00:00:00", record.get("Created"));
+        assertEquals("2025-05-19T00:00:00", record.get("Destroyed"));
         
         record = new JSONObject();
         record.put("Item", "Pen");
@@ -76,67 +74,37 @@ public class EpochDateTransformerTest
         assertTrue(record.get("Created") instanceof String);
         assertTrue(record.get("Item") instanceof String);
         assertTrue(record.get("Destroyed") instanceof Long);
-        assertEquals("2025-05-19T00:00", record.get("Created"));
+        assertEquals("2025-05-19T00:00:00", record.get("Created"));
     }
     
     @Test  
     public void testISO8601FormatsToString() 
     {
-        JSONObject record;
-        DateEpochTransformer transformer = new DateEpochTransformer();
-        EpochDateTransformer other = new EpochDateTransformer();
-        ArrayList<JSONObject> test = new ArrayList<>();
+        JSONObject record = new JSONObject();
+        EpochDateTransformer transformer = new EpochDateTransformer();
         
-        String[] formats =
-        {
-            "2025-05-19T14:30:00.123+05:30",
-            "2025-05-19T14:30:00.123456Z",
-            "2025-05-19T14:30:00+00:00",
-            "2025-05-19T14:30:00,123Z",
-            "2011-12-03T10:15:30Z",
-            "2025-05-19T14:30:00",
-            "2025-05-19T14:30",
-            "2025-W21-2",
-            "2012-11-17",
-            "2025-W05-1",
-            "2025-W212",
-            "2025-W21",
-            "2012-337",
-            "2025W212",
-            "20121117",
-            "2012-112",
-            "2012337",
-            "2025W21",
-            "2012112",
-            "2012-11",
-            "201211",
-            "2012",
-            "20250519",
-            "20250519T143000",
-            "20250519T143000Z",
-            "20250519T143000.123",
-            "20250519T143000.123456",
-            "20250519T14:30:00,123Z",
-            "20250519T143000.123+0530",
+        Long test;
+        String expected;
+        
+        Object[][] formats = {
+            { "2025-05-19T09:00:00.123", Instant.parse("2025-05-19T09:00:00.123Z").toEpochMilli() },
+            { "2025-05-19T14:30:00.123", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "2025-05-19T14:30:00.123", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "2011-12-03T10:15:30", Instant.parse("2011-12-03T10:15:30Z").toEpochMilli() },
+            { "2025-05-19T14:30:00", Instant.parse("2025-05-19T14:30:00Z").toEpochMilli() },
+            { "2025-05-19T14:30:15", Instant.parse("2025-05-19T14:30:15Z").toEpochMilli() },
+            { "2025-05-20T00:00:00", 1747699200L },
         };
-
-        for(String date : formats) 
-        {
-            record = new JSONObject();
-            
-            record.put("timestamp", date);
-            record = transformer.transform(record);
-            
-            test.add(record);
-        }
         
-        for(JSONObject item: test)
+        for(Object[] date: formats)
         {
-            assertTrue(item.get("timestamp") instanceof Long);
+            test = (Long) date[1];
+            expected = (String) date[0];
             
-            other.transform(item);
-//            System.out.println(item.get("timestamp"));
-            assertTrue(item.get("timestamp") instanceof String);         
+            record.put("timestamp", test);
+            record = transformer.transform(record);     
+            
+            assertEquals(expected, record.get("timestamp") );
         }
     }
     

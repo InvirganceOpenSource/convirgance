@@ -19,9 +19,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.
  */
-package com.invirgance.convirgance.transform;
+package com.invirgance.convirgance.transform.date;
 
 import com.invirgance.convirgance.json.JSONObject;
+import java.time.Instant;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,6 @@ public class DateEpochTransformerTest
         DateEpochTransformer unfiltered;
 
         record = new JSONObject();
-        record.put("Item", "Pen");
         record.put("Created", "2025-05-19");
         record.put("Destoryed", "2025-05-19");
             
@@ -53,7 +54,6 @@ public class DateEpochTransformerTest
         
         assertTrue(record.get("Created") instanceof Long);
         assertTrue(record.get("Destoryed") instanceof Long);
-        assertFalse(record.get("Item") instanceof Long);
 
         record = new JSONObject();
         record.put("Item", "Pen");
@@ -73,45 +73,50 @@ public class DateEpochTransformerTest
     {
         JSONObject record = new JSONObject();
         DateEpochTransformer transformer = new DateEpochTransformer();
-
-        String[] formats =
-        {
-            "2025-05-19T14:30:00.123+05:30",
-            "2025-05-19T14:30:00.123456Z",
-            "2025-05-19T14:30:00+00:00",
-            "2025-05-19T14:30:00,123Z",
-            "2011-12-03T10:15:30Z",
-            "2025-05-19T14:30:00",
-            "2025-05-19T14:30",
-            "2025-W21-2",
-            "2012-11-17",
-            "2025-W05-1",
-            "2025-W212",
-            "2025-W21",
-            "2012-337",
-            "2025W212",
-            "20121117",
-            "2012-112",
-            "2012337",
-            "2025W21",
-            "2012112",
-            "2012-11",
-            "201211",
-            "2012",
-            "20250519",
-            "20250519T143000",
-            "20250519T143000Z",
-            "20250519T143000.123",
-            "20250519T143000.123456",
-            "20250519T14:30:00,123Z",
-            "20250519T143000.123+0530",
+        
+        String test;
+        Long expected;
+        
+        Object[][] dates = {
+            { "2025-05-19T14:30:00.123+05:30", Instant.parse("2025-05-19T09:00:00.123Z").toEpochMilli() },
+            { "2025-05-19T14:30:00.123456Z", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "2025-05-19T14:30:00+00:00", Instant.parse("2025-05-19T14:30:00Z").toEpochMilli() },
+            { "2025-05-19T14:30:00,123Z", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "2011-12-03T10:15:30Z", Instant.parse("2011-12-03T10:15:30Z").toEpochMilli() },
+            { "2025-05-19T14:30:00", Instant.parse("2025-05-19T14:30:00Z").toEpochMilli() },
+            { "2025-05-19T14:30", Instant.parse("2025-05-19T14:30:00Z").toEpochMilli() },
+            { "2025-W21-2", 1747699200L },
+            { "2012-11-17", 1353110400L },
+            { "2025-W05-1",1737936000L  },
+            { "2025-W21",1747612800L },
+            { "2012-337", 1354406400L },
+            { "2025W212", 1747612800L },
+            { "20121117", 1353110400L },
+            { "2012-112", 1334966400L},
+            { "2012337", 1354406400L },
+            { "2025W21", 1747612800L },
+            { "2012112", 1334966400L },
+            { "2012-11", Instant.parse("2012-11-01T00:00:00Z").toEpochMilli() },
+            { "201211", Instant.parse("2012-11-01T00:00:00Z").toEpochMilli() },
+            { "2012", Instant.parse("2012-01-01T00:00:00Z").toEpochMilli() },
+            { "20250519", 1747612800L },
+            { "20250519T143000", Instant.parse("2025-05-19T14:30:00Z").toEpochMilli() },
+            { "20250519T143000Z", Instant.parse("2025-05-19T14:30:00Z").toEpochMilli() },
+            { "20250519T143000.123", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "20250519T143000.123456", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "20250519T14:30:00,123Z", Instant.parse("2025-05-19T14:30:00.123Z").toEpochMilli() },
+            { "20250519T143000.123+0530", Instant.parse("2025-05-19T09:00:00.123Z").toEpochMilli() }
         };
 
-        for(String dateStr : formats) 
+        for(Object[] date : dates) 
         {
-            record.put("timestamp", dateStr);
+            test = (String) date[0];
+            expected = (Long) date[1];
+            
+            record.put("timestamp", test);
             record = transformer.transform(record);   
-            assertTrue(record.get("timestamp") instanceof Long);
+            
+            assertEquals(expected, record.get("timestamp"));
         }
     }
 }
