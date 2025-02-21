@@ -24,10 +24,6 @@ package com.invirgance.convirgance.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -363,17 +359,7 @@ public class JSONWriter implements AutoCloseable
      */
     public JSONWriter write(Date date) throws IOException 
     {      
-        ZonedDateTime zdt = date.toInstant().atZone(ZoneOffset.UTC);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT;
-        
-        if(zdt.toLocalTime().equals(LocalTime.MIDNIGHT)) 
-        {
-            writer.write("\"" + zdt.toLocalDate().toString() + "\"");
-            
-            return this;
-        }
-     
-        writer.write("\"" + zdt.format(formatter) + "\"");
+        writer.write("\"" + date.toInstant().toString() + "\"");
         return this;
     }
 
