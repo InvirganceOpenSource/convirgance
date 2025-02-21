@@ -24,8 +24,22 @@ package com.invirgance.convirgance.transform.date;
 import java.util.Date;
 
 /**
- * Transforms the String values of a JSONObject into a Date object.
- * Allows selective field inclusion and exclusion.
+ * Transforms String values of a JSONObject into a Date.
+ * 
+ * <p>This transformer scans JSONObjects and transforms Strings values (formatted as RFC 1123)
+ * into their corresponding Date. If specific fields are included, only those fields will be transformed. 
+ * If specific fields are excluded, all other fields will be transformed.</p>
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ * // Convert specific fields
+ * String[] included = {"created_at", "updated_at"};
+ * StringDateTransformer transformer = new StringDateTransformer(included, null);
+ *
+ * // Convert all fields except "excluded_field"
+ * String[] excluded = {"excluded_field"};
+ * StringDateTransformer transformer = new StringDateTransformer(null, excluded);
+ * </pre>
  * 
  * Note:
  *  - Only supports transforming from Strings (Dates) formatted as RFC 1123

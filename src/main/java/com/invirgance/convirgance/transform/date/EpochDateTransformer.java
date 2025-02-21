@@ -24,11 +24,10 @@ package com.invirgance.convirgance.transform.date;
 import java.util.Date;
 
 /**
- * Transforms the epoch timestamp values from a JSONObject into Dates.
- * Allows selective field inclusion and exclusion.
+ * Transforms epoch values of a JSONObject into Date objects.
  * 
  * <p>This transformer scans JSONObjects and transforms epoch timestamps 
- * into their corresponding Date value. If specific fields are included, only those fields will be transformed. 
+ * into their corresponding Date. If specific fields are included, only those fields will be transformed. 
  * If specific fields are excluded, all other fields will be transformed.</p>
  *
  * <p>Example usage:</p>

@@ -23,14 +23,14 @@
  */
 
 /**
- * Transformers for modifying the Date like values of JSONObject streams.
+ * Support for transforming Date like values into other representations (epoch, String, Date).
  * 
  * <p>Supports transforming:</p>
  * <ul>
  * <li>String -> Date</li>
  * <li>Date -> String</li>
- * <li>Epoch -> Date</li>
- * <li>Date -> Epoch</li>
+ * <li>Epoch (Long) -> Date</li>
+ * <li>Date -> Epoch (Long)</li>
  * </ul>
  * 
  * <p>Note: Strings must be formatted as RFC 1123</p>

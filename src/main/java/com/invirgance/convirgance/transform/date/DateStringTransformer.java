@@ -24,13 +24,12 @@ package com.invirgance.convirgance.transform.date;
 import java.util.Date;
 
 /**
- * Transforms the Date values of a JSONObject into Strings.
- * Allows selective field inclusion and exclusion.
+ * Transforms Date values of a JSONObject into their String representation.
  *
  * <p>
- * This transformer scans JSON records and converts Dates into their String representation.
  * If specific fields are included, only those will be transformed. If specific fields are excluded, all others
- * will be transformed.</p>
+ * will be transformed.
+ * </p>
  *
  * <p>Example usage:</p>
  * 

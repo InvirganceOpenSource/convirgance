@@ -100,7 +100,8 @@ public abstract class DateTime implements IdentityTransformer
 
     /**
      * Sets the field names to exclude from type conversion.
-     *
+     * If both excluded and included are set and a identical field is included in both it will remain excluded.
+     * 
      * @param excluded Array of field names to exclude from conversion. Set to null to exclude no fields.
      */
     public void setExcluded(String[] excluded) 
