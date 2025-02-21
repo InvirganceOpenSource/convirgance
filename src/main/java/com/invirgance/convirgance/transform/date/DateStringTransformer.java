@@ -68,16 +68,14 @@ public class DateStringTransformer extends DateTime
     }
 
     /**
-     * Transforms the Date object into its String representation.
+     * Transforms the Date object to a String in the ISO 8601 Standard.
      *
      * @param value The value to transform
-     * @return The Date's String representation, or null.
+     * @return The Date's string in the ISO 8601 Standard, or null.
      */
     @Override
     protected Object transformAction(Object value) 
     {
-        if(value instanceof Date) return ((Date) value).toString();
-        
-        return null;
+        return value instanceof Date ? ((Date) value).toInstant().toString() : null;
     }
 }

@@ -23,7 +23,19 @@ package com.invirgance.convirgance.transform.date;
 
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.IdentityTransformer;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +56,7 @@ public abstract class DateTime implements IdentityTransformer
 {
     private Set<String> included;
     private Set<String> excluded;
-
+    protected final ISODateParser parser;
     /**
      * Creates a new Date transformer with no field restrictions.
      */
@@ -63,6 +75,7 @@ public abstract class DateTime implements IdentityTransformer
     {
         this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
         this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
+        this.parser = new ISODateParser();
     }
 
     /**
@@ -169,5 +182,158 @@ public abstract class DateTime implements IdentityTransformer
         return record;
     }
    
+    /**
+    * A utility class for parsing and normalizing various ISO 8601 date-time formats.
+    * Supports a wide range of formats including:
+    * <ul>
+    *   <li>Basic and extended ISO calendar dates (e.g., "20250519", "2025-05-19")</li>
+    *   <li>Date-times with optional fractional seconds (e.g., "2025-05-19T14:30:00.123")</li>
+    *   <li>Week dates (e.g., "2025-W21-2", "2025W212")</li>
+    *   <li>Ordinal dates (e.g., "2012-337")</li>
+    *   <li>Partial dates (Year-Month, Year only)</li>
+    *   <li>Dates with timezone offsets</li>
+    * </ul>
+    */
+    protected class ISODateParser
+    {
+        private TemporalAccessor parsed;
 
+        public ISODateParser()
+        {
+        }
+        
+        /**
+         * Converts a string date representation to Epoch milliseconds.
+         * 
+         * @param value A date as string.
+         * @return Epoch milliseconds for the date.
+         */
+        public long toEpoch(String value)
+        {
+            parsed = FORMATTER.parseBest(value, ZonedDateTime::from, LocalDateTime::from, LocalDate::from, Instant::from, YearMonth::from, Year::from);
+
+            if(parsed instanceof ZonedDateTime) return ((ZonedDateTime) parsed).toInstant().toEpochMilli();
+            if(parsed instanceof LocalDateTime) return ((LocalDateTime) parsed).toInstant(ZoneOffset.UTC).toEpochMilli();
+            if(parsed instanceof LocalDate) return ((LocalDate) parsed).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            if(parsed instanceof YearMonth) return ((YearMonth) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            if(parsed instanceof Year) return ((Year) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            
+            return ((Instant) parsed).toEpochMilli();
+        }
+        
+        /**
+         * Converts any supported ISO 8601 string to a normalized UTC format.
+         * 
+         * @param value A string representing a date in any supported ISO 8601 format
+         * @return An string in UTC (e.g., "2025-05-19T00:00:00Z") 
+         */
+        public String toString(String value)
+        {
+            parsed = FORMATTER.parseBest(value, ZonedDateTime::from, LocalDateTime::from, LocalDate::from, Instant::from, YearMonth::from, Year::from);
+
+            if(parsed instanceof ZonedDateTime) return ((ZonedDateTime) parsed).toInstant().toString();
+            if(parsed instanceof LocalDateTime) return ((LocalDateTime) parsed).toInstant(ZoneOffset.UTC).toString();
+            if(parsed instanceof LocalDate) return ((LocalDate) parsed).atStartOfDay(ZoneOffset.UTC).toInstant().toString();
+            if(parsed instanceof YearMonth) return ((YearMonth) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().toString();
+            if(parsed instanceof Year) return ((Year) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().toString();
+
+            return ((Instant) parsed).toString();
+        }
+        
+        /**
+         * Takes a Long or a String and returns it as a Date.
+         * Note: 
+         * - Longs should be as Epoch milliseconds.
+         * - Strings should be ISO 8601
+         * 
+         * @param value A long or String
+         * @return A new Date Object
+         */
+        public Date toDate(Object value)
+        {
+            return value instanceof Long ? new Date((Long) value) : new Date(toEpoch((String) value));
+        }
+
+        private final DateTimeFormatter BASIC_WEEK_FORMATTER = new DateTimeFormatterBuilder()
+                .appendPattern("YYYY")
+                .optionalStart()
+                .appendLiteral('-')
+                .optionalEnd()
+                .appendLiteral('W')
+                .appendPattern("ww")
+                .optionalStart()
+                .optionalStart()
+                .appendLiteral('-')
+                .optionalEnd()
+                .appendPattern("e")
+                .optionalEnd()
+                .parseDefaulting(ChronoField.DAY_OF_WEEK, 1)
+                .toFormatter();
+
+        private final DateTimeFormatter BASIC_WEEK_DAY_FORMATTER = new DateTimeFormatterBuilder()
+                .appendPattern("YYYY'W'wwe").toFormatter();
+
+        private final DateTimeFormatter BASIC_DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
+                .appendPattern("yyyyMMdd")
+                .optionalStart()
+                .appendLiteral('T')
+                .appendPattern("HHmmss")
+                .optionalStart()
+                .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
+                .optionalEnd()
+                .optionalStart()
+                .appendOffset("+HHMM", "Z")
+                .optionalEnd()
+                .optionalEnd()
+                .toFormatter()
+                .withZone(ZoneOffset.UTC);
+
+        // As in Year Month, Year Day or just Year
+        private final DateTimeFormatter BASIC_YEAR_MONTH_DAY_FORMATTER = new DateTimeFormatterBuilder()
+                .appendPattern("[yyyyMM][yyyy-MM][yyyyDDD][yyyy]")
+                .toFormatter()
+                .withZone(ZoneOffset.UTC);
+
+        // Year Month Day and possible time
+        private final DateTimeFormatter YEAR_MONTH_DAY_TIME = new DateTimeFormatterBuilder()
+                .appendPattern("[yyyyMMdd][yyyyMMdd'T'HHmmss]")
+                .optionalStart()
+                .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
+                .optionalEnd()
+                .toFormatter()
+                .withZone(ZoneOffset.UTC);
+
+        // Europe
+        private final DateTimeFormatter ISO_DATE_TIME_COMMA = new DateTimeFormatterBuilder()
+                .appendPattern("[yyyy-MM-dd'T'HH:mm:ss][yyyyMMdd'T'HH:mm:ss]")
+                .appendLiteral(',')
+                .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, false)
+                .appendOffset("+HH:mm", "Z")
+                .toFormatter()
+                .withZone(ZoneOffset.UTC);
+        
+        private final DateTimeFormatter DATE_OBJECT_PATTERN = new DateTimeFormatterBuilder()
+                .appendPattern("EEE MMM dd HH:mm:ss zzz yyyy")
+                .toFormatter();
+        
+        // Handles formatting of most if not all UTC date, date+time formats
+        private final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
+                .appendOptional(DateTimeFormatter.ISO_INSTANT)
+                .appendOptional(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+                .appendOptional(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                .appendOptional(BASIC_WEEK_DAY_FORMATTER)
+                .appendOptional(ISO_DATE_TIME_COMMA)
+                .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE_TIME)        
+                .appendOptional(DateTimeFormatter.ISO_WEEK_DATE)
+                .appendOptional(DateTimeFormatter.ISO_ORDINAL_DATE)           
+                .appendOptional(BASIC_WEEK_FORMATTER)       
+                .appendOptional(BASIC_DATE_TIME_FORMATTER)
+                .appendOptional(YEAR_MONTH_DAY_TIME)          
+                .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
+                .appendOptional(DateTimeFormatter.BASIC_ISO_DATE)
+                .appendOptional(BASIC_YEAR_MONTH_DAY_FORMATTER)
+                .appendOptional(DATE_OBJECT_PATTERN)
+                .toFormatter()
+                .withZone(ZoneOffset.UTC);
+    }
 }

@@ -21,8 +21,6 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.date;
 
-import java.util.Date;
-
 /**
  * Transforms epoch values of a JSONObject into Date objects.
  * 
@@ -66,7 +64,7 @@ public class EpochDateTransformer extends DateTime
     }
 
     /**
-     * Converts an epoch value into a Date.
+     * Takes an epoch timestamp transforming it into a Date.
      *
      * @param value The value to transform
      * @return The Date or null.
@@ -74,9 +72,7 @@ public class EpochDateTransformer extends DateTime
     @Override
     protected Object transformAction(Object value) 
     {
-        if(value instanceof Long) return new Date((Long) value);
-        
-        return null;
+        return (value instanceof Long) ? parser.toDate((Long) value) : null;
     }
 
 }

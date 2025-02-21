@@ -40,6 +40,7 @@ public class StringDateTransformerTest
 
     /**
      * Test of transformAction method, of class StringDateTransformer.
+     * Strings representing dates should be transformed into Date objects
      */
     @Test
     public void testTransformAction()
@@ -49,6 +50,7 @@ public class StringDateTransformerTest
         
         Long epoch = 1740087929886L;
         Date date = new Date(epoch);
+        String test = "2025-02-20T21:45:29.886Z";
         String expected = date.toString();
         
         JSONObject record = new JSONObject();
@@ -57,25 +59,25 @@ public class StringDateTransformerTest
         // Test basic value transformation
 //record.put("Item", "Phone"); The user would know not the try and convert their Item fields into dates
 
-        record.put("Created", expected);
-        record.put("Destroyed", expected);
+        record.put("Created", test);
+        record.put("Destroyed", test);
         
         record = transformer.transform(record);
-        
         assertEquals(expected, record.get("Created").toString());
         assertEquals(expected, record.get("Destroyed").toString());
         
         // Verify that excluded values remain unchanged
         record = new JSONObject();
         record.put("Item", "Phone");
-        record.put("Created", expected);
-        record.put("Destroyed", expected);
+        record.put("Created", test);
+        record.put("Destroyed", test);
             
         transformer = new StringDateTransformer(included, excluded);
         transformer.transform(record);
         
         assertTrue(record.get("Item") instanceof String);     
         assertEquals(expected, record.get("Created").toString());
+        assertTrue(record.get("Created") instanceof Date);
         assertTrue(record.get("Destroyed") instanceof String);
     }
     

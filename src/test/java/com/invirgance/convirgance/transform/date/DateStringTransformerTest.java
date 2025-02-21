@@ -46,8 +46,8 @@ public class DateStringTransformerTest
 
         Long epoch = 1740087929886L;
         Date date = new Date(epoch);
-        String expected = date.toString();
-        
+        String expected = "2025-02-20T21:45:29.886Z";
+
         JSONObject record = new JSONObject();
         DateStringTransformer transformer = new DateStringTransformer();
 

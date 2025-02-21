@@ -46,7 +46,6 @@ public class DateEpochTransformerTest
         
         Long expected = 1740087929886L;
         Date date = new Date(expected);
-        
         JSONObject record = new JSONObject();
         DateEpochTransformer transformer = new DateEpochTransformer();
         
