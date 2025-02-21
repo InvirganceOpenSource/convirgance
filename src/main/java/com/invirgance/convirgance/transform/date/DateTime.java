@@ -19,39 +19,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.
  */
-package com.invirgance.convirgance.transform;
+package com.invirgance.convirgance.transform.date;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.IdentityTransformer;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
- * A transformer class that handles date format conversions for JSON fields.
- * This class extends DateTime and provides functionality to convert between different
- * date representations including Date objects, Strings, and epoch timestamps (Numbers).
- * 
- * The transformer can be configured to:
- * - Convert Date objects to Strings or Numbers (epoch timestamps)
- * - Convert Strings or Numbers (epoch timestamps) to Date objects
- * - Selectively apply transformations to specific fields
- * - Exclude specific fields from transformation
- * - Only supports conversion from String (Dates) formatted as RFC 1123
- * 
+ * Abstract base class for date-related transformers that handle JSON field conversions.
+ * Provides common functionality for field inclusion/exclusion and transformation logic.
+ *
+ * <p>
+ * This class implements the basic structure for date transformers, including:
+ * - Field inclusion/exclusion management
+ * - Common transformation patterns
+ * - Base implementation of the IdentityTransformer interface
+ * </p>
+ *
  * @author tadghh
  */
-public class DateTransformer implements IdentityTransformer 
+public abstract class DateTime implements IdentityTransformer 
 {
-    private Function<Object, Object> transformAction;
     private Set<String> included;
     private Set<String> excluded;
 
     /**
      * Creates a new Date transformer with no field restrictions.
      */
-    public DateTransformer() 
+    protected DateTime() 
     {
         this(null, null);
     }
@@ -62,7 +59,7 @@ public class DateTransformer implements IdentityTransformer
      * @param included Field names to include in the conversion. Null for all.
      * @param excluded Field names to exclude from conversion. Null for none.
      */
-    public DateTransformer(String[] included, String[] excluded) 
+    protected DateTime(String[] included, String[] excluded) 
     {
         this.included = included != null ? new HashSet<>(Arrays.asList(included)) : null;
         this.excluded = excluded != null ? new HashSet<>(Arrays.asList(excluded)) : null;
@@ -111,87 +108,35 @@ public class DateTransformer implements IdentityTransformer
         if(excluded == null) this.excluded = null;
         else this.excluded = new HashSet<>(Arrays.asList(excluded));
     }
-   
+
     /**
-     * Enables conversion from Date to String during transformation.
-     * Setting this will override any previous value.
-     * 
-     * @param enabled If the transform action should be set to this.
+     * Checks if a field should be processed based on inclusion/exclusion rules.
+     *
+     * @param field The field name to check
+     * @return true if the field should be processed, false otherwise
      */
-    public void setConvertToString(boolean enabled) 
-    {
-        if(enabled)
-        {
-            transformAction = value -> value instanceof Date ? ((Date) value).toString() : null;
-        }
-        else
-        {
-            transformAction = null;
-        }
-    }
-    
-    /**
-     * Enables conversion from Date to Number during transformation.
-     * Setting this will override any previous value.
-     * 
-     * @param enabled If the transform action should be set to this.
-     */
-    public void setConvertToNumber(boolean enabled) 
-    {
-        if(enabled)
-        {
-            transformAction = value -> value instanceof Date ? ((Date) value).getTime() : null;
-        }
-        else
-        {
-            transformAction = null;
-        }
-    }
-    
-    /**
-     * Enables conversion from String to Date during transformation.
-     * Setting this will override any previous value.
-     * 
-     * @param enabled If the transform action should be set to this.
-     */
-    public void setConvertFromString(boolean enabled) 
-    {
-        if(enabled)
-        {
-            transformAction = value -> value instanceof String ? new Date((String) value) : null;
-        }
-        else
-        {
-            transformAction = null;
-        }
-    }
-    
-    /**
-     * Enables conversion from Number to Date during transformation. 
-     * Setting this will override any previous value.
-     * 
-     * @param enabled If the transform action should be set to this.
-     */
-    public void setConvertFromNumber(boolean enabled) 
-    {
-        if(enabled)
-        {
-            transformAction = value -> value instanceof Long ? new Date((Long) value) : null;
-        }
-        else
-        {
-            transformAction = null;
-        }
-    }  
-    
-    private boolean shouldProcessField(String field) 
+    protected boolean shouldProcessField(String field) 
     {
         if(excluded != null && excluded.contains(field)) return false;
         if(included != null && !included.contains(field)) return false;
         
         return true;
     }
-    
+
+    /**
+     * Template method for transforming a JSON field value.
+     *
+     * @param value The value to transform
+     * @return The transformed value
+     */
+    protected abstract Object transformAction(Object value);
+
+    /**
+     * Transforms JSON fields according to the concrete transformer's logic.
+     *
+     * @param record The JSON object being transformed.
+     * @return The transformed JSON object.
+     */
     @Override
     public JSONObject transform(JSONObject record) 
     {     
@@ -201,7 +146,7 @@ public class DateTransformer implements IdentityTransformer
             {
                 if(shouldProcessField(field)) 
                 {                
-                    Object transformed = transformAction.apply(record.get(field));
+                    Object transformed = transformAction(record.get(field));
                     
                     if(transformed != null) record.put(field, transformed);    
                 }
@@ -214,7 +159,7 @@ public class DateTransformer implements IdentityTransformer
         {
             if(shouldProcessField(field))
             {
-                Object transformed = transformAction.apply(record.get(field));
+                Object transformed = transformAction(record.get(field));
                 
                 if(transformed != null) record.put(field, transformed);
             }
@@ -222,4 +167,6 @@ public class DateTransformer implements IdentityTransformer
         
         return record;
     }
+   
+
 }
