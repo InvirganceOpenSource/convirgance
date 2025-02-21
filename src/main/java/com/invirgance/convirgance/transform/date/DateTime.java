@@ -203,22 +203,22 @@ public abstract class DateTime implements IdentityTransformer
         }
         
         /**
-         * Converts a string date representation to Epoch milliseconds.
+         * Converts a dates represented as a string into a Epoch timestamp.
          * 
          * @param value A date as string.
-         * @return Epoch milliseconds for the date.
+         * @return Epoch timestamp for the date.
          */
         public long toEpoch(String value)
         {
             parsed = FORMATTER.parseBest(value, ZonedDateTime::from, LocalDateTime::from, LocalDate::from, Instant::from, YearMonth::from, Year::from);
 
-            if(parsed instanceof ZonedDateTime) return ((ZonedDateTime) parsed).toInstant().toEpochMilli();
-            if(parsed instanceof LocalDateTime) return ((LocalDateTime) parsed).toInstant(ZoneOffset.UTC).toEpochMilli();
-            if(parsed instanceof LocalDate) return ((LocalDate) parsed).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-            if(parsed instanceof YearMonth) return ((YearMonth) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-            if(parsed instanceof Year) return ((Year) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            if(parsed instanceof ZonedDateTime) return ((ZonedDateTime) parsed).toInstant().getEpochSecond();
+            if(parsed instanceof LocalDateTime) return ((LocalDateTime) parsed).toInstant(ZoneOffset.UTC).getEpochSecond();
+            if(parsed instanceof LocalDate) return ((LocalDate) parsed).atStartOfDay(ZoneOffset.UTC).toInstant().getEpochSecond();
+            if(parsed instanceof YearMonth) return ((YearMonth) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().getEpochSecond();
+            if(parsed instanceof Year) return ((Year) parsed).atDay(1).atStartOfDay(ZoneOffset.UTC).toInstant().getEpochSecond();
             
-            return ((Instant) parsed).toEpochMilli();
+            return ((Instant) parsed).getEpochSecond();
         }
         
         /**
@@ -243,7 +243,7 @@ public abstract class DateTime implements IdentityTransformer
         /**
          * Takes a Long or a String and returns it as a Date.
          * Note: 
-         * - Longs should be as Epoch milliseconds.
+         * - Longs should be a Epoch timestamp.
          * - Strings should be ISO 8601
          * 
          * @param value A long or String
@@ -251,7 +251,7 @@ public abstract class DateTime implements IdentityTransformer
          */
         public Date toDate(Object value)
         {
-            return value instanceof Long ? new Date((Long) value) : new Date(toEpoch((String) value));
+            return value instanceof Long ? new Date((Long) value * 1000) : new Date(toEpoch((String) value) * 1000);
         }
 
         private final DateTimeFormatter BASIC_WEEK_FORMATTER = new DateTimeFormatterBuilder()

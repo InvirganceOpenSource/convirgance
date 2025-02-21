@@ -44,8 +44,8 @@ public class EpochDateTransformerTest
         String[] included = {"Created"};
         String[] excluded = {"Destroyed","Item"};
         
-        Long epoch = 1740087929886L;
-        String expected = new Date(epoch).toString();
+        Long epoch = 1740087929L;
+        String expected = new Date(epoch * 1000).toString();
         
         JSONObject record = new JSONObject();
         EpochDateTransformer transformer = new EpochDateTransformer();

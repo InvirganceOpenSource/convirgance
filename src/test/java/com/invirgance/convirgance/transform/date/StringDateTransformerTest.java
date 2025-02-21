@@ -47,10 +47,10 @@ public class StringDateTransformerTest
     {
         String[] included = {"Created"};
         String[] excluded = {"Destroyed","Item"};
-        
-        Long epoch = 1740087929886L;
-        Date date = new Date(epoch);
-        String test = "2025-02-20T21:45:29.886Z";
+     
+        Long epoch = 1740087929L;
+        Date date = new Date(epoch * 1000);
+        String test = "2025-02-20T21:45:29Z";
         String expected = date.toString();
         
         JSONObject record = new JSONObject();

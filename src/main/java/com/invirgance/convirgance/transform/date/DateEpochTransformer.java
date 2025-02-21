@@ -28,8 +28,7 @@ import java.util.Date;
  * 
  * <p>
  * This transformer scans JSON records and converts Date values into their
- * corresponding epoch timestamps (milliseconds since Unix epoch). If specific
- * fields are included, only those will be transformed. If specific fields are
+ * corresponding epoch timestamps. If specific fields are included, only those will be transformed. If specific fields are
  * excluded, all others will be transformed.</p>
  *
  * <p>Example usage:</p>
@@ -74,7 +73,7 @@ public class DateEpochTransformer extends DateTime
      * Transforms a Date to its Epoch timestamp.
      *
      * @param value The value to transform
-     * @return The Epoch millisecond timestamp for the Date, or null.
+     * @return The Epoch timestamp for the Date, or null.
      */
     @Override
     protected Object transformAction(Object value) 
