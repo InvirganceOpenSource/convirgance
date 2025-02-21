@@ -44,8 +44,8 @@ public class DateEpochTransformerTest
         String[] included = {"Created"};
         String[] excluded = {"Destroyed","Item"};
         
-        Long expected = 1740087929L;
-        Date date = new Date(expected * 1000);
+        Long expected = 1740087929L * 1000;
+        Date date = new Date(expected);
         JSONObject record = new JSONObject();
         DateEpochTransformer transformer = new DateEpochTransformer();
         

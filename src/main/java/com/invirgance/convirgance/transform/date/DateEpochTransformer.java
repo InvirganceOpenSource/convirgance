@@ -70,10 +70,10 @@ public class DateEpochTransformer extends DateTime
     }
 
     /**
-     * Transforms a Date to its Epoch timestamp.
+     * Transforms a Date to its Epoch millisecond timestamp.
      *
      * @param value The value to transform
-     * @return The Epoch timestamp for the Date, or null.
+     * @return The Epoch millisecond timestamp for the Date, or null.
      */
     @Override
     protected Object transformAction(Object value) 

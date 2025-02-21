@@ -22,9 +22,9 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.date;
 
 /**
- * Transforms Epoch timestamp values of a JSONObject into Date objects.
+ * Transforms Epoch millisecond timestamp values of a JSONObject into Date objects.
  * 
- * <p>This transformer scans JSONObjects and transforms Epoch timestamps 
+ * <p>This transformer scans JSONObjects and transforms Epoch millisecond timestamps 
  * into their corresponding Date. If specific fields are included, only those fields will be transformed. 
  * If specific fields are excluded, all other fields will be transformed.</p>
  *
@@ -64,7 +64,7 @@ public class EpochDateTransformer extends DateTime
     }
 
     /**
-     * Takes an Epoch timestamp transforming it into a Date.
+     * Takes an Epoch millisecond timestamp transforming it into a Date.
      *
      * @param value The value to transform
      * @return The Date or null.
