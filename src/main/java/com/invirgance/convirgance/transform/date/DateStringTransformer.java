@@ -45,7 +45,7 @@ import java.util.Date;
  *
  * @author tadghh
  */
-public class DateStringTransformer extends DateTime 
+public class DateStringTransformer extends DateTime<Date, String> 
 {
     
     /**
@@ -74,8 +74,8 @@ public class DateStringTransformer extends DateTime
      * @return The Date's string in the ISO 8601 Standard, or null.
      */
     @Override
-    protected Object transformAction(Object value) 
+    protected String transformAction(Date value) 
     {
-        return value instanceof Date ? ((Date) value).toInstant().toString() : null;
+        return value.toInstant().toString();
     }
 }

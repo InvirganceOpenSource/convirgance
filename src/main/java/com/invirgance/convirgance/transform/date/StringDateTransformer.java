@@ -21,6 +21,8 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.date;
 
+import java.util.Date;
+
 /**
  * Transforms String values of a JSONObject into a Date.
  * 
@@ -44,7 +46,7 @@ package com.invirgance.convirgance.transform.date;
  * 
  * @author tadghh
  */
-public class StringDateTransformer extends DateTime 
+public class StringDateTransformer extends DateTime<String, Date> 
 {
     /**
      * Creates a transformer that creates Date objects from Strings.
@@ -72,8 +74,8 @@ public class StringDateTransformer extends DateTime
      * @return The Date or null.
      */
     @Override
-    protected Object transformAction(Object value) 
+    protected Date transformAction(String value) 
     {
-        return (value instanceof String) ? parser.toDate((String) value) : null;
+        return parser.toDate(value);
     }
 }

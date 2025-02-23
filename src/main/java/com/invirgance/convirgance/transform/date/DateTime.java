@@ -52,7 +52,7 @@ import java.util.Set;
  *
  * @author tadghh
  */
-public abstract class DateTime implements IdentityTransformer 
+public abstract class DateTime<I, O> implements IdentityTransformer 
 {
     private Set<String> included;
     private Set<String> excluded;
@@ -124,26 +124,12 @@ public abstract class DateTime implements IdentityTransformer
     }
 
     /**
-     * Checks if a field should be processed based on inclusion/exclusion rules.
-     *
-     * @param field The field name to check
-     * @return true if the field should be processed, false otherwise
-     */
-    protected boolean shouldProcessField(String field) 
-    {
-        if(excluded != null && excluded.contains(field)) return false;
-        if(included != null && !included.contains(field)) return false;
-        
-        return true;
-    }
-
-    /**
      * Template method for transforming a JSON field value.
      *
      * @param value The value to transform
      * @return The transformed value
      */
-    protected abstract Object transformAction(Object value);
+    protected abstract O transformAction(I value);
 
     /**
      * Transforms JSON fields according to the concrete transformer's logic.
@@ -158,11 +144,16 @@ public abstract class DateTime implements IdentityTransformer
         {
             for(String field : included) 
             {
-                if(shouldProcessField(field)) 
+                if(!(excluded != null && excluded.contains(field))) 
                 {                
-                    Object transformed = transformAction(record.get(field));
-                    
-                    if(transformed != null) record.put(field, transformed);    
+                    try
+                    {
+                        record.put(field, transformAction((I) record.get(field)));
+                    }
+                    catch(ClassCastException e)
+                    {
+                        continue;
+                    }
                 }
             }
             
@@ -171,11 +162,16 @@ public abstract class DateTime implements IdentityTransformer
 
         for(String field : record.keySet())
         {
-            if(shouldProcessField(field))
+            if(!(excluded != null && excluded.contains(field)))
             {
-                Object transformed = transformAction(record.get(field));
-                
-                if(transformed != null) record.put(field, transformed);
+                try
+                {
+                    record.put(field, transformAction((I) record.get(field)));
+                }
+                catch (ClassCastException e)
+                {
+                    continue;
+                }
             }
         }
         

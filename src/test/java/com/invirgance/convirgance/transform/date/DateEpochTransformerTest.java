@@ -57,6 +57,7 @@ public class DateEpochTransformerTest
         record = transformer.transform(record);
         
         assertTrue(record.get("Item") instanceof String);
+        assertEquals("Phone", record.get("Item"));
         assertEquals(expected, record.get("Created"));
         assertEquals(expected, record.get("Destroyed"));
         

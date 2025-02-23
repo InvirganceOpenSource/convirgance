@@ -42,10 +42,9 @@ import java.util.Date;
  * String[] excluded = {"excluded_field"};
  * DateEpochTransformer transformer = new DateEpochTransformer(null, excluded);
  * </pre>
- * @see java.util.Date(long)
  * @author tadghh
  */
-public class DateEpochTransformer extends DateTime 
+public class DateEpochTransformer extends DateTime<Date, Long> 
 {
     
     /**
@@ -76,10 +75,8 @@ public class DateEpochTransformer extends DateTime
      * @return The Epoch millisecond timestamp for the Date, or null.
      */
     @Override
-    protected Object transformAction(Object value) 
+    protected Long transformAction(Date value) 
     {
-        if(value instanceof Date) return parser.toEpoch(((Date) value).toInstant().toString());
-       
-        return null;
+       return parser.toEpoch(value.toInstant().toString());
     }
 }
