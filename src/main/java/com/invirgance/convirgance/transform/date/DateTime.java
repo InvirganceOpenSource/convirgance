@@ -49,14 +49,17 @@ import java.util.Set;
  * - Common transformation patterns
  * - Base implementation of the IdentityTransformer interface
  * </p>
- *
+ * 
+ * @param <Input> The data-type to transform from.
+ * @param <Output> The output (return) type the input will be transformed into.
  * @author tadghh
  */
-public abstract class DateTime<I, O> implements IdentityTransformer 
+public abstract class DateTime<Input, Output> implements IdentityTransformer 
 {
     private Set<String> included;
     private Set<String> excluded;
     protected final ISODateParser parser;
+    
     /**
      * Creates a new Date transformer with no field restrictions.
      */
@@ -129,7 +132,7 @@ public abstract class DateTime<I, O> implements IdentityTransformer
      * @param value The value to transform
      * @return The transformed value
      */
-    protected abstract O transformAction(I value);
+    protected abstract Output transformAction(Input value);
 
     /**
      * Transforms JSON fields according to the concrete transformer's logic.
@@ -148,7 +151,7 @@ public abstract class DateTime<I, O> implements IdentityTransformer
                 {                
                     try
                     {
-                        record.put(field, transformAction((I) record.get(field)));
+                        record.put(field, transformAction((Input) record.get(field)));
                     }
                     catch(ClassCastException e)
                     {
@@ -166,7 +169,7 @@ public abstract class DateTime<I, O> implements IdentityTransformer
             {
                 try
                 {
-                    record.put(field, transformAction((I) record.get(field)));
+                    record.put(field, transformAction((Input) record.get(field)));
                 }
                 catch (ClassCastException e)
                 {
