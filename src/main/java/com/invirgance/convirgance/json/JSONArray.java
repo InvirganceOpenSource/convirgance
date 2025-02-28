@@ -33,7 +33,6 @@ import java.util.*;
  */
 public class JSONArray<T> implements List<T>
 {
-
     private final ArrayList<T> list;
 
     /**
@@ -43,13 +42,23 @@ public class JSONArray<T> implements List<T>
     {
         this.list = new ArrayList<>();
     }
+    
+    /**
+     * Create a JSONArray from the provided values
+     * 
+     * @param value one or more values to store in the JSONArray
+     */
+    public JSONArray(T... value)
+    {
+        this.list = new ArrayList<>(Arrays.asList(value));
+    }
 
     /**
      * Creates a JSONArray from a List with a shallow copy of its elements.
      *
      * @param list The source List to copy elements from.
      */
-    public JSONArray(List<T> list)
+    public JSONArray(Collection list)
     {
         this.list = new ArrayList<>(list);
     }
@@ -458,14 +467,7 @@ public class JSONArray<T> implements List<T>
     @Override
     public String toString()
     {
-        try
-        {
-            return new JSONWriter().write(this).toString();
-        }
-        catch (IOException e)
-        {
-            throw new ConvirganceException(e);
-        }
+        return toString(0);
     }
 
     /**
@@ -479,7 +481,7 @@ public class JSONArray<T> implements List<T>
     {
         try
         {
-            return new JSONWriter(indent).write(this).toString();
+            return new JSONWriter(indent, true).write(this).toString();
         }
         catch(IOException e) { throw new ConvirganceException(e); }
     }

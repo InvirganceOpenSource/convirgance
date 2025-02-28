@@ -412,4 +412,14 @@ public class JSONObjectTest
             index++;
         }
     }
+    
+    @Test
+    public void testPrintObjects()
+    {
+        JSONObject record = new JSONObject();
+        
+        record.put("test", new byte[]{0x1});
+        
+        assertTrue(record.toString().startsWith("{\"test\":\"[B@"));
+    }
 }

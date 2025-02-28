@@ -145,4 +145,14 @@ public class JSONArrayTest
         assertEquals(new JSONArray(), new JSONArray());
         assertEquals(new JSONArray().hashCode(), new JSONArray().hashCode());
     }
+    
+    @Test
+    public void testPrintObjects()
+    {
+        JSONArray record = new JSONArray();
+        
+        record.add(new byte[]{0x1});
+        
+        assertTrue(record.toString().startsWith("[\"[B@"));
+    }
 }

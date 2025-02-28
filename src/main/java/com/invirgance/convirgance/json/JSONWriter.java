@@ -24,7 +24,10 @@ package com.invirgance.convirgance.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Serializes data into JSON format and writes it to an output stream
@@ -33,7 +36,7 @@ import java.util.Date;
  */
 public class JSONWriter implements AutoCloseable
 {
-
+    private boolean loose;
     private final Writer writer;
     private int indent;
     private int level;
@@ -79,6 +82,18 @@ public class JSONWriter implements AutoCloseable
     {
         this.writer = writer;
         this.indent = indent;
+    }
+    
+    JSONWriter(int indent, boolean loose)
+    {
+        this(new StringWriter(), indent, loose);
+    }
+    
+    JSONWriter(Writer writer, int indent, boolean loose)
+    {
+        this.writer = writer;
+        this.indent = indent;
+        this.loose = loose;
     }
 
     /**
@@ -380,6 +395,12 @@ public class JSONWriter implements AutoCloseable
         else if(object instanceof Date) return write((Date)object);
         else if(object instanceof JSONObject) return write((JSONObject)object);
         else if(object instanceof JSONArray) return write((JSONArray)object);
+        else if(object instanceof Calendar) return write(((Calendar)object).getTime());
+        else if(object instanceof List) return write(new JSONArray((List)object));
+        else if(object instanceof Map) return write(new JSONObject((Map)object));
+        else if(object instanceof String[]) return write(new JSONArray<String>((String[])object));
+        else if(object instanceof Object[]) return write(new JSONArray<Object>((Object[])object));
+        else if(loose) return write(object.toString());
         else throw new IOException("Unrecognized object type " + object.getClass().getName());
     }
 

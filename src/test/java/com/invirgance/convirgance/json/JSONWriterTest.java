@@ -26,7 +26,9 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -220,5 +222,17 @@ public class JSONWriterTest
         }
     }
 
+    @Test
+    public void testWriteNonStandard() throws Exception 
+    {
+        HashMap map = new HashMap();
+        
+        map.put("x", 123);
+        
+        assertEquals("[\"Hello\",\"World\"]", new JSONWriter().write(new String[]{"Hello", "World"}).toString());
+        assertEquals("[\"Hello\",\"World\"]", new JSONWriter().write(Arrays.asList(new String[]{"Hello", "World"})).toString());
+        assertEquals("[123,456]", new JSONWriter().write(Arrays.asList(new Object[]{123, 456L})).toString());
+        assertEquals("{\"x\":123}", new JSONWriter().write(map).toString());
+    }
 
 }

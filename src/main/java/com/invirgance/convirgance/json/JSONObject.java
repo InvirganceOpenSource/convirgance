@@ -564,11 +564,7 @@ public class JSONObject implements Map<String, Object>
     @Override
     public String toString()
     {
-        try
-        {
-            return new JSONWriter().write(this).toString();
-        }
-        catch(IOException e) { throw new ConvirganceException(e); }
+        return toString(0);
     }
 
     /**
@@ -582,7 +578,7 @@ public class JSONObject implements Map<String, Object>
     {
         try
         {
-            return new JSONWriter(indent).write(this).toString();
+            return new JSONWriter(indent, true).write(this).toString();
         }
         catch(IOException e) { throw new ConvirganceException(e); }
     }
