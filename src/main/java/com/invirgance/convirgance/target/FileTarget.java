@@ -81,6 +81,8 @@ public class FileTarget implements Target
     {
         try
         {
+            if(file.getParentFile() != null) file.getParentFile().mkdirs();
+            
             return new FileOutputStream(file);
         }
         catch(IOException e) { throw new ConvirganceException(e); }

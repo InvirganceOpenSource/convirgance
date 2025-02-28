@@ -21,6 +21,8 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.target;
 
+import com.invirgance.convirgance.ConvirganceException;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -61,5 +63,56 @@ public interface Target
     default public boolean isUsed()
     {
         return false;
+    }
+    
+    /**
+     * Convenience method for writing string data to a file in UTF-8 format. This 
+     * is useful for quickly serializing in-memory data to a file, typically 
+     * generated information that is of use to a user. 
+     * 
+     * @param data the string to write
+     */
+    default public void writeString(String data)
+    {
+        writeString(data, "UTF-8");
+    }
+    
+    /**
+     * Convenience method for writing string data to a file. This is useful for quickly
+     * serializing in-memory data to a file, typically generated information that
+     * is of use to a user. 
+     * 
+     * @param data the string to write
+     * @param encoding the desired character encoding
+     */
+    default public void writeString(String data, String encoding)
+    {
+        try(OutputStream out = getOutputStream())
+        {
+            out.write(data.getBytes(encoding));
+        }
+        catch(IOException e)
+        {
+            throw new ConvirganceException(e);
+        }
+    }
+    
+    /**
+     * Convenience method for writing data to a file. This is useful for quickly
+     * serializing in-memory data to a file, typically generated information that
+     * is of use to a user. 
+     * 
+     * @param data a byte array of the data to write
+     */
+    default public void write(byte[] data)
+    {
+        try(OutputStream out = getOutputStream())
+        {
+            out.write(data);
+        }
+        catch(IOException e)
+        {
+            throw new ConvirganceException(e);
+        }
     }
 }
