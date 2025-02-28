@@ -43,8 +43,7 @@ import java.util.List;
  * Iterable&lt;JSONObject&gt; stream = ...;
  * 
  * // Convert specific fields
- * String[] included = {"created_at", "updated_at"};
- * DateEpochTransformer transformer = new DateEpochTransformer(included);
+ * DateEpochTransformer transformer = new DateEpochTransformer("created_at", "updated_at");
  * 
  * // Apply the transformation
  * stream = transformer.transform(stream);

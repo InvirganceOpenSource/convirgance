@@ -23,17 +23,15 @@
  */
 
 /**
- * Support for transforming Date like values into other representations (epoch, String, Date).
+ * Support for transforming date formats into standardized representations (e.g. Epoch, ISO 8601, Date).
  * 
  * <p>Supports transforming:</p>
  * <ul>
- * <li>String -> Date</li>
- * <li>Date -> String</li>
+ * <li>String (ISO 8601) -> Date</li>
+ * <li>Date -> String (ISO 8601)</li>
  * <li>Epoch (Long) -> Date</li>
  * <li>Date -> Epoch (Long)</li>
  * </ul>
- * 
- * <p>Note: Strings must be formatted as RFC 1123</p>
  * 
  * @since 1.2.0
  */

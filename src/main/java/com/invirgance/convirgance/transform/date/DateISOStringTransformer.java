@@ -44,8 +44,7 @@ import java.util.TimeZone;
  * Iterable&lt;JSONObject&gt; stream = ...;
  * 
  * // Convert specific fields
- * String[] included = {"created_at", "updated_at"};
- * DateStringTransformer transformer = new DateStringTransformer(included);
+ * DateStringTransformer transformer = new DateStringTransformer("created_at", "updated_at");
  * 
  * // Apply the transformation
  * stream = transformer.transform(stream);

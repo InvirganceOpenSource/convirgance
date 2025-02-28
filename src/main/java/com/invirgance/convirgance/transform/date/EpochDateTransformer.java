@@ -39,9 +39,8 @@ import java.util.List;
  * <pre>
  * Iterable&lt;JSONObject&gt; stream = ...;
  * 
- * // Convert specific fields
- * String[] included = {"created_at", "updated_at"};
- * EpochDateTransformer transformer = new EpochDateTransformer(included, null);
+ * // Convert specified fields
+ * EpochDateTransformer transformer = new EpochDateTransformer("created_at", "updated_at");
  * 
  * // Apply the transformation
  * stream = transformer.transform(stream);

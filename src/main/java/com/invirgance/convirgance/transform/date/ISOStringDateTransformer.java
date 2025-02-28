@@ -32,27 +32,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Transforms String values of a JSONObject into a Date.
- * 
- * <p>This transformer scans JSONObjects and transforms Strings values (formatted as RFC 1123)
- * into their corresponding Date. If specific fields are included, only those fields will be transformed. 
- * If specific fields are excluded, all other fields will be transformed.</p>
+ * Transforms ISO 8601 formatted strings into Date objects.
  *
  * <p>Example usage:</p>
  * <pre>
- * // Convert specific fields
- * String[] included = {"created_at", "updated_at"};
- * StringDateTransformer transformer = new StringDateTransformer(included, null);
+ * Iterable&lt;JSONObject&gt; stream = ...;
+ * 
+ * // Convert specified fields
+ * StringDateTransformer transformer = new StringDateTransformer("created_at", "updated_at");
  *
- * // Convert all fields except "excluded_field"
- * String[] excluded = {"excluded_field"};
- * StringDateTransformer transformer = new StringDateTransformer(null, excluded);
+ * // Apply the transformation
+ * stream = transformer.transform(stream);
  * </pre>
  * 
- * Note:
- *  - Only supports transforming from Strings (Dates) formatted as RFC 1123
- * 
- * @author tadghh
+ * @author jbanes
  */
 public class ISOStringDateTransformer implements IdentityTransformer
 {
