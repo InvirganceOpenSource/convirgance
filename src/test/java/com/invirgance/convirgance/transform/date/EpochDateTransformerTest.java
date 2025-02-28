@@ -21,10 +21,11 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.date;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -33,47 +34,65 @@ import org.junit.jupiter.api.Test;
  */
 public class EpochDateTransformerTest
 {
-    
-    public EpochDateTransformerTest()
-    {
-    }
-
     @Test
-    public void testTransform()
+    public void testTransformMany()
     {
-        String[] included = {"Created"};
-        String[] excluded = {"Destroyed","Item"};
-        
-        Long epoch = 1740087929L * 1000;
-        String expected = new Date(epoch).toString();
+        Long epoch = new Date().getTime();
+        Date expected = new Date(epoch);
         
         JSONObject record = new JSONObject();
-        EpochDateTransformer transformer = new EpochDateTransformer();
+        EpochDateTransformer transformer = new EpochDateTransformer("Created", "Destroyed");
        
-        // Verify non epoch fields remain unchanged
+        // Set up record
         record.put("Item", "Phone");
         record.put("Created", epoch);
         record.put("Destroyed", epoch);
         
+        // Apply transformation
         record = transformer.transform(record);
         
-        assertTrue(record.get("Item") instanceof String);
-        assertEquals(expected, record.get("Created").toString());
-        assertEquals(expected, record.get("Destroyed").toString());
+        assertEquals("Phone", record.get("Item"));
+        assertEquals(expected, record.get("Created"));
+        assertEquals(expected, record.get("Destroyed"));
+    }
+    
+    @Test
+    public void testTransformOne()
+    {
+        Long epoch = new Date().getTime();
+        Date expected = new Date(epoch);
         
-        // Verify that excluded values remain unchanged
-        record = new JSONObject();
+        JSONObject record = new JSONObject();
+        EpochDateTransformer transformer = new EpochDateTransformer("Created");
+       
+        // Set up record
         record.put("Item", "Phone");
         record.put("Created", epoch);
         record.put("Destroyed", epoch);
-            
-        transformer = new EpochDateTransformer(included, excluded);
-        transformer.transform(record);
         
-        assertTrue(record.get("Item") instanceof String);     
-        assertEquals(expected, record.get("Created").toString());
-        assertTrue(record.get("Destroyed") instanceof Long);
+        // Apply transformation
+        record = transformer.transform(record);
+        
+        assertEquals("Phone", record.get("Item"));     
+        assertEquals(expected, record.get("Created"));
+        assertEquals(epoch, record.get("Destroyed"));
     }
     
-    
+    @Test
+    public void testException()
+    {
+        JSONObject record = new JSONObject();
+        EpochDateTransformer transformer = new EpochDateTransformer();
+        
+        try
+        {
+            record = transformer.transform(record);
+            
+            fail("Expected a ConvirganceException");
+        }
+        catch(ConvirganceException e)
+        {
+            assertEquals("The list of columns to transform must be set!", e.getMessage());
+        }
+    }
 }

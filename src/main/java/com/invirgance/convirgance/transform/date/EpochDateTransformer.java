@@ -21,33 +21,43 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.date;
 
+import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.IdentityTransformer;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
- * Transforms Epoch millisecond timestamp values of a JSONObject into Date objects.
+ * Transforms long numbers representing a millisecond timestamp into Date objects. 
  * 
- * <p>This transformer scans JSONObjects and transforms Epoch millisecond timestamps 
- * into their corresponding Date. If specific fields are included, only those fields will be transformed. 
- * If specific fields are excluded, all other fields will be transformed.</p>
+ * <p>This transformer transforms Epoch millisecond timestamps into their 
+ * corresponding Date following the format of {@link java.util.Date#getTime()} in
+ * both Java and JavaScript.</p>
  *
  * <p>Example usage:</p>
  * <pre>
+ * Iterable&lt;JSONObject&gt; stream = ...;
+ * 
  * // Convert specific fields
  * String[] included = {"created_at", "updated_at"};
  * EpochDateTransformer transformer = new EpochDateTransformer(included, null);
- *
- * // Convert all fields except "excluded_field"
- * String[] excluded = {"excluded_field"};
- * EpochDateTransformer transformer = new EpochDateTransformer(null, excluded);
+ * 
+ * // Apply the transformation
+ * stream = transformer.transform(stream);
  * </pre>
  *
- * @author tadghh
+ * @author jbanes
+ * @see java.util.Date#getTime()
  */
-public class EpochDateTransformer extends DateTime<Long, Date> 
+public class EpochDateTransformer implements IdentityTransformer
 {
-
+    private List<String> columns;
+    
     /**
-     * Creates a new EpochDateTransformer for transforming the epoch values of a JSONObject to Dates.
+     * Prepares a new EpochDateTransformer for transforming epoch values 
+     * to Dates. Note that {@link #setColumns(java.lang.String...)} must be called
+     * or the transformation will throw an exception when invoked.
      */
     public EpochDateTransformer() 
     {
@@ -57,24 +67,48 @@ public class EpochDateTransformer extends DateTime<Long, Date>
     /**
      * Creates a new EpochDateTransformer for transforming the epoch values of a JSONObject to Dates.
      * 
-     * @param included Field names to include in the conversion. Null for all.
-     * @param excluded Field names to exclude during conversion. Null for none.
+     * @param columns field names to include in the conversion
      */
-    public EpochDateTransformer(String[] included, String[] excluded) 
+    public EpochDateTransformer(String... columns) 
     {
-        super(included, excluded);
+        this.columns = Arrays.asList(columns);
+    }
+    
+    /**
+     * Get the list of columns that will be transformed. Null is returned if no
+     * column list has been set. In this case, all columns will be checked.
+     * 
+     * @return list of columns to be converted or null if all columns will be checked
+     */
+    public String[] getColumns()
+    {
+        return columns.toArray(String[]::new);
     }
 
     /**
-     * Takes an Epoch millisecond timestamp transforming it into a Date.
-     *
-     * @param value The value to transform
-     * @return The Date or null.
+     * Set the list of columns to transform. Null may be passed if all columns 
+     * should be checked and transformed if they are of type {@link java.util.Date}.
+     * 
+     * @param columns list of columns to be converted
      */
-    @Override
-    protected Date transformAction(Long value) 
+    public void setColumns(String... columns)
     {
-        return parser.toDate(value);
+        this.columns = Arrays.asList(columns);
+    }
+
+    @Override
+    public JSONObject transform(JSONObject record) throws ConvirganceException
+    {
+        if(columns == null) throw new ConvirganceException("The list of columns to transform must be set!");
+
+        for(String key : columns)
+        {
+            if(record.isNull(key)) continue;
+            
+            record.put(key, new Date(record.getLong(key)));
+        }
+        
+        return record;
     }
 
 }
