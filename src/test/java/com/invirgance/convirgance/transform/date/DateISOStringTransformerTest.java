@@ -57,13 +57,11 @@ public class DateISOStringTransformerTest
     @Test
     public void testTransformOne()
     {
-        String[] included = {"Created"};
-
         Date date = new Date(1740087929886L);
         String expected = "2025-02-20T21:45:29.886Z";
 
         JSONObject record = new JSONObject();
-        DateISOStringTransformer transformer = new DateISOStringTransformer(included);
+        DateISOStringTransformer transformer = new DateISOStringTransformer("Created");
 
         // Set up record
         record.put("Item", "Phone");
