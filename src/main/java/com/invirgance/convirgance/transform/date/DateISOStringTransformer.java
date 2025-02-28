@@ -75,6 +75,27 @@ public class DateISOStringTransformer implements IdentityTransformer
     {
         this.columns = Arrays.asList(columns);
     }
+    /**
+     * Get the list of columns that will be transformed. Null is returned if no
+     * column list has been set. In this case, all columns will be checked.
+     * 
+     * @return list of columns to be converted or null if all columns will be checked
+     */
+    public String[] getColumns()
+    {
+        return columns.toArray(String[]::new);
+    }
+
+    /**
+     * Set the list of columns to transform. Null may be passed if all columns 
+     * should be checked and transformed if they are of type {@link java.util.Date}.
+     * 
+     * @param columns list of columns to be converted
+     */
+    public void setColumns(String[] columns)
+    {
+        this.columns = Arrays.asList(columns);
+    }
 
     private SimpleDateFormat getFormatter()
     {
