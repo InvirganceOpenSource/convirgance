@@ -40,7 +40,7 @@ import java.util.List;
  * <p>Example usage:</p>
  * 
  * <pre>
- * Iterator&lt;JSONObject&gt; stream = ...;
+ * Iterable&lt;JSONObject&gt; stream = ...;
  * 
  * // Convert specific fields
  * String[] included = {"created_at", "updated_at"};

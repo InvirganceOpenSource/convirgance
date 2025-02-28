@@ -31,26 +31,27 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Transforms Date values of a JSONObject into their String representation.
+ * Transforms Date values in a JSONObject into ISO 8601 string format. (e.g. "2025-02-20T21:45:29.886Z")
  *
  * <p>
- * If specific fields are included, only those will be transformed. If specific fields are excluded, all others
- * will be transformed.
+ * If specific fields are specified, only those fields will be transformed. If 
+ * specific fields are excluded, all others will be transformed.
  * </p>
  *
  * <p>Example usage:</p>
  * 
  * <pre>
+ * Iterable&lt;JSONObject&gt; stream = ...;
+ * 
  * // Convert specific fields
  * String[] included = {"created_at", "updated_at"};
- * DateStringTransformer transformer = new DateStringTransformer(included, null);
- *
- * // Convert all fields except "excluded_field"
- * String[] excluded = {"excluded_field"};
- * DateStringTransformer transformer = new DateStringTransformer(null, excluded);
+ * DateStringTransformer transformer = new DateStringTransformer(included);
+ * 
+ * // Apply the transformation
+ * stream = transformer.transform(stream);
  * </pre>
  *
- * @author tadghh
+ * @author jbanes
  */
 public class DateISOStringTransformer implements IdentityTransformer
 {
@@ -68,8 +69,7 @@ public class DateISOStringTransformer implements IdentityTransformer
     /**
      * Creates a new DateStringTransformer for transforming JSONObject Date values into Strings.
      *
-     * @param included Field names to include in the conversion. Null for all.
-     * @param excluded Field names to exclude during conversion. Null for none.
+     * @param columns field names to include in the conversion
      */
     public DateISOStringTransformer(String[] columns) 
     {
