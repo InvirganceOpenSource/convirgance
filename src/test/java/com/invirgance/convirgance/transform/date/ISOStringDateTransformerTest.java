@@ -31,54 +31,47 @@ import org.junit.jupiter.api.Test;
  *
  * @author tadghh
  */
-public class StringDateTransformerTest
+public class ISOStringDateTransformerTest
 {
-    
-    public StringDateTransformerTest()
-    {
-    }
-
-    /**
-     * Test of transformAction method, of class StringDateTransformer.
-     * Strings representing dates should be transformed into Date objects
-     */
     @Test
-    public void testTransformAction()
+    public void testTransformMany()
     {
-        String[] included = {"Created"};
-        String[] excluded = {"Destroyed","Item"};
-     
         Long epoch = 1740087929L;
         Date date = new Date(epoch * 1000);
         String test = "2025-02-20T21:45:29Z";
-        String expected = date.toString();
         
         JSONObject record = new JSONObject();
-        StringDateTransformer transformer = new StringDateTransformer();
+        ISOStringDateTransformer transformer = new ISOStringDateTransformer("Created", "Destroyed");
 
-        // Test basic value transformation
-//record.put("Item", "Phone"); The user would know not the try and convert their Item fields into dates
-
+        record.put("Item", "Phone");
         record.put("Created", test);
         record.put("Destroyed", test);
         
         record = transformer.transform(record);
-        assertEquals(expected, record.get("Created").toString());
-        assertEquals(expected, record.get("Destroyed").toString());
+
+        assertEquals("Phone", record.get("Item"));     
+        assertEquals(date, record.get("Created"));
+        assertEquals(date, record.get("Destroyed"));
+    }
+    
+    @Test
+    public void testTransformOne()
+    {
+        Long epoch = 1740087929L;
+        Date date = new Date(epoch * 1000);
+        String test = "2025-02-20T21:45:29Z";
         
-        // Verify that excluded values remain unchanged
-        record = new JSONObject();
+        JSONObject record = new JSONObject();
+        ISOStringDateTransformer transformer = new ISOStringDateTransformer("Created");
+
         record.put("Item", "Phone");
         record.put("Created", test);
         record.put("Destroyed", test);
-            
-        transformer = new StringDateTransformer(included, excluded);
-        transformer.transform(record);
         
-        assertTrue(record.get("Item") instanceof String);     
-        assertEquals(expected, record.get("Created").toString());
-        assertTrue(record.get("Created") instanceof Date);
-        assertTrue(record.get("Destroyed") instanceof String);
+        record = transformer.transform(record);
+        
+        assertEquals("Phone", record.get("Item"));     
+        assertEquals(date, record.get("Created"));
+        assertEquals(test, record.get("Destroyed"));
     }
-    
 }
