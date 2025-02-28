@@ -36,6 +36,17 @@ public class InsertKeyTransformer implements IdentityTransformer
     private String key;
     private Object value;
 
+    
+    /**
+     * Prepares a new InsertKeyTransformer. The {@link #setKey(String)} and
+     * {@link #setValue(Object)} methods must be called before attempting a
+     * transform.
+     */
+    public InsertKeyTransformer()
+    {
+        
+    }
+    
     /**
      * Creates a new InsertKeyTransformer with the specified key-value pair.
      * 
@@ -52,7 +63,7 @@ public class InsertKeyTransformer implements IdentityTransformer
      * </pre>
      *
      * @param key The key to insert or update.
-     * @param value The value to associate with the key.
+     * @param value The value to associate with the key. Supports the use of a {@link ValueGenerator}
      */
     public InsertKeyTransformer(String key, Object value)
     {
@@ -93,7 +104,9 @@ public class InsertKeyTransformer implements IdentityTransformer
     }
 
     /**
-     * Sets the value that will be associated with the key.
+     * Sets the value that will be associated with the key. If the value is a
+     * {@link ValueGenerator}, the result of the generator will be inserted
+     * rather than the generator itself.
      * 
      * @param value The value to be inserted or used for update.
      */
@@ -109,6 +122,9 @@ public class InsertKeyTransformer implements IdentityTransformer
      * <p>If the key already exists in the input object, its value will be replaced.
      * If the key doesn't exist, a new key-value pair will be added to the object.</p>
      * 
+     * <p>If the value is a {@link ValueGenerator}, the result of generation will
+     * be set rather than the generator itself.</p>
+     * 
      * @param record The JSON object to modify.
      * @return The modified JSON object (same instance as input).
      * @throws ConvirganceException if the key is null, or if there's an error
@@ -117,7 +133,8 @@ public class InsertKeyTransformer implements IdentityTransformer
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException
     {
-        record.put(key, value);
+        if(value instanceof ValueGenerator) record.put(key, ((ValueGenerator)value).generate(record));
+        else record.put(key, value);
         
         return record;
     }
