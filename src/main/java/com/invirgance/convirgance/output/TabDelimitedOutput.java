@@ -47,7 +47,7 @@ public class TabDelimitedOutput extends DelimitedOutput
      * 
      * @param columns a String array of column names
      */
-    public TabDelimitedOutput(String[] columns)
+    public TabDelimitedOutput(String... columns)
     {
         super(columns, '\t');
     }

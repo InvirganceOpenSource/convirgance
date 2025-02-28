@@ -72,7 +72,7 @@ public class DateEpochTransformer implements IdentityTransformer
      *
      * @param columns field names to include in the conversion
      */
-    public DateEpochTransformer(String[] columns) 
+    public DateEpochTransformer(String... columns) 
     {
         this.columns = Arrays.asList(columns);
     }
@@ -94,7 +94,7 @@ public class DateEpochTransformer implements IdentityTransformer
      * 
      * @param columns list of columns to be converted
      */
-    public void setColumns(String[] columns)
+    public void setColumns(String... columns)
     {
         this.columns = Arrays.asList(columns);
     }

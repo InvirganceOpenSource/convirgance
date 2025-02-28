@@ -182,7 +182,7 @@ public class CoerceStringsTransformer implements IdentityTransformer
      * 
      * @param included Array of field names to include in conversion. Set to null to include all fields.
      */
-    public void setIncluded(String[] included)
+    public void setIncluded(String... included)
     {
         if(included == null) this.included = null;
         else this.included = new HashSet<>(Arrays.asList(included));
@@ -193,7 +193,7 @@ public class CoerceStringsTransformer implements IdentityTransformer
      * 
      * @param excluded Array of field names to exclude from conversion. Set to null to exclude no fields.
      */
-    public void setExcluded(String[] excluded)
+    public void setExcluded(String... excluded)
     {
         if(excluded == null) this.excluded = null;
         else this.excluded = new HashSet<>(Arrays.asList(excluded));

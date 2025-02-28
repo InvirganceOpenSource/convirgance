@@ -49,7 +49,7 @@ public class PipeDelimitedInput extends DelimitedInput
      * 
      * @param columns The column headers.
      */
-    public PipeDelimitedInput(String[] columns)
+    public PipeDelimitedInput(String... columns)
     {
         this(columns, "UTF-8");
     }

@@ -112,7 +112,7 @@ public class DelimitedInput implements Input<JSONObject>
      * Set the columns to use as headers.
      * @param columns The column headers.
      */
-    public void setColumns(String[] columns)
+    public void setColumns(String... columns)
     {
         this.columns = columns;
     }

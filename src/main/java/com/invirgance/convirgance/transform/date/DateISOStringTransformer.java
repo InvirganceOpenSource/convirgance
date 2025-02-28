@@ -71,10 +71,11 @@ public class DateISOStringTransformer implements IdentityTransformer
      *
      * @param columns field names to include in the conversion
      */
-    public DateISOStringTransformer(String[] columns) 
+    public DateISOStringTransformer(String... columns) 
     {
         this.columns = Arrays.asList(columns);
     }
+    
     /**
      * Get the list of columns that will be transformed. Null is returned if no
      * column list has been set. In this case, all columns will be checked.
@@ -92,7 +93,7 @@ public class DateISOStringTransformer implements IdentityTransformer
      * 
      * @param columns list of columns to be converted
      */
-    public void setColumns(String[] columns)
+    public void setColumns(String... columns)
     {
         this.columns = Arrays.asList(columns);
     }

@@ -96,7 +96,7 @@ public class UnsortedGroupByTransformer implements Transformer
      *
      * @param fields The fields.
      */
-    public void setFields(String[] fields)
+    public void setFields(String... fields)
     {
         this.fields = fields;
     }
@@ -129,7 +129,7 @@ public class UnsortedGroupByTransformer implements Transformer
     public String getOutput()
     {
         return output;
-    }      
+    }
     
     /**
      * Transforms an iterator of JSON objects by grouping records with matching field values.

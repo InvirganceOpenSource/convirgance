@@ -65,7 +65,7 @@ public class DelimitedOutput implements Output
      * 
      * @param columns A String array of column names.
      */
-    public DelimitedOutput(String[] columns)
+    public DelimitedOutput(String... columns)
     {
         this(columns, '|');
     }

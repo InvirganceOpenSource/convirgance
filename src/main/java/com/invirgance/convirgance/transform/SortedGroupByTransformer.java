@@ -87,7 +87,7 @@ public class SortedGroupByTransformer implements Transformer
      *
      * @param fields The fields.
      */
-    public void setFields(String[] fields)
+    public void setFields(String... fields)
     {
         this.fields = fields;
     }
@@ -100,7 +100,27 @@ public class SortedGroupByTransformer implements Transformer
     public String[] getFields()
     {
         return fields;
-    }    
+    }
+    
+    /**
+     * Sets the field to contain related fields and values.
+     *
+     * @param output The output field.
+     */
+    public void setOutput(String output)
+    {
+        this.output = output;
+    }
+    
+    /**
+     * Returns the current field used to contain fields and values of the related records.
+     * 
+     * @return The output field.
+     */
+    public String getOutput()
+    {
+        return output;
+    }
     
     /**
      * Transforms an iterator of JSON objects by grouping records with matching field values.
@@ -121,7 +141,8 @@ public class SortedGroupByTransformer implements Transformer
      * @return A new iterator that provides the grouped JSON objects.
      */
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) {
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) 
+    {
         return new Iterator<JSONObject>() {
             private JSONObject current;          
             private JSONObject group;
@@ -160,6 +181,7 @@ public class SortedGroupByTransformer implements Transformer
                 }
                 
                 group.put(output, children);
+                
                 return group;
             }
             

@@ -64,7 +64,7 @@ public class CSVOutput implements Output
      *
      * @param headers The columns to use when writing out CSV data
      */
-    public CSVOutput(String[] headers)
+    public CSVOutput(String... headers)
     {
         this.headers = headers;
     }
@@ -107,7 +107,7 @@ public class CSVOutput implements Output
      *
      * @param columns The column headers.
      */
-    public void setHeaders(String[] columns)
+    public void setHeaders(String... columns)
     {
         this.headers = columns;
     }

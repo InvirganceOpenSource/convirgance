@@ -47,7 +47,7 @@ public class PipeDelimitedOutput extends DelimitedOutput
      * 
      * @param columns an array of column names
      */
-    public PipeDelimitedOutput(String[] columns)
+    public PipeDelimitedOutput(String... columns)
     {
         super(columns, '|');
     }

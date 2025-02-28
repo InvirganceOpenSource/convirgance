@@ -48,7 +48,7 @@ public class TabDelimitedInput extends DelimitedInput
      * Creates a new TabDelimitedInput with the provided column headers
      * @param columns The column headers.
      */
-    public TabDelimitedInput(String[] columns)
+    public TabDelimitedInput(String... columns)
     {
         this(columns, "UTF-8");
     }

@@ -66,7 +66,7 @@ public class CSVInput implements Input<JSONObject>
      * 
      * @param headers The headers to use when reading.
      */
-    public CSVInput(String[] headers)
+    public CSVInput(String... headers)
     {
         this.headers = headers;
     }
@@ -111,7 +111,7 @@ public class CSVInput implements Input<JSONObject>
      * 
      * @param columns The column headers.
      */
-    public void setHeaders(String[] columns)
+    public void setHeaders(String... columns)
     {
         this.headers = columns;
     }
