@@ -24,6 +24,8 @@ package com.invirgance.convirgance.dbms;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.Source;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +46,7 @@ import java.util.Date;
  * 
  * @author jbanes
  */
-public class Query
+public class Query implements AtomicOperation
 {
     private String sql;
     private JSONObject bindings;
@@ -416,6 +418,20 @@ public class Query
         }
         
         return list.toArray(Object[]::new);
+    }
+
+    /**
+     * Convenience implementation of {@link AtomicOperation#execute(Connection)}
+     * that initializes a QueryOperation with this Query and calls it.
+     * 
+     * @param connection a JDBC connection
+     * @throws SQLException to stop the transaction and rollback the changes
+     * @see QueryOperation
+     */
+    @Override
+    public void execute(Connection connection) throws SQLException
+    {
+        new QueryOperation(this).execute(connection);
     }
     
     /**
