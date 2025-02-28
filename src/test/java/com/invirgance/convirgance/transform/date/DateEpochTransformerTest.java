@@ -39,39 +39,45 @@ public class DateEpochTransformerTest
     }
     
     @Test
-    public void testTransform()
+    public void testTransformAll()
     {
-        String[] included = {"Created"};
-        String[] excluded = {"Destroyed","Item"};
-        
-        Long expected = 1740087929L * 1000;
-        Date date = new Date(expected);
+        Date date = new Date();
         JSONObject record = new JSONObject();
         DateEpochTransformer transformer = new DateEpochTransformer();
         
-        // Verify non Date fields remain unchanged
+        // Setup record
         record.put("Item", "Phone");
         record.put("Created", date);
         record.put("Destroyed", date);
         
+        // Apply transformation
         record = transformer.transform(record);
         
-        assertTrue(record.get("Item") instanceof String);
         assertEquals("Phone", record.get("Item"));
-        assertEquals(expected, record.get("Created"));
-        assertEquals(expected, record.get("Destroyed"));
+        assertEquals(date.getTime(), record.get("Created"));
+        assertEquals(date.getTime(), record.get("Destroyed"));
+    }
+    
+    @Test
+    public void testTransformOne()
+    {
+        String[] included = {"Created"};
+        Date date = new Date();
         
-        // Verify that excluded values remain unchanged
-        record = new JSONObject();
+        JSONObject record = new JSONObject();
+        DateEpochTransformer transformer = new DateEpochTransformer(included);
+        
+        // Setup record
         record.put("Item", "Phone");
         record.put("Created", date);
         record.put("Destroyed", date);
-            
-        transformer = new DateEpochTransformer(included, excluded);
-        transformer.transform(record);
         
-        assertTrue(record.get("Item") instanceof String);     
-        assertEquals(expected, record.get("Created"));
+        // Apply transformation
+        record = transformer.transform(record);
+        
+        assertEquals("Phone", record.get("Item"));     
+        assertEquals(date.getTime(), record.get("Created"));
+        assertEquals(date, record.get("Destroyed"));
         assertTrue(record.get("Destroyed") instanceof Date);
     }
     

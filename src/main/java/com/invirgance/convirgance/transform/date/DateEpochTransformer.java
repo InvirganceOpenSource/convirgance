@@ -21,35 +21,45 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.date;
 
+import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.IdentityTransformer;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
- * Transforms the Date values of a JSONObject into epoch timestamps.
+ * Transforms the Date values of a JSONObject into long-formatted epoch timestamps.
  * 
  * <p>
- * This transformer scans JSON records and converts Date values into their
- * corresponding epoch timestamps. If specific fields are included, only those will be transformed. If specific fields are
- * excluded, all others will be transformed.</p>
+ * This transformer scans JSON records and converts Date values into long numbers
+ * representing the number of milliseconds since January 1st, 1970 midnight UTC
+ * time. This format is compatible with {@link java.util.Date#getTime()} in both
+ * Java and Javascript.</p>
  *
  * <p>Example usage:</p>
  * 
  * <pre>
+ * Iterator&lt;JSONObject&gt; stream = ...;
+ * 
  * // Convert specific fields
  * String[] included = {"created_at", "updated_at"};
- * DateEpochTransformer transformer = new DateEpochTransformer(included, null);
- *
- * // Convert all fields except "excluded_field"
- * String[] excluded = {"excluded_field"};
- * DateEpochTransformer transformer = new DateEpochTransformer(null, excluded);
+ * DateEpochTransformer transformer = new DateEpochTransformer(included);
+ * 
+ * // Apply the transformation
+ * stream = transformer.transform(stream);
  * </pre>
- * @author tadghh
+ * 
+ * @author jbanes
+ * @see java.util.Date#getTime()
  */
-public class DateEpochTransformer extends DateTime<Date, Long> 
+public class DateEpochTransformer implements IdentityTransformer
 {
+    private List<String> columns;
     
     /**
-     * Creates a new DateEpochTransformer for converting Date values to their
-     * epoch equivalents.
+     * Creates a new DateEpochTransformer for converting any Date values found
+     * into their epoch equivalents.
      */
     public DateEpochTransformer() 
     {
@@ -60,23 +70,36 @@ public class DateEpochTransformer extends DateTime<Date, Long>
      * Creates a new DateEpochTransformer for converting Date values to their
      * epoch equivalents.
      *
-     * @param included Field names to include in the conversion. Null for all.
-     * @param excluded Field names to exclude during conversion. Null for none.
+     * @param columns field names to include in the conversion
      */
-    public DateEpochTransformer(String[] included, String[] excluded) 
+    public DateEpochTransformer(String[] columns) 
     {
-        super(included, excluded);
+        this.columns = Arrays.asList(columns);
     }
 
     /**
      * Transforms a Date to its Epoch millisecond timestamp.
      *
-     * @param value The value to transform
-     * @return The Epoch millisecond timestamp for the Date, or null.
+     * @param value the value to transform
+     * @return a JSONObject with Date values transformed to longs in Epoch format
      */
+
     @Override
-    protected Long transformAction(Date value) 
+    public JSONObject transform(JSONObject record) throws ConvirganceException
     {
-       return parser.toEpoch(value.toInstant().toString());
+        Iterable<String> iterable = columns != null ? columns : record.keySet();
+        Object value;
+        
+        for(String key : iterable)
+        {
+            value = record.get(key);
+
+            if(value != null && value instanceof Date)
+            {
+                record.put(key, ((Date)value).getTime());
+            }
+        }
+        
+        return record;
     }
 }
