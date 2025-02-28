@@ -21,7 +21,14 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.date;
 
+import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.IdentityTransformer;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Transforms Date values of a JSONObject into their String representation.
@@ -45,13 +52,15 @@ import java.util.Date;
  *
  * @author tadghh
  */
-public class DateStringTransformer extends DateTime<Date, String> 
+public class DateISOStringTransformer implements IdentityTransformer
 {
+    private List<String> columns;
+    private SimpleDateFormat formatter;
     
     /**
      * Creates a new DateStringTransformer for transforming JSONObject Date values into Strings.
      */
-    public DateStringTransformer() 
+    public DateISOStringTransformer() 
     {
         super();
     }
@@ -62,20 +71,39 @@ public class DateStringTransformer extends DateTime<Date, String>
      * @param included Field names to include in the conversion. Null for all.
      * @param excluded Field names to exclude during conversion. Null for none.
      */
-    public DateStringTransformer(String[] included, String[] excluded) 
+    public DateISOStringTransformer(String[] columns) 
     {
-        super(included, excluded);
+        this.columns = Arrays.asList(columns);
     }
 
-    /**
-     * Transforms the Date object to a String in the ISO 8601 Standard.
-     *
-     * @param value The value to transform
-     * @return The Date's string in the ISO 8601 Standard, or null.
-     */
-    @Override
-    protected String transformAction(Date value) 
+    private SimpleDateFormat getFormatter()
     {
-        return value.toInstant().toString();
+        if(this.formatter != null) return this.formatter;
+        
+        this.formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        
+        this.formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        
+        return this.formatter;
+    }
+    
+    @Override
+    public JSONObject transform(JSONObject record) throws ConvirganceException
+    {
+        Iterable<String> iterable = columns != null ? columns : record.keySet();
+        SimpleDateFormat formatter = getFormatter();
+        Object value;
+        
+        for(String key : iterable)
+        {
+            value = record.get(key);
+
+            if(value != null && value instanceof Date)
+            {
+                record.put(key, formatter.format(value));
+            }
+        }
+        
+        return record;
     }
 }

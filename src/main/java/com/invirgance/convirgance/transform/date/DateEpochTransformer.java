@@ -77,13 +77,6 @@ public class DateEpochTransformer implements IdentityTransformer
         this.columns = Arrays.asList(columns);
     }
 
-    /**
-     * Transforms a Date to its Epoch millisecond timestamp.
-     *
-     * @param value the value to transform
-     * @return a JSONObject with Date values transformed to longs in Epoch format
-     */
-
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException
     {
