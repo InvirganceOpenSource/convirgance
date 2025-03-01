@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
     <name>Convirgance</name>
     <description>
@@ -24,6 +24,18 @@
         <developer>
             <name>Jerason Banes</name>
             <email>jerasonbanes@invirgance.com</email>
+            <organization>Invirgance</organization>
+            <organizationUrl>http://www.invirgance.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Ethan Henry</name>
+            <email>ethanhenry@invirgance.com</email>
+            <organization>Invirgance</organization>
+            <organizationUrl>http://www.invirgance.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Timur Kasimov</name>
+            <email>timurkasimov@invirgance.com</email>
             <organization>Invirgance</organization>
             <organizationUrl>http://www.invirgance.com</organizationUrl>
         </developer>
