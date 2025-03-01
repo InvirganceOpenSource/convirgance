@@ -26,6 +26,8 @@ import com.invirgance.convirgance.json.JSONObject;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Used for encoding data into the JBIN format.
@@ -48,6 +50,7 @@ public class BinaryEncoder
     public static final int TYPE_BOOLEAN_TRUE = 'T';
     public static final int TYPE_BOOLEAN_FALSE = 'F';
     public static final int TYPE_CLOB = 0x0B;
+    public static final int TYPE_BLOB = 0x0C;
     
     public static final int TYPE_INTEGER_U8 = 0x20;
     public static final int TYPE_INTEGER_U16 = 0x21;
@@ -222,6 +225,13 @@ public class BinaryEncoder
         out.writeLong(value.getTime());
     }
     
+    private void writeBlob(byte[] value, DataOutput out) throws IOException
+    {
+        out.writeByte(TYPE_BLOB);
+        out.writeInt(value.length);
+        out.write(value);
+    }
+    
     /**
      * Writes out the encoded object to the provided output stream.
      * @param value The Object to encode and write.
@@ -238,6 +248,9 @@ public class BinaryEncoder
         else if(value instanceof Number) writeNumber((Number)value, out);
         else if(value instanceof Boolean) writeBoolean((Boolean)value, out);
         else if(value instanceof Date) writeDate((Date)value, out);
+        else if(value instanceof byte[]) writeBlob((byte[])value, out);
+        else if(value instanceof List) writeArray(new JSONArray((List)value), out);
+        else if(value instanceof Map) writeObject(new JSONObject((Map)value), out);
         else throw new IllegalStateException("Unknown value type " + value.getClass());
     }
 }

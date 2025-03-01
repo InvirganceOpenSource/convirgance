@@ -127,13 +127,22 @@ public class BinaryDecoder
         return array;
     }
     
-    private String readCLOB(DataInput in) throws IOException
+    private String readClob(DataInput in) throws IOException
     {
         byte[] buffer = new byte[in.readInt()];
         
         in.readFully(buffer);
         
         return new String(buffer, "UTF-8");
+    }
+    
+    private byte[] readBlob(DataInput in) throws IOException
+    {
+        byte[] buffer = new byte[in.readInt()];
+        
+        in.readFully(buffer);
+        
+        return buffer;
     }
     
     /**
@@ -192,7 +201,10 @@ public class BinaryDecoder
                 return Boolean.FALSE;
                 
             case TYPE_CLOB:
-                return readCLOB(in);
+                return readClob(in);
+                
+            case TYPE_BLOB:
+                return readBlob(in);
                 
             case TYPE_DATE:
                 return new Date(in.readLong());

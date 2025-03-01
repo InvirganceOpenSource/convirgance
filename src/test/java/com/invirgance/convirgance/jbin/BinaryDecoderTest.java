@@ -219,5 +219,28 @@ public class BinaryDecoderTest
         assertEquals(9, out.size());
         assertEquals(new Date(expected), decoder.read(in));
     }
+    
+    @Test
+    public void testBLOB() throws Exception
+    {
+        byte[] expected = {0x01, 0x02, 0x03, (byte)0xFF};
+        byte[] value;
+        
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        BinaryEncoder encoder = new BinaryEncoder();
+        BinaryDecoder decoder = new BinaryDecoder();
+        DataInputStream in;
+        
+        encoder.write(expected, new DataOutputStream(out));
+        
+        in = new DataInputStream(new ByteArrayInputStream(out.toByteArray()));
+        value = (byte[])decoder.read(in);
+        
+        assertEquals(expected.length, value.length);
+        assertEquals(expected[0], value[0]);
+        assertEquals(expected[1], value[1]);
+        assertEquals(expected[2], value[2]);
+        assertEquals(expected[3], value[3]);
+    }
 }
 
