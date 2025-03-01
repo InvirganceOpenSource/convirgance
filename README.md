@@ -1,5 +1,7 @@
 # Convirgance
 
+![Version](https://img.shields.io/badge/Version-1.2.0-blue) ![License](https://img.shields.io/badge/License-MIT-green)
+
 Convirgance is a modern, streamlined approach to database access. Unlike traditional
 ORM frameworks that map your database into Java objects, Convirgance gives you direct
 control over your SQL queries, returning results as a stream of `Map` objects.
@@ -27,7 +29,7 @@ Add the following dependency to your Maven `pom.xml` file:
 <dependency>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
