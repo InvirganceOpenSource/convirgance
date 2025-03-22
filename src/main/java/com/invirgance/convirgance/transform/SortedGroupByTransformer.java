@@ -161,6 +161,8 @@ public class SortedGroupByTransformer implements Transformer
             @Override
             public JSONObject next() 
             {
+                JSONObject filtered;
+                
                 group = new JSONObject();
                 children = new JSONArray();
         
@@ -173,7 +175,9 @@ public class SortedGroupByTransformer implements Transformer
                 // Children: Process all records for this group
                 while (current != null && keysMatch(group)) 
                 {
-                    children.add(addFilteredRecordToGroup(current));
+                    filtered = addFilteredRecordToGroup(current);
+                    
+                    if(!isNull(filtered)) children.add(filtered);
 
                     current = null;
                     
@@ -195,9 +199,21 @@ public class SortedGroupByTransformer implements Transformer
                 return true;
             }
             
+            private boolean isNull(JSONObject record)
+            {
+                if(record.isEmpty()) return true;
+                
+                for(String key : record.keySet())
+                {
+                    if(!record.isNull(key)) return false;
+                }
+                
+                return true;
+            }
+            
             private JSONObject addFilteredRecordToGroup(JSONObject record)
             {
-                for (String key : fields)
+                for(String key : fields)
                 {
                     record.remove(key);
                 }

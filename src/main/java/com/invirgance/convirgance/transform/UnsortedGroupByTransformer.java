@@ -151,13 +151,13 @@ public class UnsortedGroupByTransformer implements Transformer
     @Override
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
     {
-        String header;
+        JSONObject header;
         JSONArray group;
         JSONObject record;
         JSONObject collected; 
         JSONObject clone;
         
-        Map<String, JSONArray> related = new HashMap();
+        Map<JSONObject, JSONArray> related = new HashMap();
         JSONArray groups = new JSONArray();
         Set<String> fieldKeys = new HashSet<>(Arrays.asList(fields));
               
@@ -183,24 +183,37 @@ public class UnsortedGroupByTransformer implements Transformer
             }
 
             clone = new JSONObject(record);
-            clone.keySet().removeAll(fieldKeys);
             
-            group.add(clone);
+            for(String key : fieldKeys) clone.remove(key);
+            
+            if(!isNull(clone)) group.add(clone);
         }
 
         return groups.iterator();
     }
-
-    private String createGroupKey(JSONObject record)
+    
+    private boolean isNull(JSONObject record)
     {
-        Object[] values = new Object[fields.length];
+        if(record.isEmpty()) return true;
+
+        for(String key : record.keySet())
+        {
+            if(!record.isNull(key)) return false;
+        }
+
+        return true;
+    }
+
+    private JSONObject createGroupKey(JSONObject record)
+    {
+        JSONObject result = new JSONObject();
         
         for (int i = 0; i < fields.length; i++)
         {
-            values[i] = record.get(fields[i]);
+            result.put(fields[i], record.get(fields[i]));
         }
         
-        return Arrays.toString(values);
+        return result;
     }
     
 }

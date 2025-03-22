@@ -143,6 +143,25 @@ public class UnsortedGroupByTransformerTest
              
         assertTransformEquals(test,known,"Nested transform test.",fields);
     }
+    
+    @Test
+    public void testNullValues()
+    {
+        String expected = "[" +
+                "{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":25.7},{\"temp\":23.2}]}," +
+                "{\"city\":\"Tampa\",\"temps\":[]}" +
+                "]";
+        
+        String test = "["
+                + "{\"city\": \"Milwaukee\", \"temp\": 25.7},"
+                + "{\"city\": \"Tampa\"},"
+                + "{\"city\": \"Milwaukee\", \"temp\": 23.2}"
+                + "]";
+        
+        String[] fields = new String[] { "city" };
+        
+        assertEquals(new JSONArray(expected), processTransform(test, fields));
+    }
 
     /**
      * Tests that grouping on fields with values that contain the output key

@@ -24,7 +24,8 @@
 package com.invirgance.convirgance.transform;
 
 import com.invirgance.convirgance.json.JSONArray;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.invirgance.convirgance.json.JSONObject;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -40,17 +41,17 @@ public class SortedGroupByTransformerTest
     
     private void assertTransformEquals(String input, String known, String message)
     {
-        String[] fields = new String[]
-        {
-            "city"
-        };
+        String[] fields = new String[] { "city" };
        
-        assertTransformEquals(input,known,message,fields);
+        assertTransformEquals(input, known, message, fields);
     }
     
-    private void assertTransformEquals(String input, String known, String message, String[] fields){
+    // TODO: This entire thing is backwards and wasn't fixed when the issue was raised
+    private void assertTransformEquals(String input, String known, String message, String[] fields)
+    {
         JSONArray expected = new JSONArray(known);
-        assertTrue(processTransform(input,fields).equals(expected),message);
+        
+        assertTrue(processTransform(input, fields).equals(expected), message);
     }
     
     private JSONArray processTransform(String input, String[] fields)
@@ -134,13 +135,34 @@ public class SortedGroupByTransformerTest
                 + "{\"city\": \"Tampa\", \"temp\": 32.1, \"weather\": \"overcast\"},"
                 + "{\"city\": \"Tampa\", \"temp\": 22.1, \"weather\": \"overcast\"}"
                 + "]";
-        String known = "[{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]},{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]},{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}]";     
-        String[] fields = new String[]
-        {
-            "city","keyboard"
-        };
-             
-        assertTransformEquals(test,known,"Testing missing fields",fields);
+        
+        String expected = "[" +
+                "{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":35.2,\"weather\":\"rain\"}]}," +
+                "{\"keyboard\":null,\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2,\"weather\":\"sunny\"}]}," +
+                "{\"keyboard\":null,\"city\":\"Tampa\",\"temps\":[{\"temp\":36.2,\"weather\":\"sunny\"},{\"temp\":32.1,\"weather\":\"overcast\"},{\"temp\":22.1,\"weather\":\"overcast\"}]}," +
+                "]";
+        
+        String[] fields = new String[] { "city", "keyboard" };
+        
+        assertEquals(new JSONArray(expected), processTransform(test, fields));
+    }
+    
+    @Test
+    public void testNullValues()
+    {
+        String expected = "[" +
+                "{\"city\":\"Tampa\",\"temps\":[]}," +
+                "{\"city\":\"Milwaukee\",\"temps\":[{\"temp\":23.2}]}" +
+                "]";
+        
+        String test = "["
+                + "{\"city\": \"Tampa\"},"
+                + "{\"city\": \"Milwaukee\", \"temp\": 23.2}"
+                + "]";
+        
+        String[] fields = new String[] { "city" };
+        
+        assertEquals(new JSONArray(expected), processTransform(test, fields));
     }
 
     /**
