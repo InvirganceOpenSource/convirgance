@@ -121,7 +121,8 @@ public class DateISOStringTransformer implements IdentityTransformer
 
             if(value != null && value instanceof Date)
             {
-                record.put(key, formatter.format(value));
+                if(value instanceof java.sql.Date) record.put(key, value.toString());
+                else record.put(key, formatter.format(value));
             }
         }
         

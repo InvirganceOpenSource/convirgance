@@ -373,8 +373,10 @@ public class JSONWriter implements AutoCloseable
      * @throws IOException If writing fails.
      */
     public JSONWriter write(Date date) throws IOException 
-    {      
-        writer.write("\"" + date.toInstant().toString() + "\"");
+    {
+        if(date instanceof java.sql.Date) writer.write("\"" + date.toString() + "\"");
+        else writer.write("\"" + date.toInstant().toString() + "\"");
+        
         return this;
     }
 

@@ -75,4 +75,26 @@ public class DateISOStringTransformerTest
         assertEquals(expected, record.get("Created"));
         assertEquals(date, record.get("Destroyed"));
     }
+
+    @Test
+    public void testTransformSQLDate()
+    {
+        Date date = new java.sql.Date(125, 1, 20);
+        String expected = "2025-02-20";
+
+        JSONObject record = new JSONObject();
+        DateISOStringTransformer transformer = new DateISOStringTransformer("Created");
+
+        // Set up record
+        record.put("Item", "Phone");
+        record.put("Created", date);
+        record.put("Destroyed", date);
+        
+        // Apply transformation
+        transformer.transform(record);
+        
+        assertEquals("Phone", record.get("Item"));    
+        assertEquals(expected, record.get("Created"));
+        assertEquals(date, record.get("Destroyed"));
+    }
 }
