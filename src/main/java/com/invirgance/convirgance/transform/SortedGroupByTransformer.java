@@ -21,6 +21,7 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform;
 
+import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.util.*;
@@ -143,7 +144,7 @@ public class SortedGroupByTransformer implements Transformer
     @Override
     public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) 
     {
-        return new Iterator<JSONObject>() {
+        return new CloseableIterator<JSONObject>() {
             private JSONObject current;          
             private JSONObject group;
             private JSONArray children;
@@ -219,6 +220,16 @@ public class SortedGroupByTransformer implements Transformer
                 }
 
                 return record;
+            }
+
+            @Override
+            public void close() throws Exception
+            {
+                if(iterator instanceof CloseableIterator) ((CloseableIterator)iterator).close();
+                if(iterator instanceof Collection) return; // In memory
+                
+                // Drain the iterator
+                while(iterator.hasNext()) iterator.next();
             }
                      
         };
