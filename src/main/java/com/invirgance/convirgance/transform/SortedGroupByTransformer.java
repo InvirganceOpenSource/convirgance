@@ -164,7 +164,7 @@ public class SortedGroupByTransformer implements Transformer
             {
                 JSONObject filtered;
                 
-                group = new JSONObject();
+                group = new JSONObject(current.isOrdered());
                 children = new JSONArray();
         
                 // Set the group keys from current parent record
