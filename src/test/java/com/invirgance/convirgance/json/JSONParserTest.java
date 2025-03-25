@@ -21,6 +21,8 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.json;
 
+import com.invirgance.convirgance.source.ByteArraySource;
+import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -109,6 +111,7 @@ public class JSONParserTest
     public void testParseObject() throws Exception
     {
         JSONObject record;
+        ByteArraySource source;
         
         assertEquals(0, new JSONParser("{}").parseObject().size());
         
@@ -135,6 +138,13 @@ public class JSONParserTest
         "").parseObject();
         
         assertEquals(1, record.getJSONArray("databases").size());
+        
+        // Testing edge condition in parseNumber that causes an early stream termination
+        source = new ByteArraySource("{\"id\":12}".getBytes("UTF-8"));
+        record = new JSONParser(new InputStreamReader(source.getInputStream())).parseObject();
+
+        assertEquals(1, record.size());
+        assertEquals(12, record.get("id"));
     }
     
     @Test

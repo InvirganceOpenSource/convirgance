@@ -205,7 +205,7 @@ public class JSONParser implements AutoCloseable
             c = peek();
         }
         
-        while(reader.ready())
+        while(reader.ready() || !Character.isDigit(c))
         {   
             if(Character.isDigit(c))
             {
