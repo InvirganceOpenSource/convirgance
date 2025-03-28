@@ -422,4 +422,26 @@ public class JSONObjectTest
         
         assertTrue(record.toString().startsWith("{\"test\":\"[B@"));
     }
+    
+    @Test
+    public void testKeySet()
+    {
+        JSONObject record = new JSONObject(true);
+        
+        record.put("city", "Milwaukee");
+        record.put("temp", 25);
+        assertEquals(2, record.size());
+        
+        record.keySet().remove("city");
+        assertEquals(1, record.size());
+        
+        record.put("city", "Milwaukee");
+        assertEquals(2, record.size());
+        
+        record.keySet().removeAll(new JSONArray<>("city", "temp"));
+        assertEquals(0, record.size());
+        
+        record.put("city", "Milwaukee");
+        assertEquals("Milwaukee", record.remove("city"));
+    }
 }

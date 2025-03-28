@@ -39,6 +39,8 @@ public class JSONObject implements Map<String, Object>
     private boolean ordered = false;
     private OrderedKeys<String> orderedKeys;
 
+    // FIXME: Need to implement custom set to fix manipulations of entrySet()
+    
     /**
      * Creates a new JSONObject with ordering set to false.
      */
@@ -384,6 +386,7 @@ public class JSONObject implements Map<String, Object>
         
         if(value == null) return null;
         if(value instanceof JSONArray) return ((JSONArray)value);
+        if(value instanceof List) return new JSONArray((List)value);
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a JSONArray");
     }
@@ -401,6 +404,7 @@ public class JSONObject implements Map<String, Object>
         
         if(value == null) return defaultValue;
         if(value instanceof JSONArray) return ((JSONArray)value);
+        if(value instanceof List) return new JSONArray((List)value);
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a JSONArray");
     }
@@ -414,9 +418,19 @@ public class JSONObject implements Map<String, Object>
     public JSONObject getJSONObject(String key) throws ConvirganceException
     {
         Object value = this.map.get(key);
+        JSONObject map;
         
         if(value == null) return null;
         if(value instanceof JSONObject) return ((JSONObject)value);
+        
+        if(value instanceof Map)
+        {
+            map = new JSONObject(ordered);
+            
+            map.putAll((Map)value);
+            
+            return map;
+        }
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a JSONObject");
     }
@@ -433,9 +447,19 @@ public class JSONObject implements Map<String, Object>
     public JSONObject getJSONObject(String key, JSONObject defaultValue) throws ConvirganceException
     {
         Object value = this.map.get(key);
+        JSONObject map;
         
         if(value == null) return defaultValue;
         if(value instanceof JSONObject) return ((JSONObject)value);
+        
+        if(value instanceof Map)
+        {
+            map = new JSONObject(ordered);
+            
+            map.putAll((Map)value);
+            
+            return map;
+        }
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a JSONObject");
     }
@@ -493,9 +517,11 @@ public class JSONObject implements Map<String, Object>
     @Override
     public Object remove(Object key)
     {
+        Object value = this.map.remove(key);
+        
         if(ordered) orderedKeys.remove((String)key);
         
-        return this.map.remove(key);
+        return value;
     }
 
     /**
@@ -655,6 +681,30 @@ public class JSONObject implements Map<String, Object>
         public OrderedKeys(Collection collection)
         {
             super(collection);
+        }
+
+        @Override
+        public boolean remove(Object o)
+        {
+            map.remove(o);
+            
+            return super.remove(o);
+        }
+
+        @Override
+        public T remove(int index)
+        {
+            map.remove(get(index));
+            
+            return super.remove(index);
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c)
+        {
+            for(Object value : c) map.remove(value);
+            
+            return super.removeAll(c);
         }
     }
 }

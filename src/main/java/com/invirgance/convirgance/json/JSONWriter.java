@@ -255,6 +255,15 @@ public class JSONWriter implements AutoCloseable
 
         return this;
     }
+    
+    private JSONWriter write(Map map) throws IOException
+    {
+        JSONObject object = new JSONObject(true);
+        
+        object.putAll(map);
+        
+        return write(object);
+    }
 
     /**
      * Writes the JSON of the provided object, using indentation if set.
@@ -399,7 +408,7 @@ public class JSONWriter implements AutoCloseable
         else if(object instanceof JSONArray) return write((JSONArray)object);
         else if(object instanceof Calendar) return write(((Calendar)object).getTime());
         else if(object instanceof List) return write(new JSONArray((List)object));
-        else if(object instanceof Map) return write(new JSONObject((Map)object));
+        else if(object instanceof Map) return write((Map)object);
         else if(object instanceof String[]) return write(new JSONArray<String>((String[])object));
         else if(object instanceof Object[]) return write(new JSONArray<Object>((Object[])object));
         else if(loose) return write(object.toString());
