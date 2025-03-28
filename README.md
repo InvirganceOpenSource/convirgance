@@ -1,6 +1,6 @@
 # Convirgance
 
-![Version](https://img.shields.io/badge/Version-1.2.1-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Repository](https://img.shields.io/badge/Platform-Java-gold) ![Repository](https://img.shields.io/badge/Repository-Maven%20Central-red)
+![Version](https://img.shields.io/badge/Version-1.2.2-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Repository](https://img.shields.io/badge/Platform-Java-gold) ![Repository](https://img.shields.io/badge/Repository-Maven%20Central-red)
 
 Convirgance is a modern, streamlined approach to database access. Unlike traditional
 ORM frameworks that map your database into Java objects, Convirgance gives you direct
