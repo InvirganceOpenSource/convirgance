@@ -579,6 +579,8 @@ public class JSONObject implements Map<String, Object>
     @Override
     public Set<Entry<String, Object>> entrySet()
     {
+        if(ordered) return new OrderedEntrySet();
+        
         return this.map.entrySet();
     }
 
@@ -706,5 +708,133 @@ public class JSONObject implements Map<String, Object>
             
             return super.removeAll(c);
         }
+    }
+    
+    private class OrderedEntrySet implements Set<Entry<String, Object>>
+    {
+
+        @Override
+        public int size()
+        {
+            return JSONObject.this.size();
+        }
+
+        @Override
+        public boolean isEmpty()
+        {
+            return JSONObject.this.isEmpty();
+        }
+
+        @Override
+        public boolean contains(Object o)
+        {
+            Map.Entry<String,Object> entry;
+            
+            if(!(o instanceof Map.Entry)) return false;
+            
+            entry = (Map.Entry<String,Object>)o;
+            
+            if(!JSONObject.this.containsKey(entry.getKey())) return false;
+            if(entry.getValue() == null) return JSONObject.this.isNull(entry.getKey());
+            
+            return entry.getValue().equals(JSONObject.this.get(entry.getKey()));
+        }
+
+        @Override
+        public Iterator<Entry<String, Object>> iterator()
+        {
+            return new Iterator<Entry<String, Object>>() {
+                
+                private int index;
+                
+                @Override
+                public boolean hasNext()
+                {
+                    return (index < JSONObject.this.orderedKeys.size());
+                }
+
+                @Override
+                public Entry<String, Object> next()
+                {
+                    return new Entry<String, Object>() {
+                        
+                        private String key = JSONObject.this.orderedKeys.get(index++);
+                        
+                        @Override
+                        public String getKey()
+                        {
+                            return key;
+                        }
+
+                        @Override
+                        public Object getValue()
+                        {
+                            return JSONObject.this.get(key);
+                        }
+
+                        @Override
+                        public Object setValue(Object value)
+                        {
+                            return JSONObject.this.put(key, value);
+                        }
+                    };
+                }
+            };
+        }
+
+        @Override
+        public Object[] toArray()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public boolean add(Entry<String, Object> e)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public boolean remove(Object o)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends Entry<String, Object>> c)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c)
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public void clear()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
     }
 }

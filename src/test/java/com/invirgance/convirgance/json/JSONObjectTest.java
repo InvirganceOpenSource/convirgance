@@ -22,6 +22,9 @@ SOFTWARE.
 package com.invirgance.convirgance.json;
 
 import com.invirgance.convirgance.ConvirganceException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -443,5 +446,34 @@ public class JSONObjectTest
         
         record.put("city", "Milwaukee");
         assertEquals("Milwaukee", record.remove("city"));
+    }
+    
+    @Test
+    public void testEntrySet()
+    {
+        JSONObject record = new JSONObject(true);
+        Iterator<Map.Entry<String,Object>> iterator;
+        Set<Map.Entry<String,Object>> entries;
+        Map.Entry<String,Object> entry;
+        
+        record.put("city", "Milwaukee");
+        record.put("temp", 25);
+        
+        entries = record.entrySet();
+        iterator = entries.iterator();
+        
+        assertTrue(iterator.hasNext());
+        
+        entry = iterator.next();
+        
+        assertEquals("city", entry.getKey());
+        assertEquals("Milwaukee", entry.getValue());
+        assertTrue(iterator.hasNext());
+        
+        entry = iterator.next();
+        
+        assertEquals("temp", entry.getKey());
+        assertEquals(25, entry.getValue());
+        assertFalse(iterator.hasNext());
     }
 }
