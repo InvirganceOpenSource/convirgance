@@ -23,6 +23,7 @@ package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Set;
@@ -36,6 +37,7 @@ import java.util.Set;
  * @author jbanes
  * @see CSVOutput
  */
+@Wiring
 public class DelimitedOutput implements Output
 {
     private String[] columns;

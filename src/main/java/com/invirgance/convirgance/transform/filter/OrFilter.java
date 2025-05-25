@@ -22,6 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import java.util.List;
  * Used to filter JSONObjects that meet any of a given criteria.
  * @author jbanes
  */
+@Wiring
 public class OrFilter implements Filter
 {
     private List<Filter> filters;

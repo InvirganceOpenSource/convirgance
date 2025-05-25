@@ -23,6 +23,7 @@ package com.invirgance.convirgance.transform;
 
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.util.*;
 
 /**
@@ -35,6 +36,7 @@ import java.util.*;
  * 
  * @author jbanes
  */
+@Wiring
 public class CoerceStringsTransformer implements IdentityTransformer
 {
     private boolean booleans;

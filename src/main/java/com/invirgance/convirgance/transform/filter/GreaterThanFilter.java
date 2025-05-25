@@ -22,11 +22,13 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Used to check if a JSONObjects key has a value greater than the provided minimum value.
  * @author jbanes
  */
+@Wiring
 public class GreaterThanFilter extends ComparatorFilter
 {
     

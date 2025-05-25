@@ -26,6 +26,7 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.jbin.BinaryDecoder;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.Source;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -37,6 +38,7 @@ import java.util.zip.GZIPInputStream;
  * 
  * @author jbanes
  */
+@Wiring
 public class JBINInput implements Input<JSONObject>
 {
     private static final byte[] header = new byte[]

@@ -24,6 +24,7 @@
 package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Provides support for writing tab-delimited (tsv) files as a stream of data.  
@@ -32,6 +33,7 @@ import com.invirgance.convirgance.ConvirganceException;
  * 
  * @author timur
  */
+@Wiring
 public class TabDelimitedOutput extends DelimitedOutput
 {
     /**

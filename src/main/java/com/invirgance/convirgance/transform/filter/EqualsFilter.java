@@ -22,11 +22,13 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Used when filtering data that should be equal to some criteria.
  * @author jbanes
  */
+@Wiring
 public class EqualsFilter extends ComparatorFilter
 {
     /**

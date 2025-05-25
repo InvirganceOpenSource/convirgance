@@ -22,11 +22,13 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Filters JSONObjects where the value of the specified key is less than the provided comparison value.
  * @author jbanes
  */
+@Wiring
 public class LessThanFilter extends ComparatorFilter
 {
     /**

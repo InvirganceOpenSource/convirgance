@@ -24,6 +24,7 @@
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.util.Stack;
 
 /**
@@ -50,6 +51,7 @@ import java.util.Stack;
  * 
  * @author tadghh
  */
+@Wiring
 public class LikeFilter implements Filter
 {
     private String key;

@@ -23,6 +23,7 @@ package com.invirgance.convirgance.transform;
 
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * A transformer that inserts or updates a key-value pair in a JSON object.
@@ -31,6 +32,7 @@ import com.invirgance.convirgance.json.JSONObject;
  * 
  * @author jbanes
  */
+@Wiring
 public class InsertKeyTransformer implements IdentityTransformer
 {
     private String key;

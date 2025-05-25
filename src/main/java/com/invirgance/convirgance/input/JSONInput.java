@@ -26,6 +26,7 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.json.JSONParser;
 import com.invirgance.convirgance.source.Source;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,6 +39,7 @@ import java.io.InputStreamReader;
  * 
  * @author jbanes
  */
+@Wiring
 public class JSONInput implements Input<JSONObject>
 {
     

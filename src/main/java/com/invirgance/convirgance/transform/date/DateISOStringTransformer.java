@@ -24,6 +24,7 @@ package com.invirgance.convirgance.transform.date;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.IdentityTransformer;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -52,6 +53,7 @@ import java.util.TimeZone;
  *
  * @author jbanes
  */
+@Wiring
 public class DateISOStringTransformer implements IdentityTransformer
 {
     private List<String> columns;

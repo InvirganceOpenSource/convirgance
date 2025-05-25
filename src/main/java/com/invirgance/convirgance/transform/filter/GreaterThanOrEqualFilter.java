@@ -22,6 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Filters JSONObjects where the value of a specified key is greater than or
@@ -29,6 +30,7 @@ import com.invirgance.convirgance.json.JSONObject;
  *
  * @author jbanes
  */
+@Wiring
 public class GreaterThanOrEqualFilter extends ComparatorFilter
 {
     /**

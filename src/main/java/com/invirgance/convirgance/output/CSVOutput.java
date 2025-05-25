@@ -25,6 +25,7 @@ package com.invirgance.convirgance.output;
 
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
@@ -44,6 +45,7 @@ import java.nio.charset.Charset;
  * @author tadghh
  * @see <a href="https://tools.ietf.org/html/rfc4180">RFC 4180 Specification</a>
  */
+@Wiring
 public class CSVOutput implements Output
 {
 

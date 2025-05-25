@@ -22,11 +22,13 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Filters JSONObjects that do not meet the condition of an existing filter.
  * @author jbanes
  */
+@Wiring
 public class NotFilter implements Filter
 {
     private Filter filter;

@@ -25,6 +25,7 @@ import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.Source;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -39,6 +40,7 @@ import java.util.ArrayList;
  * @author jbanes
  * @see CSVInput
  */
+@Wiring
 public class DelimitedInput implements Input<JSONObject>
 {
     private String[] columns;

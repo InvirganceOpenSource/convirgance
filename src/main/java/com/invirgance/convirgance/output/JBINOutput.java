@@ -27,6 +27,7 @@ import com.invirgance.convirgance.jbin.KeyEncoder;
 import com.invirgance.convirgance.jbin.KeyStreamEncoder;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.target.Target;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
@@ -37,6 +38,7 @@ import java.util.zip.GZIPOutputStream;
  * 
  * @author jbanes
  */
+@Wiring
 public class JBINOutput implements Output
 {
 

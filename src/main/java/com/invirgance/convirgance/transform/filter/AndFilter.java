@@ -22,6 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import java.util.List;
  * given record as true.
  * @author jbanes
  */
+@Wiring
 public class AndFilter implements Filter
 {
     private List<Filter> filters;

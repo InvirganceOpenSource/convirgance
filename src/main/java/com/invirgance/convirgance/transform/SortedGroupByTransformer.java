@@ -24,6 +24,7 @@ package com.invirgance.convirgance.transform;
 import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.util.*;
 
 /**
@@ -35,6 +36,7 @@ import java.util.*;
  * 
  * @author tadghh
  */
+@Wiring
 public class SortedGroupByTransformer implements Transformer 
 {   
     private String[] fields;

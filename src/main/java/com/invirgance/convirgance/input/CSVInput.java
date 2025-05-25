@@ -26,6 +26,7 @@ import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.Source;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,6 +46,7 @@ import java.util.List;
  * @author tadghh
  * @see <a href="https://tools.ietf.org/html/rfc4180">RFC 4180 Specification</a>
  */
+@Wiring
 public class CSVInput implements Input<JSONObject>
 {
     private String encoding = "UTF-8"; 

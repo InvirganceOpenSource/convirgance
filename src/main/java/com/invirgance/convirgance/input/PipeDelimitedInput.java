@@ -24,6 +24,7 @@
 package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 
 /**
@@ -34,6 +35,7 @@ import com.invirgance.convirgance.ConvirganceException;
  * @author timur
  * @see DelimitedInput
  */
+@Wiring
 public class PipeDelimitedInput extends DelimitedInput
 {   
     /**

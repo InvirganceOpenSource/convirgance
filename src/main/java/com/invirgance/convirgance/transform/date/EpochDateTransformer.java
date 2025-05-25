@@ -24,6 +24,7 @@ package com.invirgance.convirgance.transform.date;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.IdentityTransformer;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,7 @@ import java.util.List;
  * @author jbanes
  * @see java.util.Date#getTime()
  */
+@Wiring
 public class EpochDateTransformer implements IdentityTransformer
 {
     private List<String> columns;

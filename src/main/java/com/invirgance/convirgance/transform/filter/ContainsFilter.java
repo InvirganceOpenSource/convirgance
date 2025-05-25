@@ -24,6 +24,7 @@
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
  * Filters out JSONObjects based on string containment comparison.
@@ -60,6 +61,7 @@ import com.invirgance.convirgance.json.JSONObject;
  * @see JSONObject
  * @author tadghh
  */
+@Wiring
 public class ContainsFilter implements Filter
 {
     private String key;
