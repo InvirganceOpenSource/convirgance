@@ -22,6 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.ValueGenerator;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
@@ -57,6 +58,10 @@ public class LessThanFilter extends ComparatorFilter
     @Override
     public boolean test(JSONObject record)
     {
-        return getComparator().compare(record.get(getKey()), getValue()) < 0;
+        Object value = getValue();
+        
+        if(value instanceof ValueGenerator) value = ((ValueGenerator)value).generate(record);
+        
+        return getComparator().compare(record.get(getKey()), value) < 0;
     }
 }

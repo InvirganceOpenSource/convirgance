@@ -22,6 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.ValueGenerator;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
@@ -58,8 +59,14 @@ public class EqualsFilter extends ComparatorFilter
     public boolean test(JSONObject record)
     {
         Object value = record.get(getKey());
+        Object target = getValue();
         
-        if(getValue() == null) return (value == null);
+        if(target == null) return (value == null);
+        
+        if(target instanceof ValueGenerator)
+        {
+            return getComparator().compare(value, ((ValueGenerator)target).generate(record)) == 0;
+        }
         
         return getComparator().compare(value, getValue()) == 0;
     }

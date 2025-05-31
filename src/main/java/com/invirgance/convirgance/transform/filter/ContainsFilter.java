@@ -24,6 +24,7 @@
 package com.invirgance.convirgance.transform.filter;
 
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.ValueGenerator;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
@@ -65,7 +66,7 @@ import com.invirgance.convirgance.wiring.annotation.Wiring;
 public class ContainsFilter implements Filter
 {
     private String key;
-    private String value;
+    private Object value;
     
     /**
      * Creates a new ContainsFilter.
@@ -80,7 +81,7 @@ public class ContainsFilter implements Filter
      * @param key The key to evaluate in the JSONObject.
      * @param value The value to check for containment.
      */
-    public ContainsFilter(String key, String value)
+    public ContainsFilter(String key, Object value)
     {
         this.key = key;
         this.value = value;
@@ -109,7 +110,7 @@ public class ContainsFilter implements Filter
      * 
      * @return The filter value.
      */
-    public String getValue()
+    public Object getValue()
     {
         return value;
     }
@@ -118,7 +119,7 @@ public class ContainsFilter implements Filter
      * Sets the value that will be checked for containment within the specified key's value.
      * @param value The substring to search for.
      */
-    public void setValue(String value)
+    public void setValue(Object value)
     {
         this.value = value;
     }
@@ -135,9 +136,12 @@ public class ContainsFilter implements Filter
     public boolean test(JSONObject record)
     {
         String current = record.getString(getKey());
+        Object value = getValue();
 
         if(current == null) return false;
+        if(value == null) return false;
+        if(value instanceof ValueGenerator) value = ((ValueGenerator)value).generate(record);
 
-        return current.contains(getValue());
+        return current.contains(String.valueOf(value));
     }
 }

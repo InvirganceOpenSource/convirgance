@@ -21,7 +21,9 @@ SOFTWARE.
  */
 package com.invirgance.convirgance.transform.filter;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.transform.ValueGenerator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,4 +53,21 @@ public class EqualsFilterTest
         assertTrue(filter.test(record1));
     }
     
+    @Test
+    public void testValueGenerator()
+    {
+        JSONObject record1 = new JSONObject("{\"x\":1,\"y\":2}");
+        JSONObject record2 = new JSONObject("{\"x\":null,\"y\":4}");
+        ValueGenerator generator = new ValueGenerator() {
+            @Override
+            public Object generate(JSONObject record) throws ConvirganceException {
+                return record.get("x");
+            }
+        };
+        
+        EqualsFilter filter = new EqualsFilter("x", generator);
+        
+        assertTrue(filter.test(record1));
+        assertTrue(filter.test(record2));
+    }
 }

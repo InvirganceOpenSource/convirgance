@@ -23,9 +23,11 @@
  */
 package com.invirgance.convirgance.transform.filter;
 
+import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.input.JSONInput;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.FileSource;
+import com.invirgance.convirgance.transform.ValueGenerator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -77,6 +79,26 @@ public class ContainsFilterTest
         Iterator<JSONObject> filtered = filter.transform(records);
         
         assertFalse(filtered.hasNext());
+    }
+    
+    @Test
+    public void testValueGenerator()
+    {
+        String key = "color";
+        
+        JSONObject record1 = new JSONObject("{\"color\": \"metallic red\"}");
+        JSONObject record2 = new JSONObject("{\"color\": \"ocean blue\"}");
+        ValueGenerator generator = new ValueGenerator() {
+            @Override
+            public Object generate(JSONObject record) throws ConvirganceException {
+                return "red";
+            }
+        };
+        
+        ContainsFilter filter = new ContainsFilter(key, generator);
+        
+        assertTrue(filter.test(record1));
+        assertFalse(filter.test(record2));
     }
     
 }
