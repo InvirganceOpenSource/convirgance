@@ -26,7 +26,9 @@ import com.invirgance.convirgance.transform.ValueGenerator;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
- * Filters JSONObjects where the value of the specified key is less than the provided comparison value.
+ * Filters JSONObjects where the value of the specified key is less than the 
+ * provided comparison value. Supports {@link ValueGenerator} as a value.
+ * 
  * @author jbanes
  */
 @Wiring

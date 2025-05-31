@@ -26,7 +26,9 @@ import com.invirgance.convirgance.transform.ValueGenerator;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
- * Used to check if a JSONObjects key has a value greater than the provided minimum value.
+ * Used to check if a JSONObjects key has a value greater than the provided 
+ * minimum value. Supports {@link ValueGenerator} as a value.
+ * 
  * @author jbanes
  */
 @Wiring

@@ -56,6 +56,7 @@ import com.invirgance.convirgance.wiring.annotation.Wiring;
  *   <li>The filter performs case-sensitive containment checks</li>
  *   <li>Null values in either the record or comparison value will result in the test returning false</li>
  *   <li>Both the record value and comparison value are converted to strings before comparison</li>
+ *   <li>Supports {@link ValueGenerator} as a value.</li>
  * </ul>
  * 
  * @see Filter

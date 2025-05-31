@@ -26,7 +26,8 @@ import com.invirgance.convirgance.transform.ValueGenerator;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 
 /**
- * Used when filtering data that should be equal to some criteria.
+ * Used when filtering data that should be equal to some criteria. Supports 
+ * {@link ValueGenerator} as a value.
  * @author jbanes
  */
 @Wiring
