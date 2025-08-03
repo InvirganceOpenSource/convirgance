@@ -23,6 +23,9 @@ package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.CloseableIterator;
 import com.invirgance.convirgance.json.JSONObject;
+import java.util.Collection;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Extends Iterable to provide a CloseableIterator that can be terminated before
@@ -36,4 +39,10 @@ public interface InputCursor<T> extends Iterable<T>
     @Override
     public CloseableIterator<T> iterator();
     
+    public default Stream<T> stream()
+    {
+        if(this instanceof Collection) return ((Collection<T>)this).stream();
+        
+        return StreamSupport.stream(this.spliterator(), false);
+    }
 }

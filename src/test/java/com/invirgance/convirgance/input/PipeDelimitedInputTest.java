@@ -25,8 +25,12 @@ package com.invirgance.convirgance.input;
 
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.source.ClasspathSource;
 import com.invirgance.convirgance.source.InputStreamSource;
+import com.invirgance.convirgance.source.Source;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
@@ -47,9 +51,8 @@ public class PipeDelimitedInputTest
         int count = 3;
         boolean empty = false;
         
-        for(JSONObject record : example1.read(new InputStreamSource(getClass().getResourceAsStream("/input/delimited/example1.txt"))))
+        for(JSONObject record : example1.read(new ClasspathSource("/input/delimited/example1.txt")))
         {
-            System.out.println(total);
             assertEquals(count, record.size());
             
             size = record.size();
@@ -90,4 +93,17 @@ public class PipeDelimitedInputTest
         }
     }
     
+    @Test
+    public void testStream()
+    {
+        String path = "/input/delimited/example1.txt";
+        Source source = new ClasspathSource(path);
+        PipeDelimitedInput input = new PipeDelimitedInput();
+        
+        boolean result = input.read(source).stream().allMatch(value -> value.containsKey("Column 1"));
+        List<JSONObject> list = input.read(source).stream().toList();
+        
+        assertTrue(result);
+        assertEquals(5, list.size());
+    }
 }
