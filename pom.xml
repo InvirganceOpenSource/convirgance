@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <packaging>jar</packaging>
     <name>Convirgance</name>
     <description>
-        Convirgance is a modern, streamlined approach to database 
+        Convirgance is a modern, Data Oriented (DOD) approach to database 
         access. Unlike traditional ORM frameworks that map your data into Java 
         objects, Convirgance provides direct SQL access as a high-performance 
         stream of Map objects which can be transformed, filtered, and 
