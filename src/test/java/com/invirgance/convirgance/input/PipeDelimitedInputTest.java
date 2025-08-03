@@ -96,12 +96,12 @@ public class PipeDelimitedInputTest
     @Test
     public void testStream()
     {
-        String path = "/input/delimited/example1.txt";
-        Source source = new ClasspathSource(path);
+        Source source = new ClasspathSource("/input/delimited/example1.txt");
         PipeDelimitedInput input = new PipeDelimitedInput();
+        InputCursor<JSONObject> cursor = input.read(source);
         
-        boolean result = input.read(source).stream().allMatch(value -> value.containsKey("Column 1"));
-        List<JSONObject> list = input.read(source).stream().toList();
+        boolean result = cursor.stream().allMatch(value -> value.containsKey("Column 1"));
+        List<JSONObject> list = cursor.stream().toList();
         
         assertTrue(result);
         assertEquals(5, list.size());
