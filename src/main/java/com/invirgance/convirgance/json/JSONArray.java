@@ -250,6 +250,49 @@ public class JSONArray<T> implements List<T>
     }    
     
     /**
+     * Gets the value associated with the specified key as a Double.
+     * If the index's value is a Double its returned.
+     * If the index's value is a String we pass the toString() of value to Double.parseDouble() 
+     * @param index The array index.
+     * @return The index's value or a String coerced into a Double.
+     * @throws ConvirganceException When the index's value is null, or its type cannot be coerced to a Double.
+     */
+    public double getDouble(int index) throws ConvirganceException
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) throw new ConvirganceException("Index " + index + " is null and therefore can't be converted to a double");
+        if(value instanceof Double) return ((Double)value);
+        if(value instanceof Number) return ((Number)value).doubleValue();
+        if(value instanceof String) return Double.parseDouble(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a double");
+    }
+    
+    /**
+     * Gets the value associated with the specified key as a Double returning the 
+     * provided default if the value or key is null.
+     * If the index's value is a Double its returned.
+     * If the index's value is a String we pass the toString() of value to Double.parseDouble() 
+     * Otherwise if the index or index's value was null, defaultValue is returned.
+     * @param index The array index.
+     * @param defaultValue The default Double value to return if the key's value is null.
+     * @return The index's value parsed to Double, or defaultValue if value or key is null.
+     * @throws ConvirganceException When the index's value cannot be converted to a Double.
+     */
+    public double getDouble(int index, double defaultValue) throws ConvirganceException
+    {
+        Object value = this.list.get(index);
+        
+        if(value == null) return defaultValue;
+        if(value instanceof Double) return ((Double)value);
+        if(value instanceof Number) return ((Number)value).doubleValue();
+        if(value instanceof String) return Double.parseDouble(value.toString());
+        
+        throw new ConvirganceException("Class type of " + value.getClass().getName() + " for index " + index + " cannot be converted to a double");
+    }
+    
+    /**
      * Gets the Boolean value for the data at given index.
      *
      * Supported types:

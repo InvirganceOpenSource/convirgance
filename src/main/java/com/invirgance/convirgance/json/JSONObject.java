@@ -266,6 +266,7 @@ public class JSONObject implements Map<String, Object>
         
         if(value == null) throw new ConvirganceException(key + " is null and therefore can't be converted to a double");
         if(value instanceof Double) return ((Double)value);
+        if(value instanceof Number) return ((Number)value).doubleValue();
         if(value instanceof String) return Double.parseDouble(value.toString());
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a double");
@@ -288,6 +289,7 @@ public class JSONObject implements Map<String, Object>
         
         if(value == null) return defaultValue;
         if(value instanceof Double) return ((Double)value);
+        if(value instanceof Number) return ((Number)value).doubleValue();
         if(value instanceof String) return Double.parseDouble(value.toString());
         
         throw new ConvirganceException("Class type of " + value.getClass().getName() + " for " + key + " cannot be converted to a double");
