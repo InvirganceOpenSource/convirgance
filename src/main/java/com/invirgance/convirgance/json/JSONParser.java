@@ -90,7 +90,7 @@ public class JSONParser implements AutoCloseable
             return (char)c;
         }
         
-        while(reader.ready())
+        while(ready())
         {
             c = reader.read();
             
@@ -98,6 +98,19 @@ public class JSONParser implements AutoCloseable
         }
         
         throw new IOException("Reached end of readable stream without finding a non-whitespace character");
+    }
+    
+    private boolean ready() throws IOException
+    {
+        int c;
+        
+        if(reader.ready()) return true;
+        
+        reader.mark(8);
+        c = reader.read();
+        reader.reset();
+        
+        return (c >= 0);
     }
 
     private char parseUnicode() throws IOException
@@ -128,7 +141,7 @@ public class JSONParser implements AutoCloseable
         
         if(next >= 0) return (char)next;
         
-        while(reader.ready())
+        while(ready())
         {
             next = reader.read();
             
@@ -205,7 +218,7 @@ public class JSONParser implements AutoCloseable
             c = peek();
         }
         
-        while(reader.ready() || !Character.isDigit(c))
+        while(ready() || !Character.isDigit(c))
         {   
             if(Character.isDigit(c))
             {
@@ -277,7 +290,7 @@ public class JSONParser implements AutoCloseable
         
         if(c != '"') throw new IOException("Expected \" but found " + c);
         
-        while(reader.ready())
+        while(ready())
         {
             c = next();
             
@@ -354,7 +367,7 @@ public class JSONParser implements AutoCloseable
         
         if(c != '{') throw new IOException("Expected {, but found " + c);
         
-        while(reader.ready())
+        while(ready())
         {
             c = peekPrintable();
             
@@ -412,7 +425,7 @@ public class JSONParser implements AutoCloseable
         
         if(c != '[') throw new IOException("Expected [ but found " + c);
         
-        while(reader.ready())
+        while(ready())
         {
             c = peekPrintable();
             
