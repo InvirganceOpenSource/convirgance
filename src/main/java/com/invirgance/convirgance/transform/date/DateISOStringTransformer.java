@@ -56,6 +56,8 @@ import java.util.TimeZone;
 @Wiring
 public class DateISOStringTransformer implements IdentityTransformer
 {
+    private static SimpleDateFormat format;
+    
     private List<String> columns;
     private SimpleDateFormat formatter;
     
@@ -129,5 +131,17 @@ public class DateISOStringTransformer implements IdentityTransformer
         }
         
         return record;
+    }
+    
+    public static String formatISO(Date date)
+    {
+        if(format == null)
+        {
+            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+        
+        return format.format(date);
     }
 }

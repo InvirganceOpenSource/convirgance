@@ -24,6 +24,7 @@ package com.invirgance.convirgance.dbms;
 import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.source.Source;
+import com.invirgance.convirgance.transform.date.DateISOStringTransformer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -219,18 +220,7 @@ public class Query implements AtomicOperation
     
     private String encodeDateTime(Date date)
     {
-        int year = date.getYear() + 1900;
-        int month = date.getMonth() + 1;
-        int day = date.getDate();
-        
-        int hour = date.getHours();
-        int minutes = date.getMinutes();
-        int seconds = date.getSeconds();
-        
-        String result = year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
-        String time = (hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-        
-        return "'" + result + " " + time + "'";
+        return "'" + DateISOStringTransformer.formatISO(date) + "'";
     }
     
     private String encodeValue(Object value)

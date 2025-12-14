@@ -109,13 +109,13 @@ public class QueryTest
         
         test.setBinding("date", new java.sql.Timestamp(2024-1900, 5, 21, 2, 14, 33, 0));
         
-        assertEquals(new java.sql.Timestamp(2024-1900, 5, 21, 2, 14, 33, 0), test.getBinding("DATE"));
-        assertEquals("select * from TABLE where date = '2024-06-21 02:14:33'", test.getDatabaseSQL());
+        assertEquals(new java.sql.Timestamp(1718954073000l), test.getBinding("DATE"));
+        assertEquals("select * from TABLE where date = '2024-06-21T07:14:33.000Z'", test.getDatabaseSQL());
         
-        test.setBinding("DATE", new java.util.Date(2024-1900, 5, 21, 2, 14, 33));
+        test.setBinding("DATE", new java.util.Date(1718954073000l));
         
         assertEquals(new java.util.Date(2024-1900, 5, 21, 2, 14, 33), test.getBinding("DATE"));
-        assertEquals("select * from TABLE where date = '2024-06-21 02:14:33'", test.getDatabaseSQL());
+        assertEquals("select * from TABLE where date = '2024-06-21T07:14:33.000Z'", test.getDatabaseSQL());
     }
     
     @Test
