@@ -166,7 +166,10 @@ public class CSVInput implements Input<JSONObject>
         @Override
         public CloseableIterator<JSONObject> iterator()
         {
+            String[] configuredHeaders = headers;
+            
             return new CloseableIterator<JSONObject>() {
+                private String[] headers = configuredHeaders;
                 private BufferedReader reader;
                 
                 {
