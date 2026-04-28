@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A single SQL query for select, insert, and update operations. Can be passed
@@ -223,6 +224,22 @@ public class Query implements AtomicOperation
         return "'" + DateISOStringTransformer.formatISO(date) + "'";
     }
     
+    private String encodeList(List array)
+    {
+        StringBuilder buffer = new StringBuilder("(");
+        
+        for(Object value : array)
+        {
+            if(buffer.length() > 1) buffer.append(", ");
+            
+            buffer.append(encodeValue(value));
+        }
+        
+        buffer.append(")");
+        
+        return buffer.toString();
+    }
+    
     private String encodeValue(Object value)
     {
         if(value == null) return "null";
@@ -234,8 +251,19 @@ public class Query implements AtomicOperation
         if(value instanceof java.sql.Timestamp) return encodeDateTime((Date)value);
         if(value instanceof Date) return encodeDateTime((Date)value);
         if(value instanceof Calendar) return encodeDateTime(((Calendar)value).getTime());
+        if(value instanceof List && isInjected((List)value)) return encodeList((List)value);
 
         return "?";
+    }
+    
+    private boolean isInjected(List array)
+    {
+        for(Object value : array)
+        {
+            if(!isInjected(value)) return false;
+        }
+        
+        return true;
     }
     
     private boolean isInjected(Object value)
@@ -249,6 +277,7 @@ public class Query implements AtomicOperation
         if(value instanceof java.sql.Timestamp) return true;
         if(value instanceof Date) return true;
         if(value instanceof Calendar) return true;
+        if(value instanceof List) return isInjected((List)value);
 
         return false;
     }

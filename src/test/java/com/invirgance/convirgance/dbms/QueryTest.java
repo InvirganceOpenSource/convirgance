@@ -22,6 +22,7 @@ SOFTWARE.
 package com.invirgance.convirgance.dbms;
 
 import com.invirgance.convirgance.ConvirganceException;
+import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -168,6 +169,16 @@ public class QueryTest
         
 //        assertEquals("insert into TABLE VALUES (123, n'Bob', null, null, null)", query.getDatabaseSQL());
         assertEquals("insert into TABLE VALUES (123, 'Bob', null, null, null)", query.getDatabaseSQL());
+        assertEquals(0, query.getDatabaseBindings().length);
+        
+        
+        // Test JSONArray injection
+        
+        query = new Query("select * from table where table_id in :array");
+        
+        query.setBinding("ARRAY", new JSONArray("abc", 123l));
+
+        assertEquals("select * from table where table_id in ('abc', 123)", query.getDatabaseSQL());
         assertEquals(0, query.getDatabaseBindings().length);
     }
     
