@@ -49,6 +49,7 @@ import javax.sql.DataSource;
 public class DBMS
 {
     private final DataSource source;
+    private int fetchSize = Integer.parseInt(System.getProperty("convirgance.dbms.fetch.size", "1000"));
     
     /**
      * Creates a new instance of the DBMS with the specified DataSource. The
@@ -60,6 +61,29 @@ public class DBMS
     public DBMS(DataSource source)
     {
         this.source = source;
+    }
+
+    /**
+     * Returns the current fetch size. The default is 1000 records or the value
+     * of the system property <code>convirgance.dbms.fetch.size</code> if set.
+     * @return The number of records fetched per batch 
+     */
+    public int getFetchSize()
+    {
+        return fetchSize;
+    }
+
+    /**
+     * Set the number of records to fetch per batch of the result set. Large 
+     * numbers can negatively impact available memory, especially with wide
+     * records. It can be advantageous to set a low number when querying wide
+     * records.
+     * 
+     * @param fetchSize number of records per batch
+     */
+    public void setFetchSize(int fetchSize)
+    {
+        this.fetchSize = fetchSize;
     }
     
     /**
@@ -135,7 +159,12 @@ public class DBMS
                 try
                 {
                     connection = source.getConnection();
-                    statement = connection.prepareStatement(query.getDatabaseSQL());
+                    
+                    connection.setAutoCommit(false);
+                    
+                    statement = connection.prepareStatement(query.getDatabaseSQL(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
+                    
+                    statement.setFetchSize(fetchSize);
                     
                     for(Object binding : query.getDatabaseBindings())
                     {
@@ -224,8 +253,6 @@ public class DBMS
             this.statement = statement;
             this.set = set;
             this.next = set.next();
-            
-            set.setFetchSize(1000);
         }
 
         @Override
@@ -275,6 +302,8 @@ public class DBMS
         {
             try { set.close(); } catch(SQLException e) { e.printStackTrace(); }
             try { statement.close(); } catch(SQLException e) { e.printStackTrace(); }
+            try { connection.commit(); } catch(SQLException e) { e.printStackTrace(); }
+            try { connection.setAutoCommit(true); } catch(SQLException e) { e.printStackTrace(); }
             
             connection.close();
         }
