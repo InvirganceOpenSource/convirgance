@@ -30,6 +30,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -241,6 +243,38 @@ public class BinaryDecoderTest
         assertEquals(expected[1], value[1]);
         assertEquals(expected[2], value[2]);
         assertEquals(expected[3], value[3]);
+    }
+    
+    @Test
+    public void testBigInteger() throws Exception
+    {
+        BigInteger expected = new BigInteger("12345678901234567890");
+        
+        BinaryEncoder writer = new BinaryEncoder();
+        BinaryDecoder decoder = new BinaryDecoder();
+        
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(buffer);
+        
+        writer.write(expected, out);
+        
+        assertEquals(expected, decoder.read(new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()))));
+    }
+    
+    @Test
+    public void testBigDecimal() throws Exception
+    {
+        BigDecimal expected = new BigDecimal("1234567890123456789.0123456789");
+        
+        BinaryEncoder writer = new BinaryEncoder();
+        BinaryDecoder decoder = new BinaryDecoder();
+        
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(buffer);
+        
+        writer.write(expected, out);
+        
+        assertEquals(expected, decoder.read(new DataInputStream(new ByteArrayInputStream(buffer.toByteArray()))));
     }
 }
 

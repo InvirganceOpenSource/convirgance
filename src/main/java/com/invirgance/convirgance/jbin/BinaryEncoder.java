@@ -23,8 +23,11 @@ package com.invirgance.convirgance.jbin;
 
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
+import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,10 @@ public class BinaryEncoder
     public static final int TYPE_BOOLEAN_FALSE = 'F';
     public static final int TYPE_CLOB = 0x0B;
     public static final int TYPE_BLOB = 0x0C;
+    public static final int TYPE_BIGINTEGER = 0x0D;
+    public static final int TYPE_BIGDECIMAL = 0x0E;
+    public static final int TYPE_SQL_DATE = 0x0F;
+    public static final int TYPE_SQL_TIMESTAMP = 0xA0;
     
     public static final int TYPE_INTEGER_U8 = 0x20;
     public static final int TYPE_INTEGER_U16 = 0x21;
@@ -146,7 +153,6 @@ public class BinaryEncoder
         
         out.writeByte(TYPE_STRING);
         out.writeByte(index);
-//        out.writeUTF(value);
         
     }
     
@@ -189,6 +195,18 @@ public class BinaryEncoder
         }
     }
     
+    private void writeEncodedLength(DataOutput out, byte[] value) throws IOException
+    {
+        out.writeInt(value.length);
+        out.write(value);
+    }
+    
+    private void writeBigDecimal(DataOutput out, BigDecimal value) throws IOException
+    {
+        writeEncodedLength(out, value.unscaledValue().toByteArray());
+        out.writeInt(value.scale());
+    }
+    
     private void writeNumber(Number value, DataOutput out) throws IOException
     {
         int integer = (value instanceof Integer ? value.intValue() : 0);
@@ -201,6 +219,8 @@ public class BinaryEncoder
         else if(value instanceof Float) out.writeByte(TYPE_FLOAT);
         else if(value instanceof Short) out.writeByte(TYPE_SHORT);
         else if(value instanceof Byte) out.writeByte(TYPE_BYTE);
+        else if(value instanceof BigInteger) out.writeByte(TYPE_BIGINTEGER);
+        else if(value instanceof BigDecimal) out.writeByte(TYPE_BIGDECIMAL);
         else throw new IllegalArgumentException("Unknown number type " + value.getClass());
         
         if(value instanceof Long) out.writeLong(value.longValue());
@@ -211,6 +231,8 @@ public class BinaryEncoder
         else if(value instanceof Float) out.writeFloat(value.floatValue());
         else if(value instanceof Short) out.writeShort(value.shortValue());
         else if(value instanceof Byte) out.writeByte(value.byteValue());
+        else if(value instanceof BigInteger) writeEncodedLength(out, ((BigInteger)value).toByteArray());
+        else if(value instanceof BigDecimal) writeBigDecimal(out, (BigDecimal)value);
         else throw new IllegalArgumentException("Unknown number type " + value.getClass());
     }
     
@@ -221,7 +243,10 @@ public class BinaryEncoder
     
     private void writeDate(Date value, DataOutput out) throws IOException
     {
-        out.writeByte(TYPE_DATE);
+        if(value instanceof java.sql.Timestamp) out.writeByte(TYPE_SQL_TIMESTAMP);
+        else if(value instanceof java.sql.Date) out.writeByte(TYPE_SQL_DATE);
+        else out.writeByte(TYPE_DATE);
+        
         out.writeLong(value.getTime());
     }
     

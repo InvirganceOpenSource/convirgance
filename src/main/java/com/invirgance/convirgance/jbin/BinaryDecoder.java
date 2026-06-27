@@ -29,6 +29,8 @@ import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import java.io.DataInput;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -145,6 +147,18 @@ public class BinaryDecoder
         return buffer;
     }
     
+    private BigInteger readBigInteger(DataInput in) throws IOException
+    {
+        byte[] buffer = readBlob(in);
+        
+        return new BigInteger(buffer);
+    }
+    
+    private BigDecimal readBigDecimal(DataInput in) throws IOException
+    {
+        return new BigDecimal(readBigInteger(in), in.readInt());
+    }
+    
     /**
      * Decodes data from an input stream that uses JBIN encoding.
      * @param in The input stream.
@@ -207,7 +221,17 @@ public class BinaryDecoder
                 return readBlob(in);
                 
             case TYPE_DATE:
-                return new Date(in.readLong());
+            case TYPE_SQL_DATE:
+            case TYPE_SQL_TIMESTAMP:
+                if(type == TYPE_SQL_TIMESTAMP) return new java.sql.Timestamp(in.readLong());
+                if(type == TYPE_SQL_DATE) return new java.sql.Date(in.readLong());
+                else return new Date(in.readLong());
+                
+            case TYPE_BIGINTEGER:
+                return readBigInteger(in);
+                
+            case TYPE_BIGDECIMAL:
+                return readBigDecimal(in);
                 
             case KEY_REGISTER_OPERATION:
                 keys.read(in);

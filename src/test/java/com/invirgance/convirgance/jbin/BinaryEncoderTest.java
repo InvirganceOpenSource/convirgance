@@ -30,6 +30,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -268,5 +270,53 @@ public class BinaryEncoderTest
         assertEquals(9, out.size());
         assertEquals(BinaryEncoder.TYPE_DATE, in.read());
         assertEquals(expected, in.readLong());
+    }
+    
+    @Test
+    public void testBigInteger() throws Exception
+    {
+        BigInteger expected = new BigInteger("12345678901234567890");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        BinaryEncoder encoder = new BinaryEncoder();
+        DataInputStream in;
+        
+        byte[] data;
+        
+        encoder.write(expected, new DataOutputStream(out));
+        
+        in = new DataInputStream(new ByteArrayInputStream(out.toByteArray()));
+        
+        assertEquals(14, out.size());
+        assertEquals(BinaryEncoder.TYPE_BIGINTEGER, in.read());
+        
+        data = new byte[in.readInt()];
+        
+        in.readFully(data);
+        
+        assertEquals(expected, new BigInteger(data));
+    }
+    
+    @Test
+    public void testBigDecimal() throws Exception
+    {
+        BigDecimal expected = new BigDecimal("1234567890123456789.0123456789");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        BinaryEncoder encoder = new BinaryEncoder();
+        DataInputStream in;
+        
+        byte[] data;
+        
+        encoder.write(expected, new DataOutputStream(out));
+        
+        in = new DataInputStream(new ByteArrayInputStream(out.toByteArray()));
+        
+        assertEquals(21, out.size());
+        assertEquals(BinaryEncoder.TYPE_BIGDECIMAL, in.read());
+        
+        data = new byte[in.readInt()];
+        
+        in.readFully(data);
+        
+        assertEquals(expected, new BigDecimal(new BigInteger(data), in.readInt()));
     }
 }
