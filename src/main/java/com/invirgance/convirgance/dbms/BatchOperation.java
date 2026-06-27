@@ -41,7 +41,7 @@ public class BatchOperation implements AtomicOperation
 {
     private Query query;
     private Iterable<JSONObject> records;
-    private int commit = 10000;
+    private int commit = Integer.parseInt(System.getProperty("convirgance.atomic.batch.size", "10000"));;
 
     /**
      * Default constructor for BatchOperation. Initializes an empty
@@ -119,7 +119,8 @@ public class BatchOperation implements AtomicOperation
     /**
      * Returns the current auto commit interval used when processing the 
      * transaction. A commit will be triggered after this number of inserts or
-     * updates. The default commit interval is 1,000.
+     * updates. The default commit interval is 10,000 or the system property
+     * <code>convirgance.atomic.batch.size</code> if set.
      * 
      * @return The auto commit interval
      */
@@ -131,7 +132,7 @@ public class BatchOperation implements AtomicOperation
     /**
      * Sets the auto commit interval used when processing the transaction. A 
      * commit will be triggered after this number of inserts or updates. Be
-     * carefuly about setting too high of a number or the database may fail on a
+     * careful about setting too high of a number or the database may fail on a
      * full transaction log.
      * 
      * @param commit The auto commit interval
