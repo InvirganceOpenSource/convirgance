@@ -175,7 +175,12 @@ public class Query implements AtomicOperation
                 }
             }
             
-            if(c == ':' || Character.isLetterOrDigit(c))
+            if(c == ':' && i < sql.length()-1 && sql.charAt(i+1) == ':')
+            {
+                i++;
+                continue; // This is a cast like '12345'::int
+            }
+            else if(c == ':' || Character.isLetterOrDigit(c))
             {
                 buffer.append(c);
             }
@@ -188,7 +193,7 @@ public class Query implements AtomicOperation
         if(buffer.length() > 1 && buffer.charAt(0) == ':')
         {
             parameter = new Parameter(buffer.substring(1), sql.length()-buffer.length(), buffer.length());
-                
+            
             parameters.add(parameter);
             markup.add(parameter);
         }

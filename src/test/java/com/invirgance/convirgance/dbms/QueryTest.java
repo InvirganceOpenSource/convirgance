@@ -191,4 +191,14 @@ public class QueryTest
         
         assertEquals("select * from TABLE where '' = ''", query.getDatabaseSQL());
     }
+    
+    @Test
+    public void testCast()
+    {
+        Query query = new Query("select (:zipcode::int) from TABLE");
+        
+        query.setBinding("zipcode", "12345");
+        
+        assertEquals("select ('12345'::int) from TABLE", query.getDatabaseSQL());
+    }
 }
