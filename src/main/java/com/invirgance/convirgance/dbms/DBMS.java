@@ -217,7 +217,7 @@ public class DBMS
         {
             try
             {
-                connection.rollback();
+                if(connection != null) connection.rollback();
             }
             catch(SQLException ex) { ex.printStackTrace(); }
             
@@ -244,6 +244,7 @@ public class DBMS
         private final Statement statement;
         private final ResultSet set;
         
+        private boolean closed;
         private boolean next;
         private String[] columns;
 
@@ -300,12 +301,16 @@ public class DBMS
         @Override
         public void close() throws SQLException
         {
+            if(closed) return;
+            
             try { set.close(); } catch(SQLException e) { e.printStackTrace(); }
             try { statement.close(); } catch(SQLException e) { e.printStackTrace(); }
             try { connection.commit(); } catch(SQLException e) { e.printStackTrace(); }
             try { connection.setAutoCommit(true); } catch(SQLException e) { e.printStackTrace(); }
             
             connection.close();
+            
+            closed = true;
         }
         
     }
