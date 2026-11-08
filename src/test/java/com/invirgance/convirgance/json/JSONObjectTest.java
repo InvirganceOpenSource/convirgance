@@ -476,4 +476,25 @@ public class JSONObjectTest
         assertEquals(25, entry.getValue());
         assertFalse(iterator.hasNext());
     }
+    
+    @Test
+    public void testWhitespaceRead()
+    {
+        String expected = "{\"data\":{\"object\":{\"total_details\":{\"amount_discount\":0}}},\"type\":\"checkout.session.completed\"}";
+        String json = 
+            "{\n" +
+            "  \"data\": {\n" +
+            "    \"object\": {\n" +
+            "      \"total_details\": {\n" +
+            "        \"amount_discount\": 0\n" +
+            "      }\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"type\": \"checkout.session.completed\"\n" +
+            "}";
+        
+        JSONObject record = new JSONObject(json);
+
+        assertEquals(expected, record.toString());
+    }
 }

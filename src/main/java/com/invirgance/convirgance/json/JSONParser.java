@@ -137,9 +137,7 @@ public class JSONParser implements AutoCloseable
 
     private char peekPrintable() throws IOException
     {
-        int c;
-        
-        if(next >= 0) return (char)next;
+        if(next >= 0 && !Character.isWhitespace((char)next)) return (char)next;
         
         while(ready())
         {
@@ -370,7 +368,7 @@ public class JSONParser implements AutoCloseable
         while(ready())
         {
             c = peekPrintable();
-            
+
             switch(c)
             {
                 case '"':
@@ -382,12 +380,12 @@ public class JSONParser implements AutoCloseable
                     return object;
                     
                 default:
-                    throw new IOException("Expected \" or }, but found " + c);
+                    throw new IOException("Expected \" or }, but found " + c + " (0x" + Integer.toHexString(c & 0xFF) + ")");
             }
             
             c = nextPrintable();
             
-            if(c != ':') throw new IOException("Expected : but found " + c);
+            if(c != ':') throw new IOException("Expected : but found " + c + " (0x" + Integer.toHexString(c & 0xFF) + ")");
             
             object.put(key, parse());
             
